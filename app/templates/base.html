@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}StorytimeFinder{% endblock %}</title>
+  <meta name="description" content="Kostenlose, werbefreie Suche für Kinder-Hörspiele und Hörbücher auf YouTube Music.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%232b6cb0'/%3E%3Cpolygon points='38,28 74,50 38,72' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="{{ url_for('main.index') }}">📖 StorytimeFinder</a>
+      <p class="tagline">Kinder-Hörspiele finden - abspielen auf YouTube Music</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="attribution">
+        <span class="yt-badge" aria-hidden="true">
+          <svg width="20" height="14" viewBox="0 0 90 64" xmlns="http://www.w3.org/2000/svg">
+            <rect width="90" height="64" rx="14" fill="#FF0000"/>
+            <polygon points="36,18 64,32 36,46" fill="#fff"/>
+          </svg>
+        </span>
+        Alle Inhalte werden von <strong>YouTube</strong> bereitgestellt. StorytimeFinder hostet
+        keine Audiodateien - jeder Titel verlinkt direkt zu YouTube Music.
+      </p>
+      <p class="footer-links">
+        <a href="{{ url_for('main.impressum') }}">Impressum</a>
+        {% if generated_at %}
+          <span class="sep">&middot;</span>
+          <span class="updated">Katalog aktualisiert: {{ generated_at | date_de }}</span>
+        {% endif %}
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

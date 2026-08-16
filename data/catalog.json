@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-08-16T00:00:00Z",
+  "items": [
+    {
+      "id": 1,
+      "title": "Findet Nemo",
+      "thumbnail_url": null,
+      "duration_seconds": 3120,
+      "category": "disney",
+      "age_tag": "all",
+      "language": "de",
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg&si=mavRgtkjRGSelBVa"
+    },
+    {
+      "id": 2,
+      "title": "[Beispiel] Die drei ??? und der seltsame Wecker",
+      "thumbnail_url": null,
+      "duration_seconds": 2760,
+      "category": "hoerspiel",
+      "age_tag": "6-10",
+      "language": "de",
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0002"
+    },
+    {
+      "id": 3,
+      "title": "[Beispiel] Der gestiefelte Kater",
+      "thumbnail_url": null,
+      "duration_seconds": 1500,
+      "category": "classic",
+      "age_tag": "3-6",
+      "language": "de",
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0003"
+    },
+    {
+      "id": 4,
+      "title": "[Beispiel] Bambi (Hörspiel)",
+      "thumbnail_url": null,
+      "duration_seconds": 2400,
+      "category": "disney",
+      "age_tag": "3-6",
+      "language": "de",
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0004"
+    }
+  ]
+}

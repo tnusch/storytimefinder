@@ -1,0 +1,42 @@
+name: Refresh catalog
+
+on:
+  schedule:
+    # Every Monday 04:00 UTC - well within the 30-day YouTube API compliance window.
+    - cron: "0 4 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install refresh dependencies
+        run: pip install -r refresh/requirements.txt
+
+      - name: Run refresh job
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python refresh/refresh.py
+
+      - name: Commit updated catalog.json
+        run: |
+          git config user.name "storytimefinder-bot"
+          git config user.email "actions@github.com"
+          git add data/catalog.json
+          git diff --cached --quiet && echo "No catalog changes" || git commit -m "chore: refresh catalog.json"
+          git push
+
+      - name: Trigger Vercel deploy hook
+        if: env.VERCEL_DEPLOY_HOOK_URL != ''
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"

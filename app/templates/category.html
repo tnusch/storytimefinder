@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_item_card.html" import item_card %}
+
+{% block title %}{{ category_label }} - StorytimeFinder{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb">
+  <a href="{{ url_for('main.index') }}">&larr; Alle Kategorien</a>
+</nav>
+
+<h2>{{ category_label }}</h2>
+
+{% if items %}
+  <div class="card-grid">
+    {% for item in items %}{{ item_card(item) }}{% endfor %}
+  </div>
+{% else %}
+  <p class="empty">Noch keine Hörspiele in dieser Kategorie.</p>
+{% endif %}
+{% endblock %}

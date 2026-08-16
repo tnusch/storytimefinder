@@ -1,0 +1,29 @@
+{% macro item_card(item) %}
+<article class="card" data-category="{{ item.category }}" data-age="{{ item.age_tag or '' }}">
+  <a class="card-thumb" href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">
+    {% if item.thumbnail_url %}
+      <img src="{{ item.thumbnail_url }}" alt="" loading="lazy">
+    {% else %}
+      <div class="card-thumb-fallback" aria-hidden="true">📖</div>
+    {% endif %}
+    {% if item.duration_seconds %}
+      <span class="card-duration">{{ item.duration_seconds | duration }}</span>
+    {% endif %}
+  </a>
+  <div class="card-body">
+    <h3 class="card-title">
+      <a href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+    </h3>
+    <p class="card-meta">
+      {% if item.age_tag %}<span class="tag">{{ item.age_tag }} Jahre</span>{% endif %}
+    </p>
+    <a class="card-play" href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">
+      <svg width="16" height="12" viewBox="0 0 90 64" aria-hidden="true">
+        <rect width="90" height="64" rx="14" fill="#FF0000"/>
+        <polygon points="36,18 64,32 36,46" fill="#fff"/>
+      </svg>
+      Auf YouTube Music abspielen
+    </a>
+  </div>
+</article>
+{% endmacro %}

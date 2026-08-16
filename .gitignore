@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+.pytest_cache/
+
+# Local SQLite DB (refresh environment only - never committed)
+data/storytimefinder.db
+data/storytimefinder.db-journal
+
+# Vercel
+.vercel
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
