@@ -7,6 +7,9 @@ env/
 *.egg-info/
 .pytest_cache/
 
+# Internal ops notes (setup/deploy/refresh how-to) - not for the public repo
+INTERNAL.md
+
 # Local SQLite DB (refresh environment only - never committed)
 data/storytimefinder.db
 data/storytimefinder.db-journal
@@ -19,3 +22,7 @@ data/storytimefinder.db-journal
 Thumbs.db
 .vscode/
 .idea/
+.claude/settings.json
+.claude/settings.local.json
+CLAUDE.md
+.gitignore

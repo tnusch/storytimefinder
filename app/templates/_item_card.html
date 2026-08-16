@@ -1,5 +1,14 @@
 {% macro item_card(item) %}
-<article class="card" data-category="{{ item.category }}" data-age="{{ item.age_tag or '' }}">
+<article class="card"
+  data-title="{{ item.title | lower }}"
+  data-age="{{ item.age_tag or '' }}"
+  data-series="{{ item.series or '' }}"
+  data-language="{{ item.language or '' }}"
+  data-publisher="{{ item.publisher or '' }}"
+  data-genre="{{ item.genre or '' }}"
+  data-duration="{{ item.duration_seconds | duration_bucket or '' }}"
+  data-release-decade="{{ item.release_date | release_decade or '' }}"
+>
   <a class="card-thumb" href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">
     {% if item.thumbnail_url %}
       <img src="{{ item.thumbnail_url }}" alt="" loading="lazy">
@@ -14,15 +23,26 @@
     <h3 class="card-title">
       <a href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
     </h3>
+
     <p class="card-meta">
-      {% if item.age_tag %}<span class="tag">{{ item.age_tag }} Jahre</span>{% endif %}
+      {% if item.category %}<span class="tag">{{ t('category_' ~ item.category) }}</span>{% endif %}
+      {% if item.age_tag %}<span class="tag">{{ item.age_tag }} {{ t('age_suffix') }}</span>{% endif %}
+      {% if item.series %}
+        <span class="tag">{{ item.series }}{% if item.position_in_series %} &middot; {{ t('episode', n=item.position_in_series) }}{% endif %}</span>
+      {% endif %}
+      {% if item.release_date %}<span class="tag">{{ item.release_date | release_year }}</span>{% endif %}
     </p>
+
+    {% if item.description %}
+      <p class="card-description">{{ item.description | truncate(140) }}</p>
+    {% endif %}
+
     <a class="card-play" href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">
       <svg width="16" height="12" viewBox="0 0 90 64" aria-hidden="true">
         <rect width="90" height="64" rx="14" fill="#FF0000"/>
         <polygon points="36,18 64,32 36,46" fill="#fff"/>
       </svg>
-      Auf YouTube Music abspielen
+      {{ t('card_play') }}
     </a>
   </div>
 </article>

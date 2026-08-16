@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Impressum - StorytimeFinder{% endblock %}
+{% block title %}{{ t('impressum_title') }} - StorytimeFinder{% endblock %}
 
 {% block content %}
-<h2>Impressum</h2>
+<h2>{{ t('impressum_title') }}</h2>
+
+{% if lang != 'de' %}
+  <p class="impressum-note">{{ t('impressum_language_note') }}</p>
+{% endif %}
 
 <!--
   TODO: replace every placeholder below with real, accurate information
   before this site goes public. A German Impressum (§5 TMG) legally
   requires the operator's real name and postal address (not a P.O. box)
   and a working contact method. Leaving placeholder text here is not
-  compliant.
+  compliant. This content is intentionally left in German only - see
+  impressum_language_note in app/i18n.py for why.
 -->
 <section class="impressum">
   <p>

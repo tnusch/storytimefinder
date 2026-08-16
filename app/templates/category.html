@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% from "_item_card.html" import item_card %}
 
-{% block title %}{{ category_label }} - StorytimeFinder{% endblock %}
+{% block title %}{{ t('category_' ~ category_slug) }} - StorytimeFinder{% endblock %}
 
 {% block content %}
 <nav class="breadcrumb">
-  <a href="{{ url_for('main.index') }}">&larr; Alle Kategorien</a>
+  <a href="{{ url_for('main.index', lang=lang) }}">&larr; {{ t('back_to_categories') }}</a>
 </nav>
 
-<h2>{{ category_label }}</h2>
+<h2>{{ t('category_' ~ category_slug) }}</h2>
 
 {% if items %}
   <div class="card-grid">
     {% for item in items %}{{ item_card(item) }}{% endfor %}
   </div>
 {% else %}
-  <p class="empty">Noch keine Hörspiele in dieser Kategorie.</p>
+  <p class="empty">{{ t('category_empty') }}</p>
 {% endif %}
 {% endblock %}

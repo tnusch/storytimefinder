@@ -40,6 +40,7 @@ from googleapiclient.errors import HttpError
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sources import SOURCES  # noqa: E402
+from overrides import ITEM_OVERRIDES  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("refresh")
@@ -69,6 +70,12 @@ CREATE TABLE IF NOT EXISTS items (
     thumbnail_url TEXT,
     duration_seconds INTEGER,
     youtube_music_url TEXT NOT NULL,
+    description TEXT,
+    release_date TEXT,
+    publisher TEXT,
+    series TEXT,
+    position_in_series INTEGER,
+    genre TEXT,
     last_refreshed TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -157,7 +164,12 @@ def fetch_playlist_video_ids(youtube, playlist_id: str) -> list[str]:
 
 
 def fetch_video_details(youtube, video_ids: list[str]) -> dict[str, dict]:
-    """Fetch title/thumbnail/duration for a list of video ids, batched 50 at a time."""
+    """Fetch metadata for a list of video ids, batched 50 at a time.
+
+    Everything here comes straight from the API (snippet + contentDetails).
+    Fields the API has no concept of - series, episode number, genre - are
+    layered in separately from overrides.py.
+    """
     details: dict[str, dict] = {}
     for i in range(0, len(video_ids), 50):
         chunk = video_ids[i : i + 50]
@@ -178,6 +190,9 @@ def fetch_video_details(youtube, video_ids: list[str]) -> dict[str, dict]:
                 "duration_seconds": parse_iso8601_duration(
                     item["contentDetails"].get("duration", "")
                 ),
+                "description": snippet.get("description") or None,
+                "release_date": snippet.get("publishedAt"),
+                "publisher": snippet.get("channelTitle"),
             }
     return details
 
@@ -212,13 +227,20 @@ def sync_source_items(conn: sqlite3.Connection, youtube, source: sqlite3.Row) ->
             continue  # video returned by playlist but not resolvable (private/deleted)
         seen_video_ids.add(vid)
         youtube_music_url = f"https://music.youtube.com/watch?v={vid}"
+        override = ITEM_OVERRIDES.get(vid, {})
+        publisher = override.get("publisher", info["publisher"])
+        series = override.get("series")
+        position_in_series = override.get("position_in_series")
+        genre = override.get("genre")
 
         if vid in existing:
             conn.execute(
                 """
                 UPDATE items
                 SET title = ?, thumbnail_url = ?, duration_seconds = ?,
-                    youtube_music_url = ?, last_refreshed = ?
+                    youtube_music_url = ?, description = ?, release_date = ?,
+                    publisher = ?, series = ?, position_in_series = ?,
+                    genre = ?, last_refreshed = ?
                 WHERE id = ?
                 """,
                 (
@@ -226,6 +248,12 @@ def sync_source_items(conn: sqlite3.Connection, youtube, source: sqlite3.Row) ->
                     info["thumbnail_url"],
                     info["duration_seconds"],
                     youtube_music_url,
+                    info["description"],
+                    info["release_date"],
+                    publisher,
+                    series,
+                    position_in_series,
+                    genre,
                     now,
                     existing[vid],
                 ),
@@ -236,8 +264,9 @@ def sync_source_items(conn: sqlite3.Connection, youtube, source: sqlite3.Row) ->
                 """
                 INSERT INTO items
                     (source_id, video_id, title, thumbnail_url, duration_seconds,
-                     youtube_music_url, last_refreshed)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                     youtube_music_url, description, release_date, publisher,
+                     series, position_in_series, genre, last_refreshed)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     source["id"],
@@ -246,6 +275,12 @@ def sync_source_items(conn: sqlite3.Connection, youtube, source: sqlite3.Row) ->
                     info["thumbnail_url"],
                     info["duration_seconds"],
                     youtube_music_url,
+                    info["description"],
+                    info["release_date"],
+                    publisher,
+                    series,
+                    position_in_series,
+                    genre,
                     now,
                 ),
             )
@@ -265,7 +300,9 @@ def export_catalog(conn: sqlite3.Connection) -> int:
     rows = conn.execute(
         """
         SELECT items.id, items.title, items.thumbnail_url, items.duration_seconds,
-               items.youtube_music_url,
+               items.youtube_music_url, items.description, items.release_date,
+               items.publisher, items.series, items.position_in_series,
+               items.genre,
                sources.category, sources.age_tag, sources.language
         FROM items
         JOIN sources ON sources.id = items.source_id

@@ -7,9 +7,15 @@
       "thumbnail_url": null,
       "duration_seconds": 3120,
       "category": "disney",
-      "age_tag": "all",
+      "age_tag": null,
       "language": "de",
-      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg&si=mavRgtkjRGSelBVa"
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg&si=mavRgtkjRGSelBVa",
+      "description": "Das Original-Hörspiel zum Disney/Pixar Film. Der kleine Clownfisch Nemo wird von seiner Familie getrennt und muss gemeinsam mit neuen Freunden den Weg nach Hause finden.",
+      "release_date": null,
+      "publisher": "Disney",
+      "series": "Disney Hörspiele",
+      "position_in_series": null,
+      "genre": "Hörspiel"
     },
     {
       "id": 2,
@@ -19,7 +25,13 @@
       "category": "hoerspiel",
       "age_tag": "6-10",
       "language": "de",
-      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0002"
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0002",
+      "description": "[Beispiel] Justus, Peter und Bob ermitteln, als in Rocky Beach ein mysteriöser Wecker auftaucht.",
+      "release_date": "2019-03-15T00:00:00Z",
+      "publisher": "[Beispiel] Europa",
+      "series": "Die drei ???",
+      "position_in_series": 78,
+      "genre": "Krimi"
     },
     {
       "id": 3,
@@ -29,7 +41,13 @@
       "category": "classic",
       "age_tag": "3-6",
       "language": "de",
-      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0003"
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0003",
+      "description": "[Beispiel] Ein Märchenklassiker der Brüder Grimm als Hörspiel.",
+      "release_date": "2015-09-01T00:00:00Z",
+      "publisher": "[Beispiel] Kiddinx",
+      "series": null,
+      "position_in_series": null,
+      "genre": "Märchen"
     },
     {
       "id": 4,
@@ -39,7 +57,29 @@
       "category": "disney",
       "age_tag": "3-6",
       "language": "de",
-      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0004"
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0004",
+      "description": "[Beispiel] Die Geschichte des jungen Rehkitzes Bambi als Hörspielfassung.",
+      "release_date": "2017-11-20T00:00:00Z",
+      "publisher": "[Beispiel] Walt Disney Records",
+      "series": null,
+      "position_in_series": null,
+      "genre": "Abenteuer"
+    },
+    {
+      "id": 5,
+      "title": "[Sample] The Lion King (Audiobook)",
+      "thumbnail_url": null,
+      "duration_seconds": 3300,
+      "category": "disney",
+      "age_tag": null,
+      "language": "en",
+      "youtube_music_url": "https://music.youtube.com/watch?v=SAMPLE0005",
+      "description": "[Sample] An English-language audiobook adaptation, included to exercise the audiobook language filter.",
+      "release_date": "2016-06-10T00:00:00Z",
+      "publisher": "[Sample] Disney",
+      "series": null,
+      "position_in_series": null,
+      "genre": "Adventure"
     }
   ]
 }

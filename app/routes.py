@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, render_template, request
+from flask import Blueprint, abort, render_template
 
 from . import data
 
@@ -10,26 +10,14 @@ def index():
     return render_template(
         "index.html",
         items=data.get_items(),
-        categories=data.get_categories(),
         age_tags=data.get_age_tags(),
+        series_list=data.get_series_list(),
+        languages=data.get_languages(),
+        publishers=data.get_publishers(),
+        genres=data.get_genres(),
+        duration_buckets=data.get_duration_buckets(),
+        release_decades=data.get_release_decades(),
         generated_at=data.get_generated_at(),
-        searched=False,
-    )
-
-
-@bp.route("/search")
-def search():
-    query = request.args.get("q", "").strip()
-    results = data.search(query=query)
-
-    return render_template(
-        "index.html",
-        items=results,
-        categories=data.get_categories(),
-        age_tags=data.get_age_tags(),
-        generated_at=data.get_generated_at(),
-        searched=True,
-        query=query,
     )
 
 
@@ -39,14 +27,12 @@ def category(slug):
     if slug not in known_slugs:
         abort(404)
 
-    items = data.search(category=slug)
+    items = [item for item in data.get_items() if item.get("category") == slug]
 
     return render_template(
         "category.html",
         items=items,
         category_slug=slug,
-        category_label=data.get_category_label(slug),
-        categories=data.get_categories(),
         generated_at=data.get_generated_at(),
     )
 

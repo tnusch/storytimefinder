@@ -1,38 +1,97 @@
 {% extends "base.html" %}
 {% from "_item_card.html" import item_card %}
 
-{% block title %}StorytimeFinder - Kinder-Hörspiele finden{% endblock %}
+{% block title %}StorytimeFinder{% endblock %}
 
 {% block content %}
-<form class="search-form" action="{{ url_for('main.search') }}" method="get">
+<p class="principles">{{ t('principles') }}</p>
+
+<div class="search-form">
   <input
     type="search"
-    name="q"
-    placeholder="Titel suchen, z.B. &quot;König der Löwen&quot;"
-    value="{{ query or '' }}"
+    id="search-input"
+    placeholder="{{ t('search_placeholder') }}"
     autofocus
   >
-  <button type="submit">Suchen</button>
-</form>
+</div>
 
-{% if categories or age_tags %}
+{% if age_tags or series_list %}
 <div class="filter-bar" id="filter-bar">
-  {% if categories %}
-  <div class="filter-group" data-filter-type="category">
-    <span class="filter-label">Kategorie:</span>
-    <button type="button" class="chip is-active" data-value="">Alle</button>
-    {% for c in categories %}
-      <button type="button" class="chip" data-value="{{ c.slug }}">{{ c.label }} ({{ c.count }})</button>
+  {% if age_tags %}
+  <div class="filter-group" data-filter-type="age">
+    <span class="filter-label">{{ t('filter_age') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for a in age_tags %}
+      <button type="button" class="chip" data-value="{{ a }}">{{ a }} {{ t('age_suffix') }}</button>
     {% endfor %}
   </div>
   {% endif %}
 
-  {% if age_tags %}
-  <div class="filter-group" data-filter-type="age">
-    <span class="filter-label">Alter:</span>
-    <button type="button" class="chip is-active" data-value="">Alle</button>
-    {% for a in age_tags %}
-      <button type="button" class="chip" data-value="{{ a }}">{{ a }} Jahre</button>
+  {% if series_list %}
+  <div class="filter-group" data-filter-type="series">
+    <span class="filter-label">{{ t('filter_series') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for s in series_list %}
+      <button type="button" class="chip" data-value="{{ s }}">{{ s }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% set has_advanced = duration_buckets or genres or languages or publishers or release_decades %}
+{% if has_advanced %}
+<button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
+  {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
+</button>
+
+<div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
+  {% if duration_buckets %}
+  <div class="filter-group" data-filter-type="duration">
+    <span class="filter-label">{{ t('filter_duration') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for b in duration_buckets %}
+      <button type="button" class="chip" data-value="{{ b.slug }}">{{ t('duration_' ~ b.slug) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if genres %}
+  <div class="filter-group" data-filter-type="genre">
+    <span class="filter-label">{{ t('filter_genre') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for g in genres %}
+      <button type="button" class="chip" data-value="{{ g }}">{{ g }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if languages %}
+  <div class="filter-group" data-filter-type="language">
+    <span class="filter-label">{{ t('filter_language') }}</span>
+    <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
+    {% for code in languages %}
+      <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if publishers %}
+  <div class="filter-group" data-filter-type="publisher">
+    <span class="filter-label">{{ t('filter_publisher') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for p in publishers %}
+      <button type="button" class="chip" data-value="{{ p }}">{{ p }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if release_decades %}
+  <div class="filter-group" data-filter-type="releaseDecade">
+    <span class="filter-label">{{ t('filter_release') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for d in release_decades %}
+      <button type="button" class="chip" data-value="{{ d }}">{{ d }}{{ t('decade_suffix') }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -40,62 +99,101 @@
 {% endif %}
 
 <section class="results">
-  <h2 id="results-count">{{ items | length }} Hörspiel{{ 'e' if items|length != 1 else '' }}</h2>
+  <h2 id="results-count">{{ t('results_count_one' if items|length == 1 else 'results_count_other', n=items|length) }}</h2>
 
   {% if items %}
     <div class="card-grid" id="card-grid">
       {% for item in items %}{{ item_card(item) }}{% endfor %}
     </div>
-    <p class="empty" id="empty-message" hidden>Keine Hörspiele passen zu dieser Auswahl.</p>
+    <p class="empty" id="empty-message" hidden>{{ t('empty_filtered') }}</p>
   {% else %}
-    <p class="empty">
-      {% if searched %}
-        Keine Hörspiele gefunden. Versuch einen anderen Suchbegriff.
-      {% else %}
-        Der Katalog ist noch leer - führe den Refresh-Job aus, um Inhalte hinzuzufügen.
-      {% endif %}
-    </p>
+    <p class="empty">{{ t('empty_catalog') }}</p>
   {% endif %}
 </section>
 
 <script>
 (function () {
-  var filterBar = document.getElementById("filter-bar");
   var grid = document.getElementById("card-grid");
-  if (!filterBar || !grid) return;
+  if (!grid) return;
 
+  var I18N = {
+    resultsOne: {{ t('results_count_one') | tojson }},
+    resultsOther: {{ t('results_count_other') | tojson }}
+  };
+
+  var searchInput = document.getElementById("search-input");
+  var filterBar = document.getElementById("filter-bar");
+  var advancedBar = document.getElementById("filter-bar-advanced");
+  var advancedToggle = document.getElementById("advanced-toggle");
   var emptyMessage = document.getElementById("empty-message");
   var resultsCount = document.getElementById("results-count");
   var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
-  var active = { category: "", age: "" };
+
+  var active = {};
+  document.querySelectorAll(".filter-group").forEach(function (group) {
+    var activeChip = group.querySelector(".chip.is-active") || group.querySelector(".chip");
+    active[group.dataset.filterType] = activeChip ? activeChip.dataset.value : "";
+  });
+  var query = "";
 
   function applyFilters() {
     var visible = 0;
+    var q = query.trim().toLowerCase();
     cards.forEach(function (card) {
-      var matches =
-        (active.category === "" || card.dataset.category === active.category) &&
-        (active.age === "" || card.dataset.age === active.age);
+      var matches = q === "" || card.dataset.title.indexOf(q) !== -1;
+      if (matches) {
+        for (var type in active) {
+          if (active[type] !== "" && card.dataset[type] !== active[type]) {
+            matches = false;
+            break;
+          }
+        }
+      }
       card.hidden = !matches;
       if (matches) visible += 1;
     });
-    resultsCount.textContent = visible + (visible === 1 ? " Hörspiel" : " Hörspiele");
+    resultsCount.textContent = (visible === 1 ? I18N.resultsOne : I18N.resultsOther).replace("{n}", visible);
     if (emptyMessage) emptyMessage.hidden = visible !== 0;
   }
 
-  filterBar.addEventListener("click", function (event) {
-    var chip = event.target.closest(".chip");
-    if (!chip) return;
-    var group = chip.closest(".filter-group");
-    var type = group.dataset.filterType;
-
-    group.querySelectorAll(".chip").forEach(function (c) {
-      c.classList.remove("is-active");
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      query = searchInput.value;
+      applyFilters();
     });
-    chip.classList.add("is-active");
+  }
 
-    active[type] = chip.dataset.value;
-    applyFilters();
-  });
+  function bindFilterBar(bar) {
+    if (!bar) return;
+    bar.addEventListener("click", function (event) {
+      var chip = event.target.closest(".chip");
+      if (!chip) return;
+      var group = chip.closest(".filter-group");
+      var type = group.dataset.filterType;
+
+      group.querySelectorAll(".chip").forEach(function (c) {
+        c.classList.remove("is-active");
+      });
+      chip.classList.add("is-active");
+
+      active[type] = chip.dataset.value;
+      applyFilters();
+    });
+  }
+
+  bindFilterBar(filterBar);
+  bindFilterBar(advancedBar);
+
+  if (advancedToggle && advancedBar) {
+    advancedToggle.addEventListener("click", function () {
+      var expanded = advancedToggle.getAttribute("aria-expanded") === "true";
+      advancedToggle.setAttribute("aria-expanded", String(!expanded));
+      advancedBar.hidden = expanded;
+      advancedToggle.classList.toggle("is-open", !expanded);
+    });
+  }
+
+  applyFilters();
 })();
 </script>
 {% endblock %}

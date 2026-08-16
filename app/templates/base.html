@@ -1,18 +1,37 @@
 <!doctype html>
-<html lang="de">
+<html lang="{{ lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}StorytimeFinder{% endblock %}</title>
-  <meta name="description" content="Kostenlose, werbefreie Suche für Kinder-Hörspiele und Hörbücher auf YouTube Music.">
+  <meta name="description" content="{{ t('meta_description') }}">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%232b6cb0'/%3E%3Cpolygon points='38,28 74,50 38,72' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var theme = stored || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="{{ url_for('main.index') }}">📖 StorytimeFinder</a>
-      <p class="tagline">Kinder-Hörspiele finden - abspielen auf YouTube Music</p>
+    <div class="wrap header-inner">
+      <div class="header-text">
+        <a class="brand" href="{{ url_for('main.index') }}">📖 StorytimeFinder</a>
+        <p class="tagline">{{ t('tagline') }}</p>
+      </div>
+      <div class="header-controls">
+        <button type="button" id="theme-toggle" class="icon-button" aria-label="{{ t('theme_toggle') }}" title="{{ t('theme_toggle') }}">
+          <span class="theme-icon theme-icon-light" aria-hidden="true">&#9728;</span>
+          <span class="theme-icon theme-icon-dark" aria-hidden="true">&#9789;</span>
+        </button>
+        <nav class="lang-switch" aria-label="Language">
+          <a href="{{ url_for(request.endpoint, lang='de', **request.view_args) }}"{% if lang == 'de' %} class="is-active"{% endif %}>DE</a>
+          <a href="{{ url_for(request.endpoint, lang='en', **request.view_args) }}"{% if lang == 'en' %} class="is-active"{% endif %}>EN</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -29,17 +48,24 @@
             <polygon points="36,18 64,32 36,46" fill="#fff"/>
           </svg>
         </span>
-        Alle Inhalte werden von <strong>YouTube</strong> bereitgestellt. StorytimeFinder hostet
-        keine Audiodateien - jeder Titel verlinkt direkt zu YouTube Music.
+        {{ t('footer_attribution') }}
       </p>
       <p class="footer-links">
-        <a href="{{ url_for('main.impressum') }}">Impressum</a>
+        <a href="{{ url_for('main.impressum', lang=lang) }}">{{ t('footer_impressum') }}</a>
         {% if generated_at %}
           <span class="sep">&middot;</span>
-          <span class="updated">Katalog aktualisiert: {{ generated_at | date_de }}</span>
+          <span class="updated">{{ t('footer_updated') }} {{ generated_at | local_date(lang) }}</span>
         {% endif %}
       </p>
     </div>
   </footer>
+
+  <script>
+    document.getElementById("theme-toggle").addEventListener("click", function () {
+      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  </script>
 </body>
 </html>

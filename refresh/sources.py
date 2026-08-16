@@ -36,7 +36,7 @@ SOURCES = [
         "label": "Disney Hörspiele (placeholder)",
         "language": "de",
         "category": "disney",
-        "age_tag": "all",
+        "age_tag": None,  # no age restriction - leave unset rather than using a catch-all value
         "active": False,
     },
     {

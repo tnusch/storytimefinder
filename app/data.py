@@ -13,12 +13,6 @@ from pathlib import Path
 
 CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "catalog.json"
 
-CATEGORY_LABELS = {
-    "hoerspiel": "Hörspiel",
-    "disney": "Disney",
-    "classic": "Klassiker",
-}
-
 _catalog_cache: dict | None = None
 
 
@@ -44,18 +38,11 @@ def get_generated_at() -> str | None:
     return load_catalog().get("generated_at")
 
 
-def get_category_label(slug: str) -> str:
-    return CATEGORY_LABELS.get(slug, slug.title())
-
-
 def get_categories() -> list[dict]:
     counts: dict[str, int] = {}
     for item in get_items():
         counts[item["category"]] = counts.get(item["category"], 0) + 1
-    return [
-        {"slug": slug, "label": get_category_label(slug), "count": count}
-        for slug, count in sorted(counts.items())
-    ]
+    return [{"slug": slug, "count": count} for slug, count in sorted(counts.items())]
 
 
 def get_age_tags() -> list[str]:
@@ -63,31 +50,89 @@ def get_age_tags() -> list[str]:
     return sorted(tags)
 
 
-def search(query: str | None = None, category: str | None = None, age: str | None = None) -> list[dict]:
-    items = get_items()
-
-    if category:
-        items = [i for i in items if i.get("category") == category]
-
-    if age:
-        items = [i for i in items if i.get("age_tag") == age]
-
-    if query:
-        q = query.strip().lower()
-        if q:
-            items = [i for i in items if q in i["title"].lower()]
-
-    return items
+def get_publishers() -> list[str]:
+    publishers = {item.get("publisher") for item in get_items() if item.get("publisher")}
+    return sorted(publishers)
 
 
-def format_date_de(value: str | None) -> str:
-    """Format an ISO 8601 timestamp as a typical German date, e.g. '16.08.2026'."""
+def get_languages() -> list[str]:
+    values = {item.get("language") for item in get_items() if item.get("language")}
+    return sorted(values)
+
+
+def get_genres() -> list[str]:
+    values = {item.get("genre") for item in get_items() if item.get("genre")}
+    return sorted(values)
+
+
+def get_series_list() -> list[str]:
+    values = {item.get("series") for item in get_items() if item.get("series")}
+    return sorted(values)
+
+
+# Duration is filtered by fixed buckets rather than raw seconds - order matters
+# here (shortest to longest), unlike the alphabetically-sorted lists above.
+DURATION_BUCKETS = [
+    {"slug": "under30", "min": 0, "max": 1800},
+    {"slug": "30to60", "min": 1800, "max": 3600},
+    {"slug": "1to2h", "min": 3600, "max": 7200},
+    {"slug": "over2h", "min": 7200, "max": None},
+]
+
+
+def duration_bucket_slug(seconds: int | None) -> str | None:
+    if not seconds:
+        return None
+    for bucket in DURATION_BUCKETS:
+        if seconds >= bucket["min"] and (bucket["max"] is None or seconds < bucket["max"]):
+            return bucket["slug"]
+    return None
+
+
+def get_duration_buckets() -> list[dict]:
+    present = {duration_bucket_slug(item.get("duration_seconds")) for item in get_items()}
+    return [b for b in DURATION_BUCKETS if b["slug"] in present]
+
+
+def release_year(release_date: str | None) -> str | None:
+    if not release_date:
+        return None
+    try:
+        return str(datetime.fromisoformat(release_date.replace("Z", "+00:00")).year)
+    except ValueError:
+        return None
+
+
+def release_decade(release_date: str | None) -> str | None:
+    """Bucket a release date down to its decade, e.g. 2019 -> '2010' (2010er/2010s)."""
+    year = release_year(release_date)
+    if year is None:
+        return None
+    return str((int(year) // 10) * 10)
+
+
+def get_release_decades() -> list[str]:
+    decades = {release_decade(item.get("release_date")) for item in get_items()}
+    decades.discard(None)
+    return sorted(decades, key=int)
+
+
+_EN_MONTHS = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+]
+
+
+def format_date(value: str | None, lang: str = "de") -> str:
+    """Format an ISO 8601 timestamp for display, e.g. '16.08.2026' (de) or '16 Aug 2026' (en)."""
     if not value:
         return ""
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return value
+    if lang == "en":
+        return f"{parsed.day} {_EN_MONTHS[parsed.month - 1]} {parsed.year}"
     return parsed.strftime("%d.%m.%Y")
 
 
