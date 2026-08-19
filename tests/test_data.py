@@ -15,48 +15,48 @@ FAKE_CATALOG = {
             "title": "Der König der Löwen (Hörspiel)",
             "thumbnail_url": None,
             "duration_seconds": 3120,
-            "category": "disney",
+            "franchise": "disney",
+            "min_age": None,
             "age_tag": None,
             "language": "de",
             "youtube_music_url": "https://music.youtube.com/watch?v=aaa",
             "description": "Simba muss lernen, ein guter König zu werden.",
-            "release_date": "2020-01-01T00:00:00Z",
-            "publisher": "Walt Disney Records",
+            "source_release_year": 2020,
             "series": None,
             "position_in_series": None,
-            "genre": "Abenteuer",
+            "genre": "adventure",
         },
         {
             "id": 2,
             "title": "Die drei ??? und der seltsame Wecker",
             "thumbnail_url": None,
             "duration_seconds": 2760,
-            "category": "hoerspiel",
-            "age_tag": "6-10",
+            "franchise": "die_drei_fragezeichen",
+            "min_age": 13,
+            "age_tag": "12_plus",
             "language": "de",
             "youtube_music_url": "https://music.youtube.com/watch?v=bbb",
             "description": "Ein Krimi-Hörspiel für Kinder.",
-            "release_date": "2019-03-15T00:00:00Z",
-            "publisher": "Europa",
+            "source_release_year": 2019,
             "series": "Die drei ???",
             "position_in_series": 78,
-            "genre": "Krimi",
+            "genre": "mystery",
         },
         {
             "id": 3,
             "title": "Der gestiefelte Kater",
             "thumbnail_url": None,
             "duration_seconds": None,
-            "category": "classic",
-            "age_tag": "3-6",
+            "franchise": "pixar",
+            "min_age": 4,
+            "age_tag": "3_5",
             "language": "en",
             "youtube_music_url": "https://music.youtube.com/watch?v=ccc",
             "description": None,
-            "release_date": None,
-            "publisher": "Kiddinx",
+            "source_release_year": None,
             "series": None,
             "position_in_series": None,
-            "genre": "Märchen",
+            "genre": "fairy_tale",
         },
     ],
 }
@@ -73,21 +73,19 @@ def test_get_items_returns_all():
     assert len(data.get_items()) == 3
 
 
-def test_get_categories_counts_and_sorts():
-    categories = data.get_categories()
-    slugs = [c["slug"] for c in categories]
+def test_get_franchises_counts_and_sorts():
+    franchises = data.get_franchises()
+    slugs = [f["slug"] for f in franchises]
     assert slugs == sorted(slugs)
-    counts = {c["slug"]: c["count"] for c in categories}
-    assert counts == {"classic": 1, "disney": 1, "hoerspiel": 1}
+    counts = {f["slug"]: f["count"] for f in franchises}
+    assert counts == {"die_drei_fragezeichen": 1, "disney": 1, "pixar": 1}
 
 
-def test_get_age_tags_unique_and_sorted_and_excludes_unset():
+def test_get_age_tags_bracket_ordered_and_excludes_unset():
     # item 1 has age_tag=None (no "all"/catch-all value) - must not show up as a tag.
-    assert data.get_age_tags() == ["3-6", "6-10"]
-
-
-def test_get_publishers_unique_and_sorted():
-    assert data.get_publishers() == ["Europa", "Kiddinx", "Walt Disney Records"]
+    # item 2 is "12_plus" and item 3 is "3_5" - a plain alphabetical sort would put
+    # "12_plus" first (string "1" < "3"), so this also verifies AGE_TAG_ORDER is used.
+    assert data.get_age_tags() == ["3_5", "12_plus"]
 
 
 def test_get_languages_unique_and_sorted():
@@ -95,7 +93,7 @@ def test_get_languages_unique_and_sorted():
 
 
 def test_get_genres_unique_and_sorted():
-    assert data.get_genres() == ["Abenteuer", "Krimi", "Märchen"]
+    assert data.get_genres() == ["adventure", "fairy_tale", "mystery"]
 
 
 def test_get_series_list_excludes_empty():
@@ -103,7 +101,7 @@ def test_get_series_list_excludes_empty():
 
 
 def test_get_release_decades_unique_sorted_excludes_missing():
-    # item 3 has release_date=None - must not produce a bogus decade.
+    # item 3 has source_release_year=None - must not produce a bogus decade.
     # Fixture items are 2019 (-> "2010") and 2020 (-> "2020").
     assert data.get_release_decades() == ["2010", "2020"]
 
@@ -133,29 +131,15 @@ def test_get_duration_buckets_only_returns_buckets_present_in_data():
 
 
 @pytest.mark.parametrize(
-    "value, expected_year",
-    [
-        (None, None),
-        ("", None),
-        ("not-a-date", None),
-        ("2019-03-15T00:00:00Z", "2019"),
-    ],
-)
-def test_release_year(value, expected_year):
-    assert data.release_year(value) == expected_year
-
-
-@pytest.mark.parametrize(
     "value, expected_decade",
     [
         (None, None),
-        ("", None),
-        ("not-a-date", None),
-        ("1999-12-31T00:00:00Z", "1990"),
-        ("2000-01-01T00:00:00Z", "2000"),
-        ("2009-12-31T00:00:00Z", "2000"),
-        ("2010-01-01T00:00:00Z", "2010"),
-        ("2019-03-15T00:00:00Z", "2010"),
+        (0, None),
+        (1999, "1990"),
+        (2000, "2000"),
+        (2009, "2000"),
+        (2010, "2010"),
+        (2019, "2010"),
     ],
 )
 def test_release_decade(value, expected_decade):

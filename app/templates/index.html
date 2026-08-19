@@ -4,8 +4,6 @@
 {% block title %}StorytimeFinder{% endblock %}
 
 {% block content %}
-<p class="principles">{{ t('principles') }}</p>
-
 <div class="search-form">
   <input
     type="search"
@@ -15,14 +13,24 @@
   >
 </div>
 
-{% if age_tags or series_list %}
+{% if franchises or age_tags or series_list %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
     <span class="filter-label">{{ t('filter_age') }}</span>
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
     {% for a in age_tags %}
-      <button type="button" class="chip" data-value="{{ a }}">{{ a }} {{ t('age_suffix') }}</button>
+      <button type="button" class="chip" data-value="{{ a }}">{{ t('age_tag_' ~ a) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if franchises %}
+  <div class="filter-group" data-filter-type="franchise">
+    <span class="filter-label">{{ t('filter_franchise') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for f in franchises %}
+      <button type="button" class="chip" data-value="{{ f.slug }}">{{ t('franchise_' ~ f.slug) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -39,7 +47,7 @@
 </div>
 {% endif %}
 
-{% set has_advanced = duration_buckets or genres or languages or publishers or release_decades %}
+{% set has_advanced = duration_buckets or genres or languages or release_decades %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
@@ -61,7 +69,7 @@
     <span class="filter-label">{{ t('filter_genre') }}</span>
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
     {% for g in genres %}
-      <button type="button" class="chip" data-value="{{ g }}">{{ g }}</button>
+      <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -72,16 +80,6 @@
     <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
     {% for code in languages %}
       <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if publishers %}
-  <div class="filter-group" data-filter-type="publisher">
-    <span class="filter-label">{{ t('filter_publisher') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for p in publishers %}
-      <button type="button" class="chip" data-value="{{ p }}">{{ p }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -106,6 +104,11 @@
       {% for item in items %}{{ item_card(item) }}{% endfor %}
     </div>
     <p class="empty" id="empty-message" hidden>{{ t('empty_filtered') }}</p>
+    <nav class="pagination" id="pagination" aria-label="{{ t('pagination_nav_label') }}" hidden>
+      <button type="button" class="pagination-btn" id="pagination-prev">{{ t('pagination_prev') }}</button>
+      <span class="pagination-status" id="pagination-status"></span>
+      <button type="button" class="pagination-btn" id="pagination-next">{{ t('pagination_next') }}</button>
+    </nav>
   {% else %}
     <p class="empty">{{ t('empty_catalog') }}</p>
   {% endif %}
@@ -116,9 +119,12 @@
   var grid = document.getElementById("card-grid");
   if (!grid) return;
 
+  var PAGE_SIZE = 24;
+
   var I18N = {
     resultsOne: {{ t('results_count_one') | tojson }},
-    resultsOther: {{ t('results_count_other') | tojson }}
+    resultsOther: {{ t('results_count_other') | tojson }},
+    paginationStatus: {{ t('pagination_status') | tojson }}
   };
 
   var searchInput = document.getElementById("search-input");
@@ -127,6 +133,11 @@
   var advancedToggle = document.getElementById("advanced-toggle");
   var emptyMessage = document.getElementById("empty-message");
   var resultsCount = document.getElementById("results-count");
+  var resultsSection = document.querySelector(".results");
+  var pagination = document.getElementById("pagination");
+  var paginationPrev = document.getElementById("pagination-prev");
+  var paginationNext = document.getElementById("pagination-next");
+  var paginationStatus = document.getElementById("pagination-status");
   var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
 
   var active = {};
@@ -135,31 +146,68 @@
     active[group.dataset.filterType] = activeChip ? activeChip.dataset.value : "";
   });
   var query = "";
+  var matches = [];
+  var currentPage = 1;
+
+  function renderPage(scrollIntoView) {
+    var totalPages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+    var start = (currentPage - 1) * PAGE_SIZE;
+    var pageCards = matches.slice(start, start + PAGE_SIZE);
+
+    cards.forEach(function (card) { card.hidden = true; });
+    pageCards.forEach(function (card) { card.hidden = false; });
+
+    resultsCount.textContent = (matches.length === 1 ? I18N.resultsOne : I18N.resultsOther).replace("{n}", matches.length);
+    if (emptyMessage) emptyMessage.hidden = matches.length !== 0;
+
+    if (pagination) {
+      pagination.hidden = totalPages <= 1;
+      paginationStatus.textContent = I18N.paginationStatus.replace("{page}", currentPage).replace("{total}", totalPages);
+      paginationPrev.disabled = currentPage <= 1;
+      paginationNext.disabled = currentPage >= totalPages;
+    }
+
+    if (scrollIntoView && resultsSection) {
+      resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   function applyFilters() {
-    var visible = 0;
     var q = query.trim().toLowerCase();
-    cards.forEach(function (card) {
-      var matches = q === "" || card.dataset.title.indexOf(q) !== -1;
-      if (matches) {
+    matches = cards.filter(function (card) {
+      var isMatch = q === "" || card.dataset.title.indexOf(q) !== -1;
+      if (isMatch) {
         for (var type in active) {
           if (active[type] !== "" && card.dataset[type] !== active[type]) {
-            matches = false;
+            isMatch = false;
             break;
           }
         }
       }
-      card.hidden = !matches;
-      if (matches) visible += 1;
+      return isMatch;
     });
-    resultsCount.textContent = (visible === 1 ? I18N.resultsOne : I18N.resultsOther).replace("{n}", visible);
-    if (emptyMessage) emptyMessage.hidden = visible !== 0;
+    currentPage = 1;
+    renderPage(false);
   }
 
   if (searchInput) {
     searchInput.addEventListener("input", function () {
       query = searchInput.value;
       applyFilters();
+    });
+  }
+
+  if (paginationPrev) {
+    paginationPrev.addEventListener("click", function () {
+      currentPage -= 1;
+      renderPage(true);
+    });
+  }
+  if (paginationNext) {
+    paginationNext.addEventListener("click", function () {
+      currentPage += 1;
+      renderPage(true);
     });
   }
 

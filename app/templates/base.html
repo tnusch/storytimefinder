@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}StorytimeFinder{% endblock %}</title>
   <meta name="description" content="{{ t('meta_description') }}">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%232b6cb0'/%3E%3Cpolygon points='38,28 74,50 38,72' fill='white'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23FF0000'/%3E%3Cpolygon points='38,28 74,50 38,72' fill='white'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script>
     (function () {
       var stored = localStorage.getItem("theme");
-      var theme = stored || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      var theme = stored === "light" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", theme);
     })();
   </script>
@@ -42,12 +45,12 @@
   <footer class="site-footer">
     <div class="wrap">
       <p class="attribution">
-        <span class="yt-badge" aria-hidden="true">
+        <!-- <span class="yt-badge" aria-hidden="true">
           <svg width="20" height="14" viewBox="0 0 90 64" xmlns="http://www.w3.org/2000/svg">
             <rect width="90" height="64" rx="14" fill="#FF0000"/>
             <polygon points="36,18 64,32 36,46" fill="#fff"/>
           </svg>
-        </span>
+        </span> -->
         {{ t('footer_attribution') }}
       </p>
       <p class="footer-links">

@@ -38,21 +38,25 @@ def get_generated_at() -> str | None:
     return load_catalog().get("generated_at")
 
 
-def get_categories() -> list[dict]:
+def get_franchises() -> list[dict]:
     counts: dict[str, int] = {}
     for item in get_items():
-        counts[item["category"]] = counts.get(item["category"], 0) + 1
+        franchise = item.get("franchise")
+        if not franchise:
+            continue
+        counts[franchise] = counts.get(franchise, 0) + 1
     return [{"slug": slug, "count": count} for slug, count in sorted(counts.items())]
 
 
+# Fixed bracket order (youngest to oldest) - mirrors AGE_BRACKETS in
+# refresh/refresh.py. Sorting age tags alphabetically would put "12_plus"
+# between "0_3" and "3_5" (string sort), so this fixed order is used instead.
+AGE_TAG_ORDER = ["0_3", "3_5", "6_8", "9_11", "12_plus"]
+
+
 def get_age_tags() -> list[str]:
-    tags = {item.get("age_tag") for item in get_items() if item.get("age_tag")}
-    return sorted(tags)
-
-
-def get_publishers() -> list[str]:
-    publishers = {item.get("publisher") for item in get_items() if item.get("publisher")}
-    return sorted(publishers)
+    present = {item.get("age_tag") for item in get_items() if item.get("age_tag")}
+    return [tag for tag in AGE_TAG_ORDER if tag in present]
 
 
 def get_languages() -> list[str]:
@@ -94,25 +98,15 @@ def get_duration_buckets() -> list[dict]:
     return [b for b in DURATION_BUCKETS if b["slug"] in present]
 
 
-def release_year(release_date: str | None) -> str | None:
-    if not release_date:
+def release_decade(source_release_year: int | None) -> str | None:
+    """Bucket a source release year down to its decade, e.g. 2019 -> '2010' (2010er/2010s)."""
+    if not source_release_year:
         return None
-    try:
-        return str(datetime.fromisoformat(release_date.replace("Z", "+00:00")).year)
-    except ValueError:
-        return None
-
-
-def release_decade(release_date: str | None) -> str | None:
-    """Bucket a release date down to its decade, e.g. 2019 -> '2010' (2010er/2010s)."""
-    year = release_year(release_date)
-    if year is None:
-        return None
-    return str((int(year) // 10) * 10)
+    return str((int(source_release_year) // 10) * 10)
 
 
 def get_release_decades() -> list[str]:
-    decades = {release_decade(item.get("release_date")) for item in get_items()}
+    decades = {release_decade(item.get("source_release_year")) for item in get_items()}
     decades.discard(None)
     return sorted(decades, key=int)
 

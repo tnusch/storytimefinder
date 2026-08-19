@@ -25,6 +25,7 @@ jobs:
       - name: Run refresh job
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python refresh/refresh.py
 
       - name: Commit updated catalog.json

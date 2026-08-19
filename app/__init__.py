@@ -9,7 +9,6 @@ def create_app() -> Flask:
 
     app.jinja_env.filters["duration"] = data.format_duration
     app.jinja_env.filters["duration_bucket"] = data.duration_bucket_slug
-    app.jinja_env.filters["release_year"] = data.release_year
     app.jinja_env.filters["release_decade"] = data.release_decade
     app.jinja_env.filters["local_date"] = data.format_date
 

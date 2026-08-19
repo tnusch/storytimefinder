@@ -14,6 +14,11 @@ INTERNAL.md
 data/storytimefinder.db
 data/storytimefinder.db-journal
 
+# Claude-generated metadata suggestions for manual review (see refresh.py's
+# generate_metadata_suggestions()) - a scratch staging file, not curated
+# truth; approved values get copied into refresh/overrides.py by hand.
+data/claude_suggestions.json
+
 # Vercel
 .vercel
 
