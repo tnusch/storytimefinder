@@ -55,9 +55,11 @@
       </p>
       <p class="footer-links">
         <a href="{{ url_for('main.impressum', lang=lang) }}">{{ t('footer_impressum') }}</a>
+        <span class="sep">&middot;</span>
+        <a href="https://github.com/tnusch/storytimefinder" target="_blank" rel="noopener noreferrer">{{ t('footer_github') }}</a>
         {% if generated_at %}
           <span class="sep">&middot;</span>
-          <span class="updated">{{ t('footer_updated') }} {{ generated_at | local_date(lang) }}</span>
+          <span class="updated" title="{{ generated_at | local_date(lang) }}">{{ t('footer_updated') }} {{ generated_at | relative_date(lang) }}</span>
         {% endif %}
       </p>
     </div>

@@ -45,6 +45,9 @@ OVERRIDE_FIELDS = (
     "franchise",
     "min_age",
     "source_release_year",
+    "mood",
+    "seasonal",
+    "awards",
 )
 
 

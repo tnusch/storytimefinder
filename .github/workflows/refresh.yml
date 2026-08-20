@@ -22,11 +22,21 @@ jobs:
       - name: Install refresh dependencies
         run: pip install -r refresh/requirements.txt
 
-      - name: Run refresh job
+      - name: Fetch new metadata
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python refresh/refresh.py
+        run: python refresh/refresh.py --fetch
+
+      # No human reviews claude_suggestions.json between these two steps in
+      # the scheduled run (unlike the local dev workflow) - --sync runs
+      # immediately after --fetch, on the same runner, so catalog.json stays
+      # up to date automatically every week. Suggestions still accumulate in
+      # data/claude_suggestions.json for later manual review; that file
+      # isn't committed here (gitignored), so review it locally after
+      # pulling a fresh --fetch, not from this workflow's output.
+      - name: Sync catalog
+        run: python refresh/refresh.py --sync
 
       - name: Commit updated catalog.json
         run: |

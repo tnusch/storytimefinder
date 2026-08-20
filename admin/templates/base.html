@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}StorytimeFinder Admin{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <span class="brand">StorytimeFinder Admin</span>
+      <nav class="admin-nav">
+        <a href="{{ url_for('admin.sources') }}" {% if request.endpoint == 'admin.sources' %}class="is-active"{% endif %}>1. Sources</a>
+        <a href="{{ url_for('admin.fetch') }}" {% if request.endpoint in ('admin.fetch', 'admin.fetch_run') %}class="is-active"{% endif %}>2. Fetch</a>
+        <a href="{{ url_for('admin.suggestions') }}" {% if request.endpoint in ('admin.suggestions', 'admin.suggestions_action', 'admin.suggestions_regenerate') %}class="is-active"{% endif %}>3. Suggestions</a>
+        <a href="{{ url_for('admin.sync') }}" {% if request.endpoint in ('admin.sync', 'admin.sync_run') %}class="is-active"{% endif %}>4. Sync</a>
+        <a href="{{ url_for('admin.values') }}" {% if request.endpoint in ('admin.values', 'admin.values_add') %}class="is-active"{% endif %}>Values</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-list">
+          {% for category, message in messages %}
+            <p class="flash flash-{{ category }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    // Opt-in: a submit button with data-loading-label gets disabled and
+    // relabeled the moment its form submits - useful for buttons that
+    // trigger a subprocess the page then blocks on (Fetch/Sync/regenerate),
+    // so a slow run reads as "in progress" rather than "did my click work?"
+    document.querySelectorAll("form").forEach(function (form) {
+      form.addEventListener("submit", function () {
+        var btn = form.querySelector("button[type=submit][data-loading-label]");
+        if (!btn) return;
+        btn.disabled = true;
+        btn.textContent = btn.dataset.loadingLabel;
+      });
+    });
+
+    // Suggestions screen's inline diff hints: clicking "Use" fills the
+    // suggested value into that field's own input/select/textarea (found
+    // by its enclosing <label>) without submitting anything - lets you
+    // review/edit it and pull in the rest of the form's existing values as
+    // normal before saving.
+    document.querySelectorAll(".diff-use-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var label = btn.closest("label");
+        var field = label && label.querySelector("[name]");
+        if (!field) return;
+        field.value = btn.dataset.value;
+      });
+    });
+  </script>
+</body>
+</html>

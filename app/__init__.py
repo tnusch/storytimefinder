@@ -11,6 +11,7 @@ def create_app() -> Flask:
     app.jinja_env.filters["duration_bucket"] = data.duration_bucket_slug
     app.jinja_env.filters["release_decade"] = data.release_decade
     app.jinja_env.filters["local_date"] = data.format_date
+    app.jinja_env.filters["relative_date"] = data.format_relative_date
 
     # A true Jinja global (not a context_processor value) so `t()` also works
     # inside macros imported via `{% from %}`, which don't inherit the

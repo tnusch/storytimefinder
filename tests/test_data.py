@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,9 @@ FAKE_CATALOG = {
             "series": None,
             "position_in_series": None,
             "genre": "adventure",
+            "mood": "calm",
+            "seasonal": None,
+            "awards": [{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2020}],
         },
         {
             "id": 2,
@@ -41,6 +45,9 @@ FAKE_CATALOG = {
             "series": "Die drei ???",
             "position_in_series": 78,
             "genre": "mystery",
+            "mood": "exciting",
+            "seasonal": "halloween",
+            "awards": [],
         },
         {
             "id": 3,
@@ -57,6 +64,8 @@ FAKE_CATALOG = {
             "series": None,
             "position_in_series": None,
             "genre": "fairy_tale",
+            # mood/seasonal/awards deliberately omitted - verifies the
+            # getters tolerate an item synced before this schema existed.
         },
     ],
 }
@@ -98,6 +107,31 @@ def test_get_genres_unique_and_sorted():
 
 def test_get_series_list_excludes_empty():
     assert data.get_series_list() == ["Die drei ???"]
+
+
+def test_get_moods_unique_and_sorted():
+    # item 3 has no "mood" key at all (pre-schema item) - must not error or
+    # produce a bogus entry.
+    assert data.get_moods() == ["calm", "exciting"]
+
+
+def test_get_seasonal_values_excludes_unset():
+    # item 1 has seasonal=None, item 3 has no "seasonal" key at all - neither
+    # should show up, only item 2's "halloween".
+    assert data.get_seasonal_values() == ["halloween"]
+
+
+def test_has_awards_true_when_any_item_has_a_nonempty_awards_list():
+    assert data.has_awards() is True
+
+
+def test_has_awards_false_when_none_do(monkeypatch):
+    no_awards_catalog = {
+        "generated_at": FAKE_CATALOG["generated_at"],
+        "items": [{**item, "awards": []} for item in FAKE_CATALOG["items"]],
+    }
+    monkeypatch.setattr(data, "_catalog_cache", no_awards_catalog)
+    assert data.has_awards() is False
 
 
 def test_get_release_decades_unique_sorted_excludes_missing():
@@ -174,3 +208,29 @@ def test_format_duration(seconds, expected):
 )
 def test_format_date(value, lang, expected):
     assert data.format_date(value, lang) == expected
+
+
+@pytest.mark.parametrize(
+    "value, lang, expected",
+    [
+        (None, "de", ""),
+        ("", "de", ""),
+        ("2026-08-16T12:00:00Z", "de", "heute"),
+        ("2026-08-15T12:00:00Z", "de", "gestern"),
+        ("2026-08-14T12:00:00Z", "de", "vor 2 Tagen"),
+        ("2026-08-10T12:00:00Z", "de", "vor 6 Tagen"),
+        ("2026-08-09T12:00:00Z", "de", "vor 1 Woche"),
+        ("2026-08-02T12:00:00Z", "de", "vor 2 Wochen"),
+        ("2026-07-01T12:00:00Z", "de", "01.07.2026"),
+        (None, "en", ""),
+        ("2026-08-16T12:00:00Z", "en", "today"),
+        ("2026-08-15T12:00:00Z", "en", "yesterday"),
+        ("2026-08-14T12:00:00Z", "en", "2 days ago"),
+        ("2026-08-09T12:00:00Z", "en", "1 week ago"),
+        ("2026-08-02T12:00:00Z", "en", "2 weeks ago"),
+        ("2026-07-01T12:00:00Z", "en", "1 Jul 2026"),
+    ],
+)
+def test_format_relative_date(value, lang, expected):
+    now = datetime(2026, 8, 16, 15, 0, 0, tzinfo=timezone.utc)
+    assert data.format_relative_date(value, lang, now=now) == expected

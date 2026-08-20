@@ -19,6 +19,11 @@ data/storytimefinder.db-journal
 # truth; approved values get copied into refresh/overrides.py by hand.
 data/claude_suggestions.json
 
+# Fetch-phase staging file (see refresh.py's --fetch/--sync split) - raw
+# metadata for items not yet synced, plus each source's current item-id
+# list for removal detection. Local/ephemeral, never curated truth.
+data/fetched_items.json
+
 # Vercel
 .vercel
 

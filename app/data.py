@@ -8,8 +8,10 @@ ever reads the denormalized catalog.json produced by refresh/refresh.py.
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
+
+from .i18n import translate
 
 CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "catalog.json"
 
@@ -67,6 +69,23 @@ def get_languages() -> list[str]:
 def get_genres() -> list[str]:
     values = {item.get("genre") for item in get_items() if item.get("genre")}
     return sorted(values)
+
+
+def get_moods() -> list[str]:
+    values = {item.get("mood") for item in get_items() if item.get("mood")}
+    return sorted(values)
+
+
+def get_seasonal_values() -> list[str]:
+    values = {item.get("seasonal") for item in get_items() if item.get("seasonal")}
+    return sorted(values)
+
+
+def has_awards() -> bool:
+    """Whether any catalog item has a non-empty awards list - gates whether
+    the award-winning filter toggle renders at all, same as the other
+    filter groups only rendering when there's something to filter by."""
+    return any(item.get("awards") for item in get_items())
 
 
 def get_series_list() -> list[str]:
@@ -128,6 +147,44 @@ def format_date(value: str | None, lang: str = "de") -> str:
     if lang == "en":
         return f"{parsed.day} {_EN_MONTHS[parsed.month - 1]} {parsed.year}"
     return parsed.strftime("%d.%m.%Y")
+
+
+def format_relative_date(value: str | None, lang: str = "de", now: datetime | None = None) -> str:
+    """Format an ISO 8601 timestamp as a short relative label ('heute'/
+    'today', 'vor 2 Tagen'/'2 days ago', ...). Falls back to the absolute
+    date (format_date()) once it's more than a month old - "vor 6 Wochen"
+    stops being a useful-at-a-glance label past that point, an absolute
+    date is.
+
+    `now` is only ever passed explicitly by tests - real callers always let
+    it default to the actual current time, computed fresh per request since
+    this is server-side rendered and "today" changes daily unlike the rest
+    of the (otherwise static per catalog refresh) page.
+    """
+    if not value:
+        return ""
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return value
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    now = now or datetime.now(timezone.utc)
+
+    delta_days = max((now.date() - parsed.date()).days, 0)
+    if delta_days == 0:
+        return translate(lang, "date_today")
+    if delta_days == 1:
+        return translate(lang, "date_yesterday")
+    if delta_days < 7:
+        return translate(lang, "date_days_ago_other", n=delta_days)
+
+    weeks = delta_days // 7
+    if weeks < 5:
+        key = "date_weeks_ago_one" if weeks == 1 else "date_weeks_ago_other"
+        return translate(lang, key, n=weeks)
+
+    return format_date(value, lang)
 
 
 def format_duration(seconds: int | None) -> str:

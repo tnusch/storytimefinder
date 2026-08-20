@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Sources - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Sources</h1>
+
+<section>
+  <h2>Add a new source</h2>
+  <form method="post" action="{{ url_for('admin.sources_add') }}" class="field-grid">
+    <label>
+      Type
+      <select name="type" required>
+        {% for t in source_types %}
+          <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      YouTube ID
+      <input type="text" name="youtube_id" required placeholder="OLAK5uy_... or UC... or PL...">
+    </label>
+    <label>
+      Label
+      <input type="text" name="label" required placeholder="Findet Nemo">
+    </label>
+    <label>
+      Language
+      <input type="text" name="language" value="de">
+    </label>
+    <label class="checkbox-label">
+      <input type="checkbox" name="active" checked>
+      Active
+    </label>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Add source</button>
+    </div>
+  </form>
+</section>
+
+<section>
+  <h2>Current sources ({{ sources|length }})</h2>
+  <table class="source-table">
+    <thead>
+      <tr><th>Active</th><th>Type</th><th>Label</th><th>YouTube ID</th><th>Language</th></tr>
+    </thead>
+    <tbody>
+      {% for s in sources %}
+      <tr class="{{ 'is-inactive' if not s.active }}">
+        <td>{{ "yes" if s.active else "no" }}</td>
+        <td>{{ s.type }}</td>
+        <td>{{ s.label }}</td>
+        <td><code>{{ s.youtube_id }}</code></td>
+        <td>{{ s.language }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

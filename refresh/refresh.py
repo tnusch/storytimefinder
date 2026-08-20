@@ -4,36 +4,60 @@ Standalone refresh job: YouTube Data API -> SQLite -> data/catalog.json
 Run this OUTSIDE of Vercel (GitHub Actions, a home-lab cron, or by hand).
 It never runs inside the Flask app / Vercel request path.
 
+Split into two independent phases - see run_fetch()/run_sync() below:
+  --fetch  talks to YouTube/Claude, writes ONLY to data/fetched_items.json
+           (raw metadata staging) and data/claude_suggestions.json (review
+           queue). Never touches storytimefinder.db or catalog.json.
+  --sync   the only phase that writes storytimefinder.db and catalog.json.
+           Reads data/fetched_items.json (from a prior --fetch) plus
+           overrides.py. Never touches the YouTube or Claude APIs.
+This lets curation (reviewing Claude's suggestions, editing overrides.py)
+happen between a --fetch and the --sync that actually publishes it, without
+either step blocking on the other. A --sync with no prior --fetch for a
+given source just skips it (logs a warning) rather than deleting its items.
+
 Usage:
-    python refresh/refresh.py
-    python refresh/refresh.py --log-responses  # also log raw YouTube API responses
-    python refresh/refresh.py --clean-db       # wipe the local DB first, full re-sync
-    python refresh/refresh.py --regenerate-suggestion YOUTUBE_ID  # refresh one item's Claude suggestion
+    python refresh/refresh.py --fetch                              # pull new metadata + suggestions only
+    python refresh/refresh.py --sync                                # rebuild storytimefinder.db + catalog.json from what's staged
+    python refresh/refresh.py --fetch --log-responses                # also log raw YouTube API responses
+    python refresh/refresh.py --fetch --clean-db                    # wipe storytimefinder.db first (see --clean-db's help)
+    python refresh/refresh.py --fetch --clean-fetched                # wipe fetched_items.json first, forcing a full re-fetch
+    python refresh/refresh.py --regenerate-suggestion YOUTUBE_ID    # refresh one item's Claude suggestion only
+
+--clean-db and --clean-fetched each wipe only their own file
+(storytimefinder.db / data/fetched_items.json respectively) - see their
+--help text for exactly what each does and doesn't force a re-fetch of.
 
 Environment:
-    YOUTUBE_API_KEY               required, YouTube Data API v3 key
+    YOUTUBE_API_KEY               required for --fetch, YouTube Data API v3 key
     ANTHROPIC_API_KEY             optional, Claude API key - used to generate each new
                                   item's Claude suggestion (description plus
                                   best-effort series/genre/franchise/min_age/
-                                  source_release_year) in one combined call (see
-                                  generate_metadata_suggestions()) - all seven fields
-                                  are written to data/claude_suggestions.json for
-                                  manual review, NEVER directly into the catalog (see
-                                  overrides.py). If unset, new items sync with no
-                                  suggestions at all.
+                                  source_release_year/mood/seasonal/awards) in one
+                                  combined call (see generate_metadata_suggestions()) -
+                                  all ten fields are written to data/claude_suggestions.json
+                                  for manual review, NEVER directly into the catalog (see
+                                  overrides.py). awards uses the web search tool to verify
+                                  real wins; the other nine fields never call out. If unset,
+                                  new items are fetched with no suggestions at all.
     STORYTIMEFINDER_DB_PATH       default: data/storytimefinder.db
     STORYTIMEFINDER_CATALOG_PATH  default: data/catalog.json
-    STORYTIMEFINDER_SUGGESTIONS_PATH  default: data/claude_suggestions.json
+    STORYTIMEFINDER_SUGGESTIONS_PATH     default: data/claude_suggestions.json
+    STORYTIMEFINDER_FETCHED_ITEMS_PATH   default: data/fetched_items.json
 
 Compliance notes (YouTube API Developer Policies §III.E):
   - We intentionally never fetch or store statistics (view/like/subscriber
     counts) - only snippet (title, thumbnail) and contentDetails (duration).
     That sidesteps the "re-verify stats within 30 days" requirement entirely.
   - We never compute a derived popularity/ranking score.
-  - This script is meant to be run on a schedule of at most 30 days
-    (weekly recommended); it fully re-syncs every active source and removes
-    items no longer returned by YouTube (deleted/private videos), so the
-    exported catalog always reflects current API state.
+  - --fetch is meant to be run on a schedule of at most 30 days (weekly
+    recommended) - it's the phase that enumerates each source's current
+    items via playlistItems.list, which is what --sync uses to delete items
+    no longer returned by YouTube. Running --fetch alone does NOT remove
+    anything from the live catalog by itself - --sync has to run afterward
+    for a detected removal to actually take effect, so in practice run them
+    back-to-back (as the GitHub Action does) unless you're deliberately
+    holding a --sync back for review.
 """
 
 from __future__ import annotations
@@ -74,6 +98,9 @@ DB_PATH = Path(os.environ.get("STORYTIMEFINDER_DB_PATH", ROOT / "data" / "storyt
 CATALOG_PATH = Path(os.environ.get("STORYTIMEFINDER_CATALOG_PATH", ROOT / "data" / "catalog.json"))
 SUGGESTIONS_PATH = Path(
     os.environ.get("STORYTIMEFINDER_SUGGESTIONS_PATH", ROOT / "data" / "claude_suggestions.json")
+)
+FETCHED_ITEMS_PATH = Path(
+    os.environ.get("STORYTIMEFINDER_FETCHED_ITEMS_PATH", ROOT / "data" / "fetched_items.json")
 )
 
 SCHEMA = """
@@ -124,6 +151,20 @@ CREATE TABLE IF NOT EXISTS items (
     -- source for this - YouTube's publishedAt is the audiobook upload date,
     -- deliberately not used here).
     source_release_year INTEGER,
+    -- Override-only, no API source, same as everything above. Single value
+    -- from MOOD_VALUES - a subjective/generative read of the story's tone,
+    -- not a factual claim, but still gated behind human review like every
+    -- other field (see overrides.py's docstring).
+    mood TEXT,
+    -- Override-only. Single value from SEASONAL_VALUES, or NULL for the
+    -- (expected-to-be-majority) non-seasonal case - never force a value.
+    seasonal TEXT,
+    -- Override-only. JSON-serialized array of {"name","category","year"}
+    -- objects, e.g. '[]' or '[{"name": "...", "category": "...", "year": 2026}]'.
+    -- Factual claims - Claude is asked to verify these with web search
+    -- rather than infer them, but still only ever a suggestion for a human
+    -- to review (see generate_metadata_suggestions()/AWARD_VALUES below).
+    awards TEXT NOT NULL DEFAULT '[]',
     last_refreshed TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -155,6 +196,34 @@ FRANCHISE_VALUES = {
     "benjamin_bluemchen",
     "die_drei_fragezeichen",
     "tkkg",
+}
+MOOD_VALUES = {
+    "calm",
+    "funny",
+    "spooky",
+    "adventurous",
+    "heartwarming",
+    "exciting",
+    "silly",
+    "gentle",
+}
+SEASONAL_VALUES = {
+    "winter",
+    "christmas",
+    "halloween",
+    "easter",
+    "summer",
+    "birthday",
+}
+# Starter list, not a claim of completeness - a soft consistency check (same
+# warning-not-block treatment as GENRE_VALUES/FRANCHISE_VALUES), meant to be
+# extended by hand as more real awards get curated. Seeded with the one
+# award already referenced indirectly in overrides.py's min_age docs
+# ("Deutscher Kinderhoerbuchpreis BEO Kategorie II/III") plus its general
+# (non-children's-specific) sibling award.
+AWARD_VALUES = {
+    "Deutscher Hörbuchpreis",
+    "Deutscher Kinderhörbuchpreis",
 }
 
 # (slug, inclusive lower bound, exclusive upper bound - None means no upper
@@ -341,7 +410,13 @@ def fetch_album_details(youtube, playlist_id: str) -> dict | None:
 
 
 SUGGESTION_MODEL = "claude-haiku-4-5-20251001"
-SUGGESTION_MAX_TOKENS = 500
+# Raised from the original 500 to leave headroom for the web search tool's
+# result blocks (see generate_metadata_suggestions()) on top of the JSON
+# answer itself.
+SUGGESTION_MAX_TOKENS = 1024
+# Web search is only meant to verify awards - max_uses bounds it so a single
+# item's suggestion call can't spiral into many searches.
+AWARDS_WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 3}
 DESCRIPTION_LANGUAGE_NAMES = {"de": "German", "en": "English"}
 SUGGESTION_MAX_ATTEMPTS = 2
 
@@ -355,6 +430,9 @@ EMPTY_SUGGESTIONS = {
     "franchise": None,
     "min_age": None,
     "source_release_year": None,
+    "mood": None,
+    "seasonal": None,
+    "awards": [],
 }
 
 _TITLE_PAREN_RE = re.compile(r"[\(\[][^)\]]*[\)\]]")
@@ -387,10 +465,26 @@ def _description_leaks_title(description: str, title: str) -> bool:
 
 def _parse_suggestion_json(raw_text: str) -> dict | None:
     """Parse Claude's JSON response, tolerating a ```json ... ``` code fence
-    (a common LLM habit even when told not to use one)."""
+    (a common LLM habit even when told not to use one) and, since the web
+    search tool was added for awards (see AWARDS_WEB_SEARCH_TOOL), a bit of
+    explanatory prose Claude sometimes wraps around the JSON after reasoning
+    about search results - despite being told the final message must be
+    ONLY the object. Falls back to extracting the first {...} span and
+    parsing that if the whole string isn't valid JSON on its own."""
     try:
-        return json.loads(_CODE_FENCE_RE.sub("", raw_text.strip()))
-    except (json.JSONDecodeError, AttributeError, TypeError):
+        text = _CODE_FENCE_RE.sub("", raw_text.strip())
+    except AttributeError:
+        return None
+    try:
+        return json.loads(text)
+    except (json.JSONDecodeError, TypeError):
+        pass
+    start, end = text.find("{"), text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return None
+    try:
+        return json.loads(text[start : end + 1])
+    except json.JSONDecodeError:
         return None
 
 
@@ -408,13 +502,43 @@ def _clean_int(value) -> int | None:
     return None
 
 
+def _validate_awards(raw) -> list[dict]:
+    """Coerce/validate a suggested `awards` value - drops anything that
+    isn't a well-formed {"name", "category", "year"} object, clamps `year`
+    to a plausible range, and logs (doesn't drop) an entry whose `name`
+    isn't in AWARD_VALUES, same warning-not-block treatment as genre/
+    franchise: AWARD_VALUES is a starter list, not a hard allowlist."""
+    if not isinstance(raw, list):
+        return []
+    cleaned = []
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        name = _clean_str(entry.get("name"))
+        if not name:
+            continue
+        if name not in AWARD_VALUES:
+            log.warning(
+                "Suggested award %r is not in AWARD_VALUES %s - keeping it, add it to the "
+                "list by hand if it's legitimate",
+                name, sorted(AWARD_VALUES),
+            )
+        year = _clean_int(entry.get("year"))
+        if year is not None and not (1900 <= year <= 2100):
+            year = None
+        cleaned.append({"name": name, "category": _clean_str(entry.get("category")), "year": year})
+    return cleaned
+
+
 def _validate_suggested_fields(raw: dict) -> dict:
-    """Coerce/validate the six non-description fields from a parsed Claude
-    response - genre/franchise are dropped (set None) if Claude proposed a
-    value outside the fixed lists, min_age/source_release_year are dropped if
-    not a sane non-negative int / plausible year. These are suggestions for a
-    human to review (see save_suggestions()), never written to the catalog
-    directly, but there's no reason to keep an obviously-bad value around."""
+    """Coerce/validate the nine non-description fields from a parsed Claude
+    response - genre/franchise/mood/seasonal are dropped (set None) if
+    Claude proposed a value outside their fixed lists, min_age/
+    source_release_year are dropped if not a sane non-negative int /
+    plausible year, awards go through _validate_awards(). These are
+    suggestions for a human to review (see save_suggestions()), never
+    written to the catalog directly, but there's no reason to keep an
+    obviously-bad value around."""
     genre = _clean_str(raw.get("genre"))
     if genre not in GENRE_VALUES:
         genre = None
@@ -427,6 +551,12 @@ def _validate_suggested_fields(raw: dict) -> dict:
     source_release_year = _clean_int(raw.get("source_release_year"))
     if source_release_year is not None and not (1850 <= source_release_year <= 2100):
         source_release_year = None
+    mood = _clean_str(raw.get("mood"))
+    if mood not in MOOD_VALUES:
+        mood = None
+    seasonal = _clean_str(raw.get("seasonal"))
+    if seasonal not in SEASONAL_VALUES:
+        seasonal = None
     return {
         "series": _clean_str(raw.get("series")),
         "position_in_series": _clean_int(raw.get("position_in_series")),
@@ -434,18 +564,32 @@ def _validate_suggested_fields(raw: dict) -> dict:
         "franchise": franchise,
         "min_age": min_age,
         "source_release_year": source_release_year,
+        "mood": mood,
+        "seasonal": seasonal,
+        "awards": _validate_awards(raw.get("awards")),
     }
+
+
+def _final_text_block(message) -> str:
+    """Extract the answer text from a Claude response. Can't just use
+    content[0].text - with the web search tool enabled (see
+    generate_metadata_suggestions()), the response may include
+    server_tool_use/web_search_tool_result blocks *before* the final text
+    block, so content[0] isn't reliably the answer anymore. Returns "" if no
+    text block is present at all (e.g. the model only emitted tool calls)."""
+    text_blocks = [block.text for block in message.content if getattr(block, "type", None) == "text"]
+    return text_blocks[-1] if text_blocks else ""
 
 
 def generate_metadata_suggestions(claude_client, title: str, language: str) -> dict:
     """One combined Claude call per new item: a description, plus
     best-effort suggestions for series/position_in_series/genre/franchise/
-    min_age/source_release_year - a single request instead of seven, to keep
-    token spend down. Only called for items not already in the DB (see
-    sync_source_items) - already-synced items don't trigger another call
-    (and more API usage) on every re-sync.
+    min_age/source_release_year/mood/seasonal/awards - a single request
+    instead of ten, to keep token spend down. Only called for items not
+    already in the DB (see sync_source_items) - already-synced items don't
+    trigger another call (and more API usage) on every re-sync.
 
-    None of these seven fields are EVER written to the catalog/DB directly -
+    None of these ten fields are EVER written to the catalog/DB directly -
     all are suggestions only, for a human to review in
     data/claude_suggestions.json (see save_suggestions()) and, if they agree,
     copy into overrides.py by hand. overrides.py always wins; nothing here is
@@ -453,23 +597,33 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
     sync_source_items(), which reads `description` from ITEM_OVERRIDES
     exactly like every other field.
 
-    Returns a dict with all of EMPTY_SUGGESTIONS' keys, each None if the
-    client is missing, the call fails outright, or that particular field
-    wasn't confidently determined. The description must never repeat the
-    item's own title/name back - the title is already shown right next to it
-    on the card, so that would be redundant. Since an LLM won't reliably
-    honor a "don't mention X" instruction on every call,
-    _description_leaks_title() checks the actual output and, if it still
-    names the title, retries once with a firmer prompt (metadata fields get
-    regenerated too, which is free within the same retry); if it leaks
-    again, the description is dropped but whatever metadata was parsed is
-    still returned.
+    mood/seasonal are generative judgment calls (no web search needed -
+    the prompt tells Claude not to search for them); awards is a factual
+    claim, so the web search tool (AWARDS_WEB_SEARCH_TOOL) is enabled on
+    this call specifically so Claude can verify a real win instead of
+    guessing. That's the only reason this call has a tool at all - the
+    other nine fields never need one.
+
+    Returns a dict with all of EMPTY_SUGGESTIONS' keys, each None (or `[]`
+    for awards) if the client is missing, the call fails outright, or that
+    particular field wasn't confidently determined. The description must
+    never repeat the item's own title/name back - the title is already
+    shown right next to it on the card, so that would be redundant. Since
+    an LLM won't reliably honor a "don't mention X" instruction on every
+    call, _description_leaks_title() checks the actual output and, if it
+    still names the title, retries once with a firmer prompt (metadata
+    fields get regenerated too, which is free within the same retry); if it
+    leaks again, the description is dropped but whatever metadata was
+    parsed is still returned.
     """
     if claude_client is None:
         return dict(EMPTY_SUGGESTIONS)
     language_name = DESCRIPTION_LANGUAGE_NAMES.get(language, language)
     genre_list = ", ".join(sorted(GENRE_VALUES))
     franchise_list = ", ".join(sorted(FRANCHISE_VALUES))
+    mood_list = ", ".join(sorted(MOOD_VALUES))
+    seasonal_list = ", ".join(sorted(SEASONAL_VALUES))
+    award_list = ", ".join(sorted(AWARD_VALUES))
     parsed = None
     for attempt in range(SUGGESTION_MAX_ATTEMPTS):
         prompt = (
@@ -490,8 +644,24 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
             '- "source_release_year": the year the SOURCE film or book this is based on was '
             "originally released (not this audiobook's own release) as an integer, only if "
             "known, otherwise null.\n"
-            "Only fill in a field if you're reasonably confident - use null rather than "
-            "guessing."
+            f'- "mood": exactly one of [{mood_list}] - your best-effort subjective read of the '
+            "overall tone from the title/franchise/description context. This is a creative "
+            "judgment call, not a factual lookup - do not use web search for this, always "
+            "provide your best guess rather than null.\n"
+            f'- "seasonal": exactly one of [{seasonal_list}] if the story is clearly tied to a '
+            "specific season or holiday (e.g. explicitly Christmas- or Halloween-themed), "
+            "otherwise null. Most titles are NOT seasonal - like mood, this is a subjective "
+            "judgment call, not a web search - only set it when obvious, don't force a value.\n"
+            '- "awards": an array of {"name": ..., "category": ..., "year": ...} objects for '
+            "real, verifiable awards this SPECIFIC title has actually won - unlike the fields "
+            "above, this IS a factual claim, so use web search to check rather than guessing. "
+            f"Prefer these known award names when they apply: [{award_list}]. Return an empty "
+            "array if you don't find a real, verifiable win - never guess or invent one.\n"
+            "Only fill in a field if you're reasonably confident - use null (or an empty array "
+            "for awards) rather than guessing, except mood which should always get a value. "
+            "If you use web search to check for awards, your FINAL message must still contain "
+            "ONLY the JSON object - do not add any explanation of what you searched for or found "
+            "before or after it."
         )
         if attempt > 0:
             prompt += (
@@ -504,12 +674,13 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
                 model=SUGGESTION_MODEL,
                 max_tokens=SUGGESTION_MAX_TOKENS,
                 messages=[{"role": "user", "content": prompt}],
+                tools=[AWARDS_WEB_SEARCH_TOOL],
             )
         except Exception as exc:
             log.warning("Claude metadata suggestion failed for %r: %s", title, exc)
             return dict(EMPTY_SUGGESTIONS)
 
-        raw_text = message.content[0].text
+        raw_text = _final_text_block(message)
         parsed = _parse_suggestion_json(raw_text)
         if parsed is None:
             log.warning("Claude returned unparsable JSON for %r: %r", title, raw_text)
@@ -548,18 +719,50 @@ def save_suggestions(suggestions: dict) -> None:
     )
 
 
+def load_fetched_items() -> dict:
+    """Load the fetch-phase staging file (see fetch_source()/save_fetched_items()).
+
+    Shape: {"sources": {source_youtube_id: {"current_item_ids": [...], "fetched_at": ...}},
+            "items": {entry_id: {...entry fields..., "source_youtube_id": ...}}}
+    `sources` is how sync_source() detects removals without ever calling the
+    YouTube API itself; `items` is raw metadata for not-yet-synced items,
+    pruned by sync_source() once it consumes each one. Tolerates a missing
+    or corrupt file - starts fresh rather than failing the whole run over a
+    scratch file.
+    """
+    if not FETCHED_ITEMS_PATH.exists():
+        return {"sources": {}, "items": {}}
+    try:
+        data = json.loads(FETCHED_ITEMS_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        log.warning("Could not read %s - starting with no staged fetch data", FETCHED_ITEMS_PATH)
+        return {"sources": {}, "items": {}}
+    data.setdefault("sources", {})
+    data.setdefault("items", {})
+    return data
+
+
+def save_fetched_items(fetched_items: dict) -> None:
+    FETCHED_ITEMS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    FETCHED_ITEMS_PATH.write_text(
+        json.dumps(fetched_items, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8"
+    )
+
+
 def record_suggestion(suggestions: dict, entry_id: str, title: str, result: dict) -> None:
     """Add/update one item's entry in the in-memory suggestions accumulator -
     only if Claude proposed at least one field worth a human reviewing (an
-    all-null suggestion isn't worth cluttering the file with). This now
-    includes `description` too, same as the other six fields - nothing from
-    Claude reaches the catalog/DB directly (see sync_source_items()); a
-    human has to copy an approved value into overrides.py by hand. `suggestions`
-    is mutated in place; see save_suggestions() for the eventual write, and
-    load_suggestions() for why previously-recorded entries for other items
-    are preserved across runs."""
+    all-empty suggestion isn't worth cluttering the file with - `[]` counts
+    as empty here too, same as None, since that's awards' "nothing found"
+    default). This now includes `description` too, same as the other fields
+    - nothing from Claude reaches the catalog/DB directly (see
+    sync_source_items()); a human has to copy an approved value into
+    overrides.py by hand. `suggestions` is mutated in place; see
+    save_suggestions() for the eventual write, and load_suggestions() for
+    why previously-recorded entries for other items are preserved across
+    runs."""
     fields = {key: result.get(key) for key in EMPTY_SUGGESTIONS}
-    if not any(value is not None for value in fields.values()):
+    if not any(value not in (None, []) for value in fields.values()):
         return
     suggestions[entry_id] = {
         "title": title,
@@ -666,13 +869,32 @@ def get_existing_items(conn: sqlite3.Connection, source_id: int) -> dict[str, sq
     }
 
 
+def get_existing_items_by_youtube_id(conn: sqlite3.Connection, source_youtube_id: str) -> dict[str, sqlite3.Row]:
+    """Same as get_existing_items(), but looked up by the source's own
+    youtube_id rather than its DB id - tolerates the source having no
+    `sources` row at all yet (a source that's never been synced), returning
+    an empty dict rather than erroring. Read-only; used by fetch_source(),
+    which must never write to the `sources`/`items` tables (see its
+    docstring) - this lets it still know what's already synced without
+    calling sync_sources() first.
+    """
+    conn.row_factory = sqlite3.Row
+    source_row = conn.execute("SELECT id FROM sources WHERE youtube_id = ?", (source_youtube_id,)).fetchone()
+    if source_row is None:
+        return {}
+    return {
+        row["video_id"]: row
+        for row in conn.execute("SELECT * FROM items WHERE source_id = ?", (source_row["id"],)).fetchall()
+    }
+
+
 def row_to_entry(row: sqlite3.Row) -> dict:
     """Rebuild an entry dict from an already-synced DB row - no API call needed.
 
     No `description` here either, for the same reason build_track_entries()/
     build_album_entry() don't carry one - it's computed fresh from
-    ITEM_OVERRIDES every time in sync_source_items(), never read back off a
-    prior entry.
+    ITEM_OVERRIDES every time in sync_source(), never read back off a prior
+    entry.
     """
     return {
         "id": row["video_id"],
@@ -683,53 +905,105 @@ def row_to_entry(row: sqlite3.Row) -> dict:
     }
 
 
-def sync_source_items(
-    conn: sqlite3.Connection, youtube, claude_client, source: sqlite3.Row, suggestions: dict
-) -> tuple[int, int, int]:
-    """Sync one source's items. Returns (added, updated, removed).
+def fetch_source(youtube, claude_client, source: dict, conn: sqlite3.Connection, fetched_items: dict, suggestions: dict) -> int:
+    """Fetch phase for one source. Returns how many new items were fetched.
 
-    Already-synced entries are rebuilt from the DB instead of re-fetched from
-    the API - videos().list/playlists().list are only called for video ids
-    that aren't in the DB yet, to avoid burning quota on unchanged items (and
-    to avoid regenerating each item's Claude description/suggestions on every
-    run). playlistItems.list is still always called (cheap - 1 unit/page)
-    since it's the only way to detect removals.
+    Always enumerates the source's current items via playlistItems.list
+    (cheap, 1 unit/page) and records that full id list into
+    `fetched_items["sources"][source_youtube_id]` - this is what sync_source()
+    later uses to detect removals, since sync never calls the YouTube API
+    itself. Then fetches full metadata + a Claude suggestion (the expensive
+    calls) only for items not already synced (checked read-only via
+    get_existing_items_by_youtube_id() - never via sync_sources(), which
+    this never calls) and not already staged from a previous --fetch run,
+    storing the result into `fetched_items["items"]`.
+
+    `source` is a plain dict from sources.py's SOURCES list, not a DB row -
+    deliberately, so this works correctly for a source that's never been
+    synced before. Writes ONLY to the in-memory `fetched_items`/`suggestions`
+    dicts (saved by the caller) - never to the database or catalog.json.
     """
     if source["type"] == "channel":
         playlist_id = resolve_uploads_playlist_id(youtube, source["youtube_id"])
         if playlist_id is None:
             log.warning("Channel %s (%s) not found, skipping", source["youtube_id"], source["label"])
-            return (0, 0, 0)
+            return 0
     else:
         playlist_id = source["youtube_id"]
 
     video_ids = fetch_playlist_video_ids(youtube, playlist_id)
-    existing = get_existing_items(conn, source["id"])
+    current_item_ids = [playlist_id] if source["type"] == "album" else video_ids
+
+    fetched_items["sources"][source["youtube_id"]] = {
+        "current_item_ids": current_item_ids,
+        "fetched_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    existing = get_existing_items_by_youtube_id(conn, source["youtube_id"])
+    staged_items = fetched_items["items"]
 
     if source["type"] == "album":
-        if playlist_id in existing:
-            entry = row_to_entry(existing[playlist_id])
-            entry["title"] = source["label"]  # sources.py always wins over the stored title
-            entries = [entry]
-        else:
-            video_details = fetch_video_details(youtube, video_ids)
-            entries = build_album_entry(
-                youtube,
-                playlist_id,
-                video_ids,
-                video_details,
-                claude_client,
-                source["language"],
-                source["label"],
-                suggestions,
-            )
+        if playlist_id in existing or playlist_id in staged_items:
+            return 0
+        video_details = fetch_video_details(youtube, video_ids)
+        entries = build_album_entry(
+            youtube, playlist_id, video_ids, video_details, claude_client, source["language"], source["label"], suggestions,
+        )
     else:
-        new_ids = [vid for vid in video_ids if vid not in existing]
-        video_details = fetch_video_details(youtube, new_ids) if new_ids else {}
-        entries = [row_to_entry(existing[vid]) for vid in video_ids if vid in existing]
-        entries += build_track_entries(new_ids, video_details, claude_client, source["language"], suggestions)
+        new_ids = [vid for vid in video_ids if vid not in existing and vid not in staged_items]
+        if not new_ids:
+            return 0
+        video_details = fetch_video_details(youtube, new_ids)
+        entries = build_track_entries(new_ids, video_details, claude_client, source["language"], suggestions)
 
-    existing = {vid: row["id"] for vid, row in existing.items()}
+    for entry in entries:
+        staged_items[entry["id"]] = {**entry, "source_youtube_id": source["youtube_id"]}
+
+    return len(entries)
+
+
+def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: dict) -> tuple[int, int, int] | None:
+    """Sync phase for one source. Returns (added, updated, removed), or None
+    (logging a warning, touching nothing) if this source has no staged fetch
+    data at all yet - run --fetch first.
+
+    Applies whatever fetch_source() staged in `fetched_items` into the
+    database: `current_item_ids` (recorded per source at fetch time) is
+    compared against what's already in the DB to find both new items to
+    insert (pulled from `fetched_items["items"]`, then pruned from there
+    once consumed) and stale ones to delete - the same removal-detection
+    the old combined sync used to do inline, just using data staged earlier
+    instead of a live playlistItems.list call. Never calls the YouTube or
+    Claude APIs.
+    """
+    staged_source = fetched_items["sources"].get(source["youtube_id"])
+    if staged_source is None:
+        log.warning(
+            "No fetched data for source %s (%s) - run --fetch first, skipping",
+            source["youtube_id"], source["label"],
+        )
+        return None
+
+    current_item_ids = staged_source["current_item_ids"]
+    staged_items = fetched_items["items"]
+    existing = get_existing_items(conn, source["id"])
+    existing_ids = {vid: row["id"] for vid, row in existing.items()}
+
+    entries = []
+    for entry_id in current_item_ids:
+        if entry_id in existing:
+            entry = row_to_entry(existing[entry_id])
+            if source["type"] == "album":
+                entry["title"] = source["label"]  # sources.py always wins over the stored title
+            entries.append(entry)
+        elif entry_id in staged_items:
+            entries.append(staged_items[entry_id])
+        else:
+            log.warning(
+                "Item %s (source %s) is listed as current but has no staged metadata - "
+                "run --fetch again, skipping this item",
+                entry_id, source["youtube_id"],
+            )
 
     added = updated = 0
     seen_ids = set()
@@ -758,8 +1032,17 @@ def sync_source_items(
         min_age = override.get("min_age")
         age_tag = derive_age_tag(min_age)
         source_release_year = override.get("source_release_year")
+        mood = override.get("mood")
+        if mood and mood not in MOOD_VALUES:
+            log.warning("Item %s: mood %r is not in MOOD_VALUES %s", entry_id, mood, sorted(MOOD_VALUES))
+        seasonal = override.get("seasonal")
+        if seasonal and seasonal not in SEASONAL_VALUES:
+            log.warning(
+                "Item %s: seasonal %r is not in SEASONAL_VALUES %s", entry_id, seasonal, sorted(SEASONAL_VALUES)
+            )
+        awards_json = json.dumps(override.get("awards") or [], ensure_ascii=False)
 
-        if entry_id in existing:
+        if entry_id in existing_ids:
             conn.execute(
                 """
                 UPDATE items
@@ -767,6 +1050,7 @@ def sync_source_items(
                     youtube_music_url = ?, description = ?,
                     series = ?, position_in_series = ?,
                     genre = ?, franchise = ?, min_age = ?, age_tag = ?, source_release_year = ?,
+                    mood = ?, seasonal = ?, awards = ?,
                     last_refreshed = ?
                 WHERE id = ?
                 """,
@@ -783,8 +1067,11 @@ def sync_source_items(
                     min_age,
                     age_tag,
                     source_release_year,
+                    mood,
+                    seasonal,
+                    awards_json,
                     now,
-                    existing[entry_id],
+                    existing_ids[entry_id],
                 ),
             )
             updated += 1
@@ -795,8 +1082,8 @@ def sync_source_items(
                     (source_id, video_id, title, thumbnail_url, duration_seconds,
                      youtube_music_url, description,
                      series, position_in_series, genre, franchise, min_age, age_tag,
-                     source_release_year, last_refreshed)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     source_release_year, mood, seasonal, awards, last_refreshed)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     source["id"],
@@ -813,12 +1100,16 @@ def sync_source_items(
                     min_age,
                     age_tag,
                     source_release_year,
+                    mood,
+                    seasonal,
+                    awards_json,
                     now,
                 ),
             )
             added += 1
+            staged_items.pop(entry_id, None)  # consumed - prune from the fetch cache
 
-    stale_ids = [row_id for eid, row_id in existing.items() if eid not in seen_ids]
+    stale_ids = [row["id"] for vid, row in existing.items() if vid not in seen_ids]
     removed = len(stale_ids)
     if stale_ids:
         conn.executemany("DELETE FROM items WHERE id = ?", [(rid,) for rid in stale_ids])
@@ -827,40 +1118,62 @@ def sync_source_items(
     return (added, updated, removed)
 
 
-def regenerate_suggestion(conn: sqlite3.Connection, claude_client, youtube_id: str, suggestions: dict) -> bool:
-    """Force-regenerate one already-synced item's Claude suggestion (description
-    plus the other six fields) and record it into `suggestions` for review.
+def regenerate_suggestion(
+    conn: sqlite3.Connection, claude_client, youtube_id: str, suggestions: dict, fetched_items: dict | None = None
+) -> bool:
+    """Force-regenerate one item's Claude suggestion (description plus the
+    other nine fields) and record it into `suggestions` for review.
 
     `youtube_id` is the item's video_id column - a real YouTube video id for
     'channel'/'playlist' sources, or the playlist/album id for an 'album'
     source. Unlike the normal sync path, this always calls Claude regardless
     of whether the item is "new" - it's an explicit, single-item override of
     the quota-saving reuse rule, for getting a fresh suggestion to review
-    without a full --clean-db resync. Returns False (and logs an error) if no
-    item with that id exists.
+    without a full --clean-db resync.
 
-    Deliberately does NOT touch the `items` table - description is
-    override-only now, same as every other suggested field (see
-    sync_source_items()), so there's nothing for this to write to the DB;
-    it only updates the review file. Run refresh.py again after copying an
-    approved value into overrides.py to actually apply it.
+    Looks up the item's title/language from storytimefinder.db first (the
+    common case - it's already synced). If the DB has no row for it - e.g.
+    --fetch has staged it into data/fetched_items.json but --sync hasn't run
+    locally yet, so nothing's in the DB even though the item is perfectly
+    real - falls back to that staging data instead, cross-referencing
+    SOURCES for the language (staged items don't carry it directly, only
+    their source does). Returns False (and logs an error) if the item isn't
+    found in either place.
+
+    Deliberately does NOT touch the `items` table either way - description
+    is override-only now, same as every other suggested field (see
+    sync_source()), so there's nothing for this to write to the DB; it only
+    updates the review file. Run refresh.py again after copying an approved
+    value into overrides.py to actually apply it.
     """
     conn.row_factory = sqlite3.Row
     row = conn.execute(
         """
-        SELECT items.id, items.title, sources.language
+        SELECT items.title, sources.language
         FROM items JOIN sources ON sources.id = items.source_id
         WHERE items.video_id = ?
         """,
         (youtube_id,),
     ).fetchone()
-    if row is None:
-        log.error("No item found with video id %r", youtube_id)
-        return False
 
-    result = generate_metadata_suggestions(claude_client, row["title"], row["language"])
-    record_suggestion(suggestions, youtube_id, row["title"], result)
-    log.info("Regenerated suggestion for %r (%s): %r", row["title"], youtube_id, result)
+    if row is not None:
+        title, language = row["title"], row["language"]
+    else:
+        staged = (fetched_items or {}).get("items", {}).get(youtube_id)
+        if staged is None:
+            log.error(
+                "No item found with video id %r in storytimefinder.db or data/fetched_items.json "
+                "- run --fetch first",
+                youtube_id,
+            )
+            return False
+        title = staged["title"]
+        source = next((s for s in SOURCES if s["youtube_id"] == staged.get("source_youtube_id")), None)
+        language = source["language"] if source else "de"
+
+    result = generate_metadata_suggestions(claude_client, title, language)
+    record_suggestion(suggestions, youtube_id, title, result)
+    log.info("Regenerated suggestion for %r (%s): %r", title, youtube_id, result)
     return True
 
 
@@ -872,6 +1185,7 @@ def export_catalog(conn: sqlite3.Connection) -> int:
                items.youtube_music_url, items.description,
                items.series, items.position_in_series,
                items.genre, items.franchise, items.min_age, items.age_tag, items.source_release_year,
+               items.mood, items.seasonal, items.awards,
                sources.language
         FROM items
         JOIN sources ON sources.id = items.source_id
@@ -880,9 +1194,18 @@ def export_catalog(conn: sqlite3.Connection) -> int:
         """
     ).fetchall()
 
+    catalog_items = []
+    for row in rows:
+        item = dict(row)
+        # awards is stored as a JSON TEXT column (see SCHEMA) - decode it
+        # back into a real array so catalog.json holds nested JSON, not a
+        # JSON-string-within-JSON.
+        item["awards"] = json.loads(item["awards"]) if item.get("awards") else []
+        catalog_items.append(item)
+
     catalog = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "items": [dict(row) for row in rows],
+        "items": catalog_items,
     }
 
     CATALOG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -891,34 +1214,233 @@ def export_catalog(conn: sqlite3.Connection) -> int:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--log-responses",
-        action="store_true",
-        help="Log raw YouTube API responses (verbose - useful for debugging sources/overrides).",
-    )
-    parser.add_argument(
-        "--clean-db",
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument(
+        "--fetch",
         action="store_true",
         help=(
-            "Delete the local SQLite DB before syncing, forcing a full re-sync of every "
-            "source - including re-fetching every item's API data and regenerating every "
-            "item's Claude suggestion, since none of them will be 'already synced' anymore."
+            "Fetch phase: pull new items' metadata from YouTube and a Claude suggestion for "
+            "each, staging both into data/fetched_items.json and data/claude_suggestions.json. "
+            "Never touches storytimefinder.db or catalog.json - run --sync afterward to "
+            "actually publish anything this finds."
         ),
     )
-    parser.add_argument(
+    mode.add_argument(
+        "--sync",
+        action="store_true",
+        help=(
+            "Sync phase: the only mode that writes storytimefinder.db and catalog.json. Reads "
+            "whatever the most recent --fetch staged (plus overrides.py) - never touches the "
+            "YouTube or Claude APIs itself. A source with no prior --fetch is skipped with a "
+            "warning, not treated as having zero items."
+        ),
+    )
+    mode.add_argument(
         "--regenerate-suggestion",
         metavar="YOUTUBE_ID",
         help=(
             "Regenerate the Claude suggestion (description plus the other six fields) for a "
             "single already-synced item (its video id, or playlist/album id for an 'album' "
-            "source) and write it to data/claude_suggestions.json for review - skips syncing "
-            "every other source, and doesn't touch the items table (description is "
-            "override-only, like every other suggested field - see overrides.py). Requires "
-            "ANTHROPIC_API_KEY; does not touch the YouTube API."
+            "source) and write it to data/claude_suggestions.json for review. Like --fetch, "
+            "never touches storytimefinder.db or catalog.json. Requires ANTHROPIC_API_KEY; "
+            "does not touch the YouTube API."
+        ),
+    )
+    parser.add_argument(
+        "--log-responses",
+        action="store_true",
+        help="With --fetch: also log raw YouTube API responses (verbose - useful for debugging).",
+    )
+    parser.add_argument(
+        "--clean-db",
+        action="store_true",
+        help=(
+            "Delete the local SQLite DB first. Only affects storytimefinder.db - "
+            "data/fetched_items.json (see --clean-fetched) is untouched, so items already "
+            "staged from an earlier --fetch are still skipped by fetch_source()'s new-item "
+            "check, not re-fetched. With --sync, the rebuilt catalog only contains whatever is "
+            "currently staged in fetched_items.json - if that's been pruned down to nothing by "
+            "a prior --sync, run --fetch first so there's something to rebuild from."
+        ),
+    )
+    parser.add_argument(
+        "--clean-fetched",
+        action="store_true",
+        help=(
+            "Delete data/fetched_items.json first. Only affects the fetch-phase staging file - "
+            "storytimefinder.db (see --clean-db) is untouched. With --fetch, this forces every "
+            "item to be re-fetched/re-suggested from scratch (even ones already staged from an "
+            "earlier --fetch), since the staging file's 'already staged' check has nothing left "
+            "to find. With --sync alone (no fresh --fetch first), this leaves the catalog empty - "
+            "combine it with --fetch, not --sync."
         ),
     )
     return parser.parse_args()
+
+
+def run_fetch(claude_client) -> None:
+    api_key = os.environ.get("YOUTUBE_API_KEY")
+    if not api_key:
+        log.error("YOUTUBE_API_KEY is not set (see .env.example)")
+        sys.exit(1)
+    if claude_client is None:
+        log.warning("ANTHROPIC_API_KEY is not set - new items will be fetched with no Claude suggestions")
+
+    conn = get_db()  # read-only use here: only ever SELECTs, never INSERT/UPDATE/DELETE - see fetch_source()
+    active_sources = [s for s in SOURCES if s.get("active")]
+    if not active_sources:
+        log.warning("No active sources configured - edit refresh/sources.py")
+        return
+
+    youtube = build("youtube", "v3", developerKey=api_key)
+    fetched_items = load_fetched_items()
+    suggestions = load_suggestions()
+
+    processed = 0
+    total_new = 0
+    for source in active_sources:
+        log.info("Fetching source: %s (%s)", source["label"], source["youtube_id"])
+        try:
+            new_count = fetch_source(youtube, claude_client, source, conn, fetched_items, suggestions)
+        except HttpError as exc:
+            log.error("YouTube API error for source %s: %s", source["label"], exc)
+            continue
+        processed += 1
+        total_new += new_count
+        log.info("  %d new item(s) fetched", new_count)
+
+    save_fetched_items(fetched_items)
+    save_suggestions(suggestions)
+    log.info(
+        "Fetch done. %d/%d sources processed, %d new item(s) staged in %s. Run --sync to publish.",
+        processed, len(active_sources), total_new, FETCHED_ITEMS_PATH,
+    )
+
+
+def _series_consistency_warnings(by_series: dict[str, list[tuple[str, dict]]]) -> list[str]:
+    """Core of the series consistency check, shared by the DB-backed
+    _check_series_consistency() (run during --sync) and the ITEM_OVERRIDES-
+    backed check_overrides_series_consistency() (run against overrides.py
+    directly, e.g. from the admin UI, without needing a prior --sync).
+
+    `by_series` maps a series name to a list of (label, fields) tuples -
+    `label` is whatever the caller wants shown in a warning (a title, an
+    entry id, ...), `fields` is a dict with genre/franchise/mood/seasonal/
+    position_in_series keys. Returns human-readable warning strings (never
+    logs or raises itself) for two likely curation mistakes:
+      - items sharing a series disagreeing on genre/franchise/mood/seasonal
+        - a real series is usually consistent on all four, so a mismatch is
+          more often a typo/forgotten field than a deliberate choice.
+      - two items in the same series claiming the same position_in_series -
+        almost always a copy-paste mistake.
+    """
+    warnings = []
+    for series, entries in sorted(by_series.items()):
+        if len(entries) < 2:
+            continue
+
+        for field in ("genre", "franchise", "mood", "seasonal"):
+            values = {fields.get(field) for _, fields in entries if fields.get(field)}
+            if len(values) > 1:
+                detail = ", ".join(f"{label!r}={fields.get(field)!r}" for label, fields in entries)
+                warnings.append(f"Series {series!r} has inconsistent {field} across its items: {detail}")
+
+        positions: dict[int, list[str]] = {}
+        for label, fields in entries:
+            position = fields.get("position_in_series")
+            if position is None:
+                continue
+            positions.setdefault(position, []).append(label)
+        for position, labels in positions.items():
+            if len(labels) > 1:
+                warnings.append(
+                    f"Series {series!r} has {len(labels)} items sharing position_in_series={position}: {labels}"
+                )
+    return warnings
+
+
+def _check_series_consistency(conn: sqlite3.Connection) -> None:
+    """Log warnings (via _series_consistency_warnings()) for likely
+    curation mistakes across ITEM_OVERRIDES' `series` entries, read back
+    from storytimefinder.db post-sync - purely informational, never blocks
+    the sync or changes what gets written (overrides.py is always trusted
+    as-is, same as every other override field). Checks run across all
+    sources, not just one - a series could in principle span more than one.
+    """
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        "SELECT title, series, position_in_series, genre, franchise, mood, seasonal "
+        "FROM items WHERE series IS NOT NULL"
+    ).fetchall()
+
+    by_series: dict[str, list[tuple[str, dict]]] = {}
+    for row in rows:
+        by_series.setdefault(row["series"], []).append((row["title"], dict(row)))
+
+    for warning in _series_consistency_warnings(by_series):
+        log.warning(warning)
+
+
+def check_overrides_series_consistency(overrides: dict, labels: dict | None = None) -> list[str]:
+    """Same two checks as _check_series_consistency(), but reading directly
+    from an ITEM_OVERRIDES-shaped dict instead of storytimefinder.db - lets
+    these warnings surface at curation time (e.g. in the admin UI's
+    Suggestions screen) without requiring a --sync first. `labels`
+    optionally maps entry_id -> a human-readable name (e.g. a title) for
+    nicer messages; an entry_id missing from it is labeled by its raw id.
+    Returns the warning strings (doesn't log them itself - the CLI's
+    --sync path uses _check_series_consistency() instead, which does).
+    """
+    labels = labels or {}
+    by_series: dict[str, list[tuple[str, dict]]] = {}
+    for entry_id, override in overrides.items():
+        series = override.get("series")
+        if not series:
+            continue
+        by_series.setdefault(series, []).append((labels.get(entry_id, entry_id), override))
+    return _series_consistency_warnings(by_series)
+
+
+def run_sync() -> None:
+    conn = get_db()
+    sync_sources(conn)
+    sources = get_active_sources(conn)
+
+    if not sources:
+        log.warning("No active sources configured - edit refresh/sources.py")
+        export_catalog(conn)
+        return
+
+    fetched_items = load_fetched_items()
+
+    total_added = total_updated = total_removed = 0
+    processed = 0
+    for source in sources:
+        log.info("Syncing source: %s (%s)", source["label"], source["youtube_id"])
+        result = sync_source(conn, source, fetched_items)
+        if result is None:
+            continue
+        added, updated, removed = result
+        processed += 1
+        total_added += added
+        total_updated += updated
+        total_removed += removed
+        log.info("  +%d added, %d updated, -%d removed", added, updated, removed)
+
+    save_fetched_items(fetched_items)
+    _check_series_consistency(conn)
+    item_count = export_catalog(conn)
+    log.info(
+        "Sync done. %d/%d sources processed. +%d added, %d updated, -%d removed. "
+        "catalog.json now has %d items.",
+        processed,
+        len(sources),
+        total_added,
+        total_updated,
+        total_removed,
+        item_count,
+    )
 
 
 def main() -> None:
@@ -930,6 +1452,10 @@ def main() -> None:
         DB_PATH.unlink()
         log.info("--clean-db: deleted %s, starting from a clean database", DB_PATH)
 
+    if args.clean_fetched and FETCHED_ITEMS_PATH.exists():
+        FETCHED_ITEMS_PATH.unlink()
+        log.info("--clean-fetched: deleted %s, starting from no staged fetch data", FETCHED_ITEMS_PATH)
+
     load_dotenv()
     anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY")
     claude_client = Anthropic(api_key=anthropic_api_key) if anthropic_api_key else None
@@ -940,61 +1466,17 @@ def main() -> None:
             sys.exit(1)
         conn = get_db()
         suggestions = load_suggestions()
-        if not regenerate_suggestion(conn, claude_client, args.regenerate_suggestion, suggestions):
+        fetched_items = load_fetched_items()
+        if not regenerate_suggestion(conn, claude_client, args.regenerate_suggestion, suggestions, fetched_items):
             sys.exit(1)
         save_suggestions(suggestions)
         return
 
-    api_key = os.environ.get("YOUTUBE_API_KEY")
-    if not api_key:
-        log.error("YOUTUBE_API_KEY is not set (see .env.example)")
-        sys.exit(1)
-
-    if claude_client is None:
-        log.warning(
-            "ANTHROPIC_API_KEY is not set - new items will sync with no Claude "
-            "suggestions at all (description included)"
-        )
-
-    conn = get_db()
-    sync_sources(conn)
-    sources = get_active_sources(conn)
-    suggestions = load_suggestions()
-
-    if not sources:
-        log.warning("No active sources configured - edit refresh/sources.py")
-        export_catalog(conn)
+    if args.fetch:
+        run_fetch(claude_client)
         return
 
-    youtube = build("youtube", "v3", developerKey=api_key)
-
-    total_added = total_updated = total_removed = 0
-    processed = 0
-    for source in sources:
-        log.info("Syncing source: %s (%s)", source["label"], source["youtube_id"])
-        try:
-            added, updated, removed = sync_source_items(conn, youtube, claude_client, source, suggestions)
-        except HttpError as exc:
-            log.error("YouTube API error for source %s: %s", source["label"], exc)
-            continue
-        processed += 1
-        total_added += added
-        total_updated += updated
-        total_removed += removed
-        log.info("  +%d added, %d updated, -%d removed", added, updated, removed)
-
-    save_suggestions(suggestions)
-    item_count = export_catalog(conn)
-    log.info(
-        "Done. %d/%d sources processed. +%d added, %d updated, -%d removed. "
-        "catalog.json now has %d items.",
-        processed,
-        len(sources),
-        total_added,
-        total_updated,
-        total_removed,
-        item_count,
-    )
+    run_sync()
 
 
 if __name__ == "__main__":

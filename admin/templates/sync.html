@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Sync - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Sync</h1>
+<p class="hint">
+  The final step: rebuilds <code>storytimefinder.db</code> and
+  <code>catalog.json</code> from whatever the most recent
+  <a href="{{ url_for('admin.fetch') }}">Fetch</a> staged, plus whatever's
+  currently in <code>overrides.py</code>. Runs <code>refresh/refresh.py
+  --sync</code> as a subprocess. <strong>Never calls the YouTube or Claude
+  APIs</strong> - safe to run as often as you like after editing
+  <code>overrides.py</code>, with no extra API cost. A source with no prior
+  fetch is skipped (not deleted) - see the output below if that happens.
+  <code>--clean-db</code> lives on the <a href="{{ url_for('admin.fetch') }}">Fetch</a>
+  screen only - paired with Sync alone (no fresh Fetch first) it can leave
+  the catalog empty, with no real upside, so it isn't offered here.
+</p>
+
+<form method="post" action="{{ url_for('admin.sync_run') }}">
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">Run sync</button>
+  </div>
+</form>
+
+{% if output is not none %}
+<section>
+  <h2>
+    Output
+    {% if returncode is none %}<span class="badge badge-warn">timed out</span>
+    {% elif returncode == 0 %}<span class="badge badge-ok">exit 0</span>
+    {% else %}<span class="badge badge-error">exit {{ returncode }}</span>
+    {% endif %}
+  </h2>
+  <pre class="log-output">{{ output }}</pre>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Values - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Value lists</h1>
+<p class="hint">
+  The fixed vocabularies genre/franchise/mood/seasonal/award draw from -
+  used to validate <code>overrides.py</code> entries (a value outside these
+  lists just logs a warning, never fails a sync - see <code>refresh.py</code>)
+  and to populate the dropdowns on the <a href="{{ url_for('admin.suggestions') }}">Suggestions</a>
+  screen. Adding a genre/franchise/mood/seasonal value here also adds its
+  German and English display label to <code>app/i18n.py</code> - without
+  that step a new value would still work for filtering but show its raw
+  slug instead of a translated label everywhere it's displayed. Award names
+  are shown as-is, so they need no label. There's no delete here - edit
+  <code>refresh.py</code>/<code>app/i18n.py</code> by hand for that, same
+  philosophy as everywhere else in this tool.
+</p>
+
+{% for name, values in lists.items() %}
+<section class="value-list-section">
+  <h2>{{ name | capitalize }}</h2>
+  <p class="value-list-current">
+    {% for v in values %}<span class="value-chip">{{ v }}</span>{% else %}<span class="empty">(none yet)</span>{% endfor %}
+  </p>
+  <form method="post" action="{{ url_for('admin.values_add') }}" class="field-grid">
+    <input type="hidden" name="list_name" value="{{ name }}">
+    <label>
+      {% if list_config[name].i18n_prefix %}Slug (lowercase_underscore){% else %}Award name{% endif %}
+      <input
+        type="text"
+        name="value"
+        required
+        placeholder="{% if list_config[name].i18n_prefix %}e.g. new_{{ name }}{% else %}e.g. Deutscher Kindermedienpreis{% endif %}"
+      >
+    </label>
+    {% if list_config[name].i18n_prefix %}
+    <label>
+      German label
+      <input type="text" name="label_de" required placeholder="e.g. Neu">
+    </label>
+    <label>
+      English label
+      <input type="text" name="label_en" required placeholder="e.g. New">
+    </label>
+    {% endif %}
+    <div class="actions">
+      <button type="submit" class="btn btn-secondary">Add</button>
+    </div>
+  </form>
+</section>
+{% endfor %}
+{% endblock %}

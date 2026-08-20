@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Fetch - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Fetch</h1>
+<p class="hint">
+  Pulls new items' metadata from YouTube and a Claude suggestion for each,
+  staging both into <code>data/fetched_items.json</code> and
+  <code>data/claude_suggestions.json</code>. Runs <code>refresh/refresh.py
+  --fetch</code> as a subprocess, using this machine's <code>.env</code>
+  for API keys. <strong>Never touches storytimefinder.db or
+  catalog.json</strong> - nothing here is visible on the live site until
+  you run <a href="{{ url_for('admin.sync') }}">Sync</a> afterward. This can
+  take a while for many new items - the page waits for it to finish before
+  showing output. To regenerate a single item's suggestion, use its
+  <strong>Regenerate suggestion</strong> button on the
+  <a href="{{ url_for('admin.suggestions') }}">Suggestions</a> screen instead.
+</p>
+
+<form method="post" action="{{ url_for('admin.fetch_run') }}">
+  <div class="checkbox-group">
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="clean_db">
+      <span><code>--clean-db</code> - wipe <code>storytimefinder.db</code>
+      first, so every already-synced item looks unsynced again. Items
+      already staged in <code>fetched_items.json</code> from an earlier
+      Fetch are still skipped (see <code>--clean-fetched</code> below to
+      force those too)</span>
+    </label>
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="clean_fetched">
+      <span><code>--clean-fetched</code> - wipe
+      <code>data/fetched_items.json</code> first, so every item is
+      re-fetched and re-suggested from scratch, even ones already staged
+      from an earlier Fetch. Does not touch <code>storytimefinder.db</code></span>
+    </label>
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="log_responses">
+      <span><code>--log-responses</code> - also log raw YouTube API
+      responses</span>
+    </label>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary" data-loading-label="Running...">Run fetch</button>
+  </div>
+</form>
+
+{% if output is not none %}
+<section>
+  <h2>
+    Output
+    {% if returncode is none %}<span class="badge badge-warn">timed out</span>
+    {% elif returncode == 0 %}<span class="badge badge-ok">exit 0</span>
+    {% else %}<span class="badge badge-error">exit {{ returncode }}</span>
+    {% endif %}
+  </h2>
+  <pre class="log-output">{{ output }}</pre>
+</section>
+{% endif %}
+{% endblock %}

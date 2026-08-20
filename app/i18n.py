@@ -4,10 +4,10 @@ Minimal UI translation layer - two supported languages, no i18n framework.
 Only site chrome (labels, buttons, messages) is translated here. Catalog
 content (titles, descriptions, series names) is curated data and is never
 translated - there's no bilingual data model for that. The exception is
-genre/franchise/language, which map through fixed `genre_<slug>` /
-`franchise_<slug>` / `language_<code>` translation keys, since each is a
-small, known, enumerable set (see refresh/overrides.py's docstring for the
-canonical value lists).
+genre/franchise/language/mood/seasonal, which map through fixed
+`genre_<slug>` / `franchise_<slug>` / `language_<code>` / `mood_<slug>` /
+`seasonal_<slug>` translation keys, since each is a small, known, enumerable
+set (see refresh/overrides.py's docstring for the canonical value lists).
 
 Language selection is server-side and stateless: resolve_language() checks
 an explicit `?lang=` query param first, then falls back to the browser's
@@ -33,6 +33,11 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "filter_duration": "Dauer:",
         "filter_genre": "Genre:",
         "filter_release": "Veröffentlicht:",
+        "filter_mood": "Stimmung:",
+        "filter_seasonal": "Saison:",
+        "filter_awards": "Auszeichnung:",
+        "awards_chip": "🏆 Preisgekrönt",
+        "surprise_me": "Überrasch mich",
         "chip_all": "Alle",
         "decade_suffix": "er",
         "advanced_toggle": "Erweiterte Filter",
@@ -44,7 +49,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pagination_prev": "Zurück",
         "pagination_next": "Weiter",
         "pagination_status": "Seite {page} von {total}",
-        "episode": "Folge {n}",
         "card_play": "Auf YouTube Music abspielen",
         "footer_attribution": (
             "Kostenlos, werbefrei und ohne Anmeldung oder Tracking. Alle Inhalte werden "
@@ -53,6 +57,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "footer_impressum": "Impressum",
         "footer_updated": "Katalog aktualisiert:",
+        "footer_github": "GitHub",
+        "date_today": "heute",
+        "date_yesterday": "gestern",
+        "date_days_ago_other": "vor {n} Tagen",
+        "date_weeks_ago_one": "vor {n} Woche",
+        "date_weeks_ago_other": "vor {n} Wochen",
         "theme_toggle": "Farbschema umschalten",
         "impressum_title": "Impressum",
         "impressum_language_note": "Dieses Impressum ist gesetzlich vorgeschrieben (§5 TMG) und wird auf Deutsch bereitgestellt.",
@@ -84,6 +94,20 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "franchise_tkkg": "TKKG",
         "language_de": "Deutsch",
         "language_en": "Englisch",
+        "mood_calm": "Ruhig",
+        "mood_funny": "Lustig",
+        "mood_spooky": "Gruselig",
+        "mood_adventurous": "Abenteuerlich",
+        "mood_heartwarming": "Herzerwärmend",
+        "mood_exciting": "Spannend",
+        "mood_silly": "Albern",
+        "mood_gentle": "Sanft",
+        "seasonal_winter": "Winter",
+        "seasonal_christmas": "Weihnachten",
+        "seasonal_halloween": "Halloween",
+        "seasonal_easter": "Ostern",
+        "seasonal_summer": "Sommer",
+        "seasonal_birthday": "Geburtstag",
     },
     "en": {
         "tagline": "Find children's audiobooks - play them on YouTube Music",
@@ -96,6 +120,11 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "filter_duration": "Duration:",
         "filter_genre": "Genre:",
         "filter_release": "Released:",
+        "filter_mood": "Mood:",
+        "filter_seasonal": "Season:",
+        "filter_awards": "Award:",
+        "awards_chip": "🏆 Award-winning",
+        "surprise_me": "Surprise me",
         "chip_all": "All",
         "decade_suffix": "s",
         "advanced_toggle": "Advanced filters",
@@ -107,7 +136,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pagination_prev": "Previous",
         "pagination_next": "Next",
         "pagination_status": "Page {page} of {total}",
-        "episode": "Episode {n}",
         "card_play": "Play on YouTube Music",
         "footer_attribution": (
             "Free, ad-free, no account or tracking required. All content is provided "
@@ -116,6 +144,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "footer_impressum": "Legal notice",
         "footer_updated": "Catalog updated:",
+        "footer_github": "GitHub",
+        "date_today": "today",
+        "date_yesterday": "yesterday",
+        "date_days_ago_other": "{n} days ago",
+        "date_weeks_ago_one": "{n} week ago",
+        "date_weeks_ago_other": "{n} weeks ago",
         "theme_toggle": "Toggle color theme",
         "impressum_title": "Legal notice",
         "impressum_language_note": "This legal notice is required under German law (§5 TMG) and is provided in German.",
@@ -147,6 +181,20 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "franchise_tkkg": "TKKG",
         "language_de": "German",
         "language_en": "English",
+        "mood_calm": "Calm",
+        "mood_funny": "Funny",
+        "mood_spooky": "Spooky",
+        "mood_adventurous": "Adventurous",
+        "mood_heartwarming": "Heartwarming",
+        "mood_exciting": "Exciting",
+        "mood_silly": "Silly",
+        "mood_gentle": "Gentle",
+        "seasonal_winter": "Winter",
+        "seasonal_christmas": "Christmas",
+        "seasonal_halloween": "Halloween",
+        "seasonal_easter": "Easter",
+        "seasonal_summer": "Summer",
+        "seasonal_birthday": "Birthday",
     },
 }
 

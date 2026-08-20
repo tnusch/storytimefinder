@@ -120,9 +120,10 @@ main.wrap { padding-top: 2rem; padding-bottom: 3rem; min-height: 60vh; }
 
 h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 
-.search-form { margin-bottom: 1.5rem; }
+.search-form { margin-bottom: 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .search-form input[type="search"] {
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   padding: 0.65rem 1.1rem;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -134,6 +135,18 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   outline: none;
   border-color: var(--muted);
 }
+.btn-surprise {
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-surprise:hover { background: var(--hover-surface); }
 
 .advanced-toggle {
   display: inline-flex;
@@ -209,6 +222,11 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 .card[hidden] {
   display: none;
 }
+.card-highlight { animation: card-pulse 1.6s ease-out; }
+@keyframes card-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(255, 0, 0, 0); }
+}
 .card-thumb {
   position: relative;
   display: block;
@@ -258,6 +276,10 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   color: var(--muted);
   border-radius: 999px;
   padding: 0.1rem 0.55rem;
+}
+.tag-award {
+  background: rgba(255, 0, 0, 0.15);
+  color: var(--brand);
 }
 .card-description {
   margin: 0;

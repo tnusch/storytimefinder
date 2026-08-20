@@ -11,9 +11,10 @@
     placeholder="{{ t('search_placeholder') }}"
     autofocus
   >
+  <button type="button" class="btn-surprise" id="surprise-btn"><span aria-hidden="true">🎲</span> {{ t('surprise_me') }}</button>
 </div>
 
-{% if franchises or age_tags or series_list %}
+{% if franchises or age_tags or series_list or has_awards %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
@@ -22,6 +23,14 @@
     {% for a in age_tags %}
       <button type="button" class="chip" data-value="{{ a }}">{{ t('age_tag_' ~ a) }}</button>
     {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if has_awards %}
+  <div class="filter-group" data-filter-type="awards">
+    <span class="filter-label">{{ t('filter_awards') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    <button type="button" class="chip" data-value="true">{{ t('awards_chip') }}</button>
   </div>
   {% endif %}
 
@@ -47,7 +56,7 @@
 </div>
 {% endif %}
 
-{% set has_advanced = duration_buckets or genres or languages or release_decades %}
+{% set has_advanced = duration_buckets or genres or moods or languages or release_decades or seasonal_values %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
@@ -74,12 +83,32 @@
   </div>
   {% endif %}
 
+  {% if seasonal_values %}
+  <div class="filter-group" data-filter-type="seasonal">
+    <span class="filter-label">{{ t('filter_seasonal') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for sv in seasonal_values %}
+      <button type="button" class="chip" data-value="{{ sv }}">{{ t('seasonal_' ~ sv) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% if languages %}
   <div class="filter-group" data-filter-type="language">
     <span class="filter-label">{{ t('filter_language') }}</span>
     <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
     {% for code in languages %}
       <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if moods %}
+  <div class="filter-group" data-filter-type="mood">
+    <span class="filter-label">{{ t('filter_mood') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for m in moods %}
+      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -128,6 +157,7 @@
   };
 
   var searchInput = document.getElementById("search-input");
+  var surpriseBtn = document.getElementById("surprise-btn");
   var filterBar = document.getElementById("filter-bar");
   var advancedBar = document.getElementById("filter-bar-advanced");
   var advancedToggle = document.getElementById("advanced-toggle");
@@ -238,6 +268,20 @@
       advancedToggle.setAttribute("aria-expanded", String(!expanded));
       advancedBar.hidden = expanded;
       advancedToggle.classList.toggle("is-open", !expanded);
+    });
+  }
+
+  if (surpriseBtn) {
+    surpriseBtn.addEventListener("click", function () {
+      // `matches` already is "currently filtered, or everything if no
+      // filters are active" - no separate fallback needed for either case.
+      if (!matches.length) return;
+      var pick = matches[Math.floor(Math.random() * matches.length)];
+      currentPage = Math.floor(matches.indexOf(pick) / PAGE_SIZE) + 1;
+      renderPage(false);
+      pick.scrollIntoView({ behavior: "smooth", block: "center" });
+      pick.classList.add("card-highlight");
+      setTimeout(function () { pick.classList.remove("card-highlight"); }, 1600);
     });
   }
 
