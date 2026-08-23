@@ -1,7 +1,6 @@
 # StorytimeFinder
 
-A free, ad-free, no-account discovery site for curated children's audiobooks
-(Hörspiele/Hörbücher) that live on YouTube Music. StorytimeFinder does not
+A free, ad-free, no-account discovery site for curated children's audiobooks that live on YouTube Music. StorytimeFinder does not
 host or stream any audio - it's a search/browse front door that links out to
 `music.youtube.com`. The UI is available in German and English.
 
@@ -103,6 +102,12 @@ built around, if you're using an AI coding assistant).
 
 Found a bug or have a feature request? [Open an issue on
 GitHub](https://github.com/tnusch/storytimefinder/issues).
+
+Know a children's audiobook on YouTube Music that's missing from the
+catalog? Use the "Suggest an audiobook" link in the site footer (or [open a
+suggestion directly](https://github.com/tnusch/storytimefinder/issues/new?template=audiobook-suggestion.yml))
+- suggestions are reviewed and curated by hand, so it can take a little
+while to show up.
 
 ## License
 

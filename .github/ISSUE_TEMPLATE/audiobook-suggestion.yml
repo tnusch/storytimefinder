@@ -1,0 +1,60 @@
+name: Suggest an audiobook
+description: Suggest a children's audiobook on YouTube Music to add to the catalog
+title: "[Suggestion] "
+labels: ["audiobook suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping grow the catalog! A few notes before you submit:
+        - StorytimeFinder only links to audio that's already public on YouTube
+          Music/YouTube - it never hosts or uploads anything itself, so please
+          only suggest something you've found there already.
+        - Suggestions are reviewed by hand (age recommendations, genre, etc.
+          are curated manually), so it can take a little while to show up.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: The audiobook's title, as shown on YouTube Music.
+      placeholder: e.g. Die drei ??? und der seltsame Wecker
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: YouTube / YouTube Music link
+      description: >-
+        A link to the video, playlist, album, or channel - whatever you have
+        is fine, it doesn't need to be the exact YouTube Music URL.
+      placeholder: https://music.youtube.com/playlist?list=...
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - German
+        - English
+        - Other (mention it in the notes below)
+    validations:
+      required: true
+  - type: input
+    id: age
+    attributes:
+      label: Recommended minimum age (if known)
+      description: From the publisher/retailer, if you know it - e.g. "4" or "ab 6".
+      placeholder: e.g. 4
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else worth knowing?
+      description: >-
+        Series/franchise it belongs to, genre, mood, whether it's won an
+        award, or anything else that'd help with curating it.
+      placeholder: e.g. Part of the "Die drei ???" series, spooky/mystery genre
+    validations:
+      required: false

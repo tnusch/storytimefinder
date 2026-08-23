@@ -56,6 +56,8 @@
       <p class="footer-links">
         <a href="{{ url_for('main.impressum', lang=lang) }}">{{ t('footer_impressum') }}</a>
         <span class="sep">&middot;</span>
+        <a href="https://github.com/tnusch/storytimefinder/issues/new?template=audiobook-suggestion.yml" target="_blank" rel="noopener noreferrer">{{ t('footer_suggest') }}</a>
+        <span class="sep">&middot;</span>
         <a href="https://github.com/tnusch/storytimefinder" target="_blank" rel="noopener noreferrer">{{ t('footer_github') }}</a>
         {% if generated_at %}
           <span class="sep">&middot;</span>
