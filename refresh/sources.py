@@ -34,6 +34,22 @@ treat it as a starting skeleton for curation, not a finished catalog.
 """
 
 SOURCES = [
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lAEv53WjTcYdbezfmqvoRbp0rxbCTTWSk",
+        "label": "Kung Fu Panda",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nT1mL8aZvxqfIRFN9L8FgIzfvk6HUkd0I",
+        "label": "Madagascar",
+        "language": "de",
+        "active": True,
+    },
+
     # {
     #     "type": "channel",
     #     "youtube_id": "UC_REPLACE_WITH_REAL_CHANNEL_ID",

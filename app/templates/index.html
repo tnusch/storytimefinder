@@ -11,10 +11,9 @@
     placeholder="{{ t('search_placeholder') }}"
     autofocus
   >
-  <button type="button" class="btn-surprise" id="surprise-btn"><span aria-hidden="true">🎲</span> {{ t('surprise_me') }}</button>
 </div>
 
-{% if franchises or age_tags or series_list or has_awards %}
+{% if franchises or age_tags or has_awards %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
@@ -44,19 +43,10 @@
   </div>
   {% endif %}
 
-  {% if series_list %}
-  <div class="filter-group" data-filter-type="series">
-    <span class="filter-label">{{ t('filter_series') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for s in series_list %}
-      <button type="button" class="chip" data-value="{{ s }}">{{ s }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
 </div>
 {% endif %}
 
-{% set has_advanced = duration_buckets or genres or moods or languages or release_decades or seasonal_values %}
+{% set has_advanced = duration_buckets or genres or moods or languages or release_decades or seasonal_values or series_list %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
@@ -79,6 +69,16 @@
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
     {% for g in genres %}
       <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if series_list %}
+  <div class="filter-group" data-filter-type="series">
+    <span class="filter-label">{{ t('filter_series') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for s in series_list %}
+      <button type="button" class="chip" data-value="{{ s }}">{{ s }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -157,7 +157,6 @@
   };
 
   var searchInput = document.getElementById("search-input");
-  var surpriseBtn = document.getElementById("surprise-btn");
   var filterBar = document.getElementById("filter-bar");
   var advancedBar = document.getElementById("filter-bar-advanced");
   var advancedToggle = document.getElementById("advanced-toggle");
@@ -268,20 +267,6 @@
       advancedToggle.setAttribute("aria-expanded", String(!expanded));
       advancedBar.hidden = expanded;
       advancedToggle.classList.toggle("is-open", !expanded);
-    });
-  }
-
-  if (surpriseBtn) {
-    surpriseBtn.addEventListener("click", function () {
-      // `matches` already is "currently filtered, or everything if no
-      // filters are active" - no separate fallback needed for either case.
-      if (!matches.length) return;
-      var pick = matches[Math.floor(Math.random() * matches.length)];
-      currentPage = Math.floor(matches.indexOf(pick) / PAGE_SIZE) + 1;
-      renderPage(false);
-      pick.scrollIntoView({ behavior: "smooth", block: "center" });
-      pick.classList.add("card-highlight");
-      setTimeout(function () { pick.classList.remove("card-highlight"); }, 1600);
     });
   }
 

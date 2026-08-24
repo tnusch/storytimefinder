@@ -22,21 +22,44 @@ jobs:
       - name: Install refresh dependencies
         run: pip install -r refresh/requirements.txt
 
+      # The only step that enumerates each source's current items
+      # (playlistItems.list) - this is what --sync uses below to delete
+      # items no longer returned by their source, and satisfies the 30-day
+      # compliance window on its own regardless of how often --fetch runs.
+      - name: Check for removed items
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python refresh/refresh.py --check-removed
+
       - name: Fetch new metadata
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python refresh/refresh.py --fetch
 
-      # No human reviews claude_suggestions.json between these two steps in
+      # No human reviews claude_suggestions.json between these steps in
       # the scheduled run (unlike the local dev workflow) - --sync runs
-      # immediately after --fetch, on the same runner, so catalog.json stays
-      # up to date automatically every week. Suggestions still accumulate in
-      # data/claude_suggestions.json for later manual review; that file
-      # isn't committed here (gitignored), so review it locally after
-      # pulling a fresh --fetch, not from this workflow's output.
+      # immediately after --check-removed/--fetch, on the same runner, so
+      # catalog.json stays up to date automatically every week. Suggestions
+      # still accumulate in data/claude_suggestions.json for later manual
+      # review; that file isn't committed here (gitignored), so review it
+      # locally after pulling a fresh --fetch, not from this workflow's
+      # output.
       - name: Sync catalog
         run: python refresh/refresh.py --sync
+
+      # Runs on this same runner, right after --sync, while storytimefinder.db
+      # still exists (gitignored, never committed, but present locally here) -
+      # see refresh/check_catalog.py's docstring for what each of the three
+      # checks does. Schema errors (blank titles, malformed URLs, duplicate
+      # YouTube ids) are real bugs and fail this step by default, which blocks
+      # the commit step below from ever publishing broken data. Broken-link
+      # and staleness findings are report-only (visible in this step's log)
+      # unless --fail-on-broken-links is added - left off here so a transient
+      # network hiccup or YouTube rate-limit doesn't block a legitimate
+      # weekly publish.
+      - name: Data quality checks
+        run: python refresh/check_catalog.py
 
       - name: Commit updated catalog.json
         run: |

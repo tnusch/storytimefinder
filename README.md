@@ -65,23 +65,26 @@ storytimefinder/
 | Scheduled refresh       | GitHub Actions                                |
 | Tests                   | pytest                                        |
 
-### Write/read split
+### Write/read split (CQRS-lite)
 
-StorytimeFinder deliberately splits into a write path and a read path,
-because the web app runs on Vercel's free tier (ephemeral, largely
-read-only filesystem - no reliable SQLite writes there):
+StorytimeFinder deliberately splits into a write path and a read path -
+"lite" CQRS in that there's no event bus wiring them together, just a
+build step - because the web app runs on Vercel's free tier (ephemeral,
+largely read-only filesystem - no reliable SQLite writes there):
 
-- **`refresh/`** - a standalone script, run on a schedule outside of Vercel
-  (see the included GitHub Action). It calls the YouTube Data API to pull
-  catalog metadata, calls Claude to generate each new item's description,
-  curates the results against a local SQLite database, and exports the
-  current catalog to `data/catalog.json`, which **is** committed to the
-  repo.
-- **`app/`** - a read-only Flask app that loads `data/catalog.json` into
-  memory and serves search/browse pages. All search/filtering runs
-  client-side in the browser. The app never touches SQLite or any external
-  API at request time, so there's nothing for Vercel's ephemeral filesystem
-  to break.
+- **`refresh/`** (command side) - a standalone script, run on a schedule
+  outside of Vercel (see the included GitHub Action). It calls the YouTube
+  Data API to pull catalog metadata, calls Claude to generate each new
+  item's description, curates the results against a local SQLite database
+  (the write model), and exports/denormalizes the current catalog into
+  `data/catalog.json` - a read model shaped for exactly how the app queries
+  it - which **is** committed to the repo.
+- **`app/`** (query side) - a read-only Flask app that loads
+  `data/catalog.json` into memory and serves search/browse pages. All
+  search/filtering runs client-side in the browser. The app never touches
+  SQLite or any external API at request time, so there's nothing for
+  Vercel's ephemeral filesystem to break - the trade-off is that the site
+  is only ever as fresh as the last scheduled refresh, not real-time.
 
 ## Contributing
 

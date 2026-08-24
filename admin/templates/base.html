@@ -12,9 +12,10 @@
       <span class="brand">StorytimeFinder Admin</span>
       <nav class="admin-nav">
         <a href="{{ url_for('admin.sources') }}" {% if request.endpoint == 'admin.sources' %}class="is-active"{% endif %}>1. Sources</a>
-        <a href="{{ url_for('admin.fetch') }}" {% if request.endpoint in ('admin.fetch', 'admin.fetch_run') %}class="is-active"{% endif %}>2. Fetch</a>
-        <a href="{{ url_for('admin.suggestions') }}" {% if request.endpoint in ('admin.suggestions', 'admin.suggestions_action', 'admin.suggestions_regenerate') %}class="is-active"{% endif %}>3. Suggestions</a>
-        <a href="{{ url_for('admin.sync') }}" {% if request.endpoint in ('admin.sync', 'admin.sync_run') %}class="is-active"{% endif %}>4. Sync</a>
+        <a href="{{ url_for('admin.check_removed') }}" {% if request.endpoint in ('admin.check_removed', 'admin.check_removed_run') %}class="is-active"{% endif %}>2. Check Removed</a>
+        <a href="{{ url_for('admin.fetch') }}" {% if request.endpoint in ('admin.fetch', 'admin.fetch_run') %}class="is-active"{% endif %}>3. Fetch</a>
+        <a href="{{ url_for('admin.suggestions') }}" {% if request.endpoint in ('admin.suggestions', 'admin.suggestions_action', 'admin.suggestions_regenerate') %}class="is-active"{% endif %}>4. Suggestions</a>
+        <a href="{{ url_for('admin.sync') }}" {% if request.endpoint in ('admin.sync', 'admin.sync_run') %}class="is-active"{% endif %}>5. Sync</a>
         <a href="{{ url_for('admin.values') }}" {% if request.endpoint in ('admin.values', 'admin.values_add') %}class="is-active"{% endif %}>Values</a>
       </nav>
     </div>

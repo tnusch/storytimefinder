@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T20:44:41Z",
+  "generated_at": "2026-08-23T14:29:34Z",
   "items": [
     {
       "id": 14,
@@ -135,6 +135,25 @@
       "language": "de"
     },
     {
+      "id": 16,
+      "title": "Kung Fu Panda",
+      "thumbnail_url": "https://i.ytimg.com/vi/_XPCVG0ZMOM/maxresdefault.jpg",
+      "duration_seconds": 4565,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lAEv53WjTcYdbezfmqvoRbp0rxbCTTWSk",
+      "description": "Ein unwahrscheinlicher Held muss seine innere Kraft entdecken, um sein Dorf vor einer großen Bedrohung zu bewahren.",
+      "series": "Kung Fu Panda",
+      "position_in_series": 1,
+      "genre": "adventure",
+      "franchise": "dreamworks",
+      "min_age": 5,
+      "age_tag": "3_5",
+      "source_release_year": 2008,
+      "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
       "id": 13,
       "title": "Küss den Frosch",
       "thumbnail_url": "https://i.ytimg.com/vi/RRifqEpgXtQ/maxresdefault.jpg",
@@ -150,6 +169,25 @@
       "source_release_year": 2009,
       "mood": "adventurous",
       "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 15,
+      "title": "Madagascar",
+      "thumbnail_url": "https://i.ytimg.com/vi/53_smrKkESI/maxresdefault.jpg",
+      "duration_seconds": 3443,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nT1mL8aZvxqfIRFN9L8FgIzfvk6HUkd0I",
+      "description": "Vier Zootiere landen auf einer exotischen Insel und müssen sich an das Wildleben anpassen.",
+      "series": "Madagascar",
+      "position_in_series": 1,
+      "genre": "comedy",
+      "franchise": "dreamworks",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2005,
+      "mood": "funny",
+      "seasonal": "summer",
       "awards": [],
       "language": "de"
     },

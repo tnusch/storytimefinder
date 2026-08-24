@@ -8,11 +8,16 @@
   staging both into <code>data/fetched_items.json</code> and
   <code>data/claude_suggestions.json</code>. Runs <code>refresh/refresh.py
   --fetch</code> as a subprocess, using this machine's <code>.env</code>
-  for API keys. <strong>Never touches storytimefinder.db or
-  catalog.json</strong> - nothing here is visible on the live site until
-  you run <a href="{{ url_for('admin.sync') }}">Sync</a> afterward. This can
-  take a while for many new items - the page waits for it to finish before
-  showing output. To regenerate a single item's suggestion, use its
+  for API keys. Reads the current-item-id list a prior
+  <a href="{{ url_for('admin.check_removed') }}">Check Removed</a> run
+  staged rather than calling YouTube's <code>playlistItems.list</code>
+  itself, so a source with no Check Removed data yet is skipped with a
+  warning - run that first if this is your first time here.
+  <strong>Never touches storytimefinder.db or catalog.json</strong> -
+  nothing here is visible on the live site until you run
+  <a href="{{ url_for('admin.sync') }}">Sync</a> afterward. This can take a
+  while for many new items - the page waits for it to finish before showing
+  output. To regenerate a single item's suggestion, use its
   <strong>Regenerate suggestion</strong> button on the
   <a href="{{ url_for('admin.suggestions') }}">Suggestions</a> screen instead.
 </p>
@@ -32,7 +37,11 @@
       <span><code>--clean-fetched</code> - wipe
       <code>data/fetched_items.json</code> first, so every item is
       re-fetched and re-suggested from scratch, even ones already staged
-      from an earlier Fetch. Does not touch <code>storytimefinder.db</code></span>
+      from an earlier Fetch. This also wipes the current-item-id list Check
+      Removed staged, so run
+      <a href="{{ url_for('admin.check_removed') }}">Check Removed</a>
+      again afterward before re-running Fetch. Does not touch
+      <code>storytimefinder.db</code></span>
     </label>
     <label class="checkbox-label checkbox-option">
       <input type="checkbox" name="log_responses">

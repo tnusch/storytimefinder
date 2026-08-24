@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Check Removed - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Check Removed</h1>
+<p class="hint">
+  Enumerates every active source's <strong>current</strong> items via
+  YouTube's <code>playlistItems.list</code> (cheap, 1 unit/page) and stages
+  that id list into <code>data/fetched_items.json</code> - this is what
+  <a href="{{ url_for('admin.sync') }}">Sync</a> uses to delete items no
+  longer returned by their source, and what
+  <a href="{{ url_for('admin.fetch') }}">Fetch</a> reads to find new items
+  without enumerating anything itself. Runs <code>refresh/refresh.py
+  --check-removed</code> as a subprocess, using this machine's
+  <code>.env</code> for API keys. <strong>Never touches
+  storytimefinder.db, catalog.json, or Claude.</strong> Run this on its own
+  schedule - at most every 30 days, weekly recommended - independently of
+  how often you run Fetch.
+</p>
+
+<form method="post" action="{{ url_for('admin.check_removed_run') }}">
+  <div class="checkbox-group">
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="clean_fetched">
+      <span><code>--clean-fetched</code> - wipe
+      <code>data/fetched_items.json</code> first (both the current-item-id
+      list and any not-yet-synced item details) before re-checking. Does
+      not touch <code>storytimefinder.db</code></span>
+    </label>
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="log_responses">
+      <span><code>--log-responses</code> - also log raw YouTube API
+      responses</span>
+    </label>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary" data-loading-label="Running...">Run check</button>
+  </div>
+</form>
+
+{% if output is not none %}
+<section>
+  <h2>
+    Output
+    {% if returncode is none %}<span class="badge badge-warn">timed out</span>
+    {% elif returncode == 0 %}<span class="badge badge-ok">exit 0</span>
+    {% else %}<span class="badge badge-error">exit {{ returncode }}</span>
+    {% endif %}
+  </h2>
+  <pre class="log-output">{{ output }}</pre>
+</section>
+{% endif %}
+{% endblock %}

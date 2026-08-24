@@ -10,7 +10,7 @@ from . import file_ops
 
 bp = Blueprint("admin", __name__)
 
-SOURCE_TYPES = ("channel", "playlist", "album")
+SOURCE_TYPES = ("album", "channel", "playlist")
 SUGGESTION_FIELDS = (
     "description",
     "series",
@@ -90,6 +90,23 @@ def _run_refresh_subprocess(flags: list[str]) -> tuple[str, int | None]:
         return (result.stdout or "") + (result.stderr or ""), result.returncode
     except subprocess.TimeoutExpired as exc:
         return f"Timed out after {exc.timeout}s.\n\n{exc.stdout or ''}{exc.stderr or ''}", None
+
+
+@bp.route("/check-removed")
+def check_removed():
+    return render_template("check_removed.html", output=None, returncode=None)
+
+
+@bp.route("/check-removed/run", methods=["POST"])
+def check_removed_run():
+    flags = ["--check-removed"]
+    if request.form.get("clean_fetched") == "on":
+        flags.append("--clean-fetched")
+    if request.form.get("log_responses") == "on":
+        flags.append("--log-responses")
+
+    output, returncode = _run_refresh_subprocess(flags)
+    return render_template("check_removed.html", output=output, returncode=returncode, flags=flags)
 
 
 @bp.route("/fetch")

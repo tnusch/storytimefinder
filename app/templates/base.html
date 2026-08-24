@@ -5,35 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}StorytimeFinder{% endblock %}</title>
   <meta name="description" content="{{ t('meta_description') }}">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23FF0000'/%3E%3Cpolygon points='38,28 74,50 38,72' fill='white'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script>
-    (function () {
-      var stored = localStorage.getItem("theme");
-      var theme = stored === "light" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", theme);
-    })();
-  </script>
 </head>
 <body>
   <header class="site-header">
     <div class="wrap header-inner">
       <div class="header-text">
-        <a class="brand" href="{{ url_for('main.index') }}">📖 StorytimeFinder</a>
-        <p class="tagline">{{ t('tagline') }}</p>
+        <a href="{{ url_for('main.index') }}"><img class="brand-logo" src="{{ url_for('static', filename='logo.svg') }}" alt="" width="56" height="56"></a>
+        <div class="brand-text">
+          <a class="brand" href="{{ url_for('main.index') }}">StorytimeFinder</a>
+          <p class="tagline">{{ t('tagline') }}</p>
+        </div>
       </div>
       <div class="header-controls">
-        <button type="button" id="theme-toggle" class="icon-button" aria-label="{{ t('theme_toggle') }}" title="{{ t('theme_toggle') }}">
-          <span class="theme-icon theme-icon-light" aria-hidden="true">&#9728;</span>
-          <span class="theme-icon theme-icon-dark" aria-hidden="true">&#9789;</span>
-        </button>
-        <nav class="lang-switch" aria-label="Language">
-          <a href="{{ url_for(request.endpoint, lang='de', **request.view_args) }}"{% if lang == 'de' %} class="is-active"{% endif %}>DE</a>
-          <a href="{{ url_for(request.endpoint, lang='en', **request.view_args) }}"{% if lang == 'en' %} class="is-active"{% endif %}>EN</a>
-        </nav>
+        <select id="lang-select" class="lang-select" aria-label="Language">
+          <option value="{{ url_for(request.endpoint, lang='de', **request.view_args) }}"{% if lang == 'de' %} selected{% endif %}>DE</option>
+          <option value="{{ url_for(request.endpoint, lang='en', **request.view_args) }}"{% if lang == 'en' %} selected{% endif %}>EN</option>
+        </select>
       </div>
     </div>
   </header>
@@ -68,10 +60,8 @@
   </footer>
 
   <script>
-    document.getElementById("theme-toggle").addEventListener("click", function () {
-      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
+    document.getElementById("lang-select").addEventListener("change", function () {
+      window.location.href = this.value;
     });
   </script>
 </body>

@@ -16,13 +16,14 @@ API data), so they're safe from being wiped out by a re-sync and stay
 version-controlled like the rest of the curation.
 
 For every genuinely new item, refresh.py also asks Claude for best-effort
-suggestions for all ten of these fields (one combined call, to keep token
-spend down - see generate_metadata_suggestions() in refresh.py) and writes
-them to data/claude_suggestions.json for you to review by hand. That file
-is NEVER read back into the catalog - it's a staging area, not a data
-source. Nothing Claude proposes reaches the catalog on its own, `description`
+suggestions for nine of these ten fields - everything except `awards` (see
+below) - in one combined call, to keep token spend down (see
+generate_metadata_suggestions() in refresh.py), and writes them to
+data/claude_suggestions.json for you to review by hand. That file is NEVER
+read back into the catalog - it's a staging area, not a data source.
+Nothing Claude proposes reaches the catalog on its own, `description`
 included - `mood`/`seasonal` too, even though they're subjective/generative
-rather than factual claims like `awards`; every field goes through the same
+rather than factual claims; every suggested field goes through the same
 human-review gate with no exceptions. If you agree with a suggestion, copy
 it into an entry here yourself. ITEM_OVERRIDES here is always the only
 thing that actually reaches the catalog.
@@ -83,16 +84,18 @@ override-only with NO fallback to any API value:
   - `awards`: a list of `{"name": ..., "category": ..., "year": ...}` dicts
     for real awards this specific title has won - `category`/`year` are
     optional per entry, `name` is required. Unlike every other field here,
-    this is a FACTUAL claim, not a judgment call - Claude is asked to
-    verify a suggested award with web search before proposing it (see
-    generate_metadata_suggestions()), but it's still only ever a suggestion
-    until you copy it in here, same as everything else. `name` is checked
-    against `AWARD_VALUES` in refresh.py (a starter list, not a claim of
-    completeness - extend it by hand as you curate more real awards); an
-    unrecognized name logs a warning but doesn't fail the sync, same
-    treatment as genre/franchise. Omit the field entirely (not `[]`) for
-    "never checked" - `[]` in refresh.py's default just means "no awards
-    found so far".
+    this is entirely hand-curated - Claude is NEVER asked to suggest it (it
+    used to verify candidates with a web search tool, but that was removed:
+    the searches were expensive, and this catalog's award data is meant to
+    be maintained fully manually anyway, so there's no reason to pay for an
+    LLM's best-effort guess at a factual claim it can't verify without a
+    tool). Add awards here only from what you've verified yourself. `name`
+    is checked against `AWARD_VALUES` in refresh.py (a starter list, not a
+    claim of completeness - extend it by hand as you curate more real
+    awards, e.g. via the admin tool's Values screen); an unrecognized name
+    logs a warning but doesn't fail the sync, same treatment as genre/
+    franchise. Omit the field entirely (not `[]`) for "never checked" -
+    `[]` in refresh.py's default just means "no awards found so far".
 
 Series consistency checks: every entry sharing the same `series` name
 (across every source, not just one - a series could in principle span more
@@ -142,6 +145,29 @@ Example:
 """
 
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_lAEv53WjTcYdbezfmqvoRbp0rxbCTTWSk": {
+        "description": "Ein unwahrscheinlicher Held muss seine innere Kraft entdecken, um sein Dorf vor einer großen Bedrohung zu bewahren.",
+        "series": "Kung Fu Panda",
+        "position_in_series": 1,
+        "genre": "adventure",
+        "franchise": "dreamworks",
+        "min_age": 5,
+        "source_release_year": 2008,
+        "mood": "adventurous",
+    },
+
+    "OLAK5uy_nT1mL8aZvxqfIRFN9L8FgIzfvk6HUkd0I": {
+        "description": "Vier Zootiere landen auf einer exotischen Insel und müssen sich an das Wildleben anpassen.",
+        "series": "Madagascar",
+        "position_in_series": 1,
+        "genre": "comedy",
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2005,
+        "mood": "funny",
+        "seasonal": "summer",
+    },
+
     "OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg": {  # Findet Nemo
         "description": "Ein Fisch macht sich auf eine gefährliche Reise durchs Meer, um seinen vermissten Sohn zu finden.",
     #     "series": None,
