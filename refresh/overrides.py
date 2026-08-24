@@ -145,6 +145,16 @@ Example:
 """
 
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_m5np3cQD6JI4qqyaKPFkyYJacjmepggw0": {
+        "description": "Ein alter Mann und sein kluges Haustier erleben zusammen alltägliche Abenteuer voller Wärme und Humor.",
+        "series": "Pettersson und Findus",
+        "position_in_series": 1,
+        "genre": "comedy",
+        "min_age": 4,
+        "source_release_year": 1999,
+        "mood": "heartwarming",
+    },
+
     "OLAK5uy_lAEv53WjTcYdbezfmqvoRbp0rxbCTTWSk": {
         "description": "Ein unwahrscheinlicher Held muss seine innere Kraft entdecken, um sein Dorf vor einer großen Bedrohung zu bewahren.",
         "series": "Kung Fu Panda",

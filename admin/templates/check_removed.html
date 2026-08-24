@@ -9,8 +9,9 @@
   that id list into <code>data/fetched_items.json</code> - this is what
   <a href="{{ url_for('admin.sync') }}">Sync</a> uses to delete items no
   longer returned by their source, and what
-  <a href="{{ url_for('admin.fetch') }}">Fetch</a> reads to find new items
-  without enumerating anything itself. Runs <code>refresh/refresh.py
+  <a href="{{ url_for('admin.fetch') }}">Fetch</a> prefers over enumerating
+  itself when deciding what's new (though Fetch also works standalone - see
+  its own page). Runs <code>refresh/refresh.py
   --check-removed</code> as a subprocess, using this machine's
   <code>.env</code> for API keys. <strong>Never touches
   storytimefinder.db, catalog.json, or Claude.</strong> Run this on its own

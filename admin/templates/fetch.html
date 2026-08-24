@@ -8,11 +8,12 @@
   staging both into <code>data/fetched_items.json</code> and
   <code>data/claude_suggestions.json</code>. Runs <code>refresh/refresh.py
   --fetch</code> as a subprocess, using this machine's <code>.env</code>
-  for API keys. Reads the current-item-id list a prior
+  for API keys. Prefers the current-item-id list a prior
   <a href="{{ url_for('admin.check_removed') }}">Check Removed</a> run
-  staged rather than calling YouTube's <code>playlistItems.list</code>
-  itself, so a source with no Check Removed data yet is skipped with a
-  warning - run that first if this is your first time here.
+  staged over calling YouTube's <code>playlistItems.list</code> itself, but
+  works standalone too - a source with no Check Removed data yet is simply
+  checked on the spot as a one-time fallback, no need to run
+  <a href="{{ url_for('admin.check_removed') }}">Check Removed</a> first.
   <strong>Never touches storytimefinder.db or catalog.json</strong> -
   nothing here is visible on the live site until you run
   <a href="{{ url_for('admin.sync') }}">Sync</a> afterward. This can take a

@@ -13,15 +13,21 @@ run_sync() below:
            storytimefinder.db or catalog.json. Meant to run on its own
            schedule (weekly recommended - see the compliance note below),
            independently of --fetch.
-  --fetch  reads the id list --check-removed staged (no playlistItems.list
-           call of its own) and, for ids not already synced or staged,
-           talks to YouTube/Claude to fetch full details + a suggestion,
-           writing ONLY to data/fetched_items.json (raw metadata staging)
-           and data/claude_suggestions.json (review queue). Never touches
-           storytimefinder.db or catalog.json. Since it does no per-existing-
-           item API work, it's cheap enough to run as often as you like
-           (daily, or on demand) - a source with no --check-removed data
-           yet is skipped with a warning.
+  --fetch  prefers the id list a prior --check-removed staged (no
+           playlistItems.list call of its own in that case) and, for ids
+           not already synced or staged, talks to YouTube/Claude to fetch
+           full details + a suggestion, writing ONLY to
+           data/fetched_items.json (raw metadata staging) and
+           data/claude_suggestions.json (review queue). Never touches
+           storytimefinder.db or catalog.json. --fetch also works fully
+           standalone - a source with no --check-removed data yet gets
+           enumerated on the spot as a one-time fallback (see
+           fetch_new_items_for_source()), so there's no hard ordering
+           requirement between the two commands. Once a source does have
+           staged data (from either command), later --fetch runs reuse it
+           and skip the enumeration call, which is what lets --fetch run
+           as often as you like (daily, or on demand) without per-existing-
+           item API cost in the steady state.
   --sync   the only phase that writes storytimefinder.db and catalog.json.
            Reads data/fetched_items.json (from a prior --check-removed and
            --fetch) plus overrides.py. Never touches the YouTube or Claude
@@ -76,10 +82,14 @@ Compliance notes (YouTube API Developer Policies §III.E):
     has to run afterward for a detected removal to actually take effect, so
     in practice run --check-removed, --fetch, and --sync back-to-back (as
     the GitHub Action does) unless you're deliberately holding a --sync back
-    for review. --fetch itself can run more often than that (it no longer
-    touches playlistItems.list at all) but that has no bearing on this
-    requirement - --check-removed is what satisfies it, regardless of how
-    often --fetch runs in between.
+    for review. --fetch itself can run more often than that (in the steady
+    state it no longer touches playlistItems.list at all) but that has no
+    bearing on this requirement - --check-removed is what satisfies it,
+    regardless of how often --fetch runs in between. Note --fetch's
+    standalone fallback (enumerating a source that has no --check-removed
+    data yet, see fetch_new_items_for_source()) is a one-time convenience
+    for a source's first run, not a substitute for --check-removed's own
+    30-day schedule - it only fires once per source, not on every --fetch.
 """
 
 from __future__ import annotations
@@ -916,16 +926,22 @@ def fetch_new_items_for_source(
 ) -> int:
     """Detail-fetch phase for one source. Returns how many new items were fetched.
 
-    Reads the current-item-id list a prior --check-removed run staged into
+    Prefers the current-item-id list a prior --check-removed run staged into
     `fetched_items["sources"][source_youtube_id]` (see check_removed_source())
-    rather than calling playlistItems.list itself, then fetches full metadata
-    + a Claude suggestion (the expensive calls) only for items not already
-    synced (checked read-only via get_existing_items_by_youtube_id() - never
-    via sync_sources(), which this never calls) and not already staged from a
-    previous --fetch run, storing the result into `fetched_items["items"]`.
-    A source with no --check-removed data yet is skipped with a warning
-    rather than treated as having zero items, same as sync_source() does for
-    a source with no --fetch data.
+    over calling playlistItems.list itself - but --fetch must also work as a
+    fully standalone command (no forced ordering with --check-removed), so if
+    that source has no staged data yet, this falls back to calling
+    check_removed_source() inline to populate it on the spot. That fallback
+    is the only case where --fetch still pays the cheap enumeration cost;
+    once a source has been through --check-removed (here or via a real
+    --check-removed run), later --fetch runs reuse that staged list and
+    never re-enumerate for it.
+
+    Then fetches full metadata + a Claude suggestion (the expensive calls)
+    only for items not already synced (checked read-only via
+    get_existing_items_by_youtube_id() - never via sync_sources(), which
+    this never calls) and not already staged from a previous --fetch run,
+    storing the result into `fetched_items["items"]`.
 
     Album sources are the one exception that still calls
     fetch_playlist_video_ids() here: a brand-new album's own chapter ids
@@ -939,11 +955,14 @@ def fetch_new_items_for_source(
     """
     staged_source = fetched_items["sources"].get(source["youtube_id"])
     if staged_source is None:
-        log.warning(
-            "No --check-removed data for source %s (%s) - run --check-removed first, skipping",
+        log.info(
+            "No --check-removed data for source %s (%s) yet - checking now",
             source["youtube_id"], source["label"],
         )
-        return 0
+        check_removed_source(youtube, source, fetched_items)
+        staged_source = fetched_items["sources"].get(source["youtube_id"])
+        if staged_source is None:
+            return 0  # e.g. a 'channel' source whose channel id couldn't be resolved
     current_item_ids = staged_source["current_item_ids"]
 
     existing = get_existing_items_by_youtube_id(conn, source["youtube_id"])
@@ -1250,11 +1269,12 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Detail-fetch phase: pull new items' metadata from YouTube and a Claude suggestion "
             "for each, staging both into data/fetched_items.json and "
-            "data/claude_suggestions.json. Reads the current-item-id list a prior "
-            "--check-removed run staged rather than calling playlistItems.list itself, so a "
-            "source with no --check-removed data yet is skipped with a warning (run "
-            "--check-removed first). Never touches storytimefinder.db or catalog.json - run "
-            "--sync afterward to actually publish anything this finds."
+            "data/claude_suggestions.json. Prefers the current-item-id list a prior "
+            "--check-removed run staged over calling playlistItems.list itself, but works fully "
+            "standalone too - a source with no --check-removed data yet is enumerated on the "
+            "spot as a one-time fallback, no forced ordering with --check-removed. Never touches "
+            "storytimefinder.db or catalog.json - run --sync afterward to actually publish "
+            "anything this finds."
         ),
     )
     mode.add_argument(
@@ -1263,8 +1283,10 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Sync phase: the only mode that writes storytimefinder.db and catalog.json. Reads "
             "whatever the most recent --check-removed/--fetch staged (plus overrides.py) - "
-            "never touches the YouTube or Claude APIs itself. A source with no prior "
-            "--check-removed is skipped with a warning, not treated as having zero items."
+            "never touches the YouTube or Claude APIs itself. A source with no staged "
+            "current-item-id list at all (from neither a prior --check-removed nor a --fetch, "
+            "whose own standalone fallback also stages one) is skipped with a warning, not "
+            "treated as having zero items."
         ),
     )
     mode.add_argument(

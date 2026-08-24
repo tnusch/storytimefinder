@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T14:29:34Z",
+  "generated_at": "2026-08-24T19:30:30Z",
   "items": [
     {
       "id": 14,
@@ -263,6 +263,25 @@
       "age_tag": "3_5",
       "source_release_year": 2002,
       "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 17,
+      "title": "Pettersson und Findus",
+      "thumbnail_url": "https://i.ytimg.com/vi/Pff-W5yOv80/maxresdefault.jpg",
+      "duration_seconds": 3615,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_m5np3cQD6JI4qqyaKPFkyYJacjmepggw0",
+      "description": "Ein alter Mann und sein kluges Haustier erleben zusammen alltägliche Abenteuer voller Wärme und Humor.",
+      "series": "Pettersson und Findus",
+      "position_in_series": 1,
+      "genre": "comedy",
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 1999,
+      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"

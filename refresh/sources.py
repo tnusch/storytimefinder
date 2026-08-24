@@ -36,6 +36,14 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_m5np3cQD6JI4qqyaKPFkyYJacjmepggw0",
+        "label": "Pettersson und Findus",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_lAEv53WjTcYdbezfmqvoRbp0rxbCTTWSk",
         "label": "Kung Fu Panda",
         "language": "de",
