@@ -13,7 +13,7 @@
   >
 </div>
 
-{% if franchises or age_tags or has_awards %}
+{% if age_tags or has_awards or duration_buckets or moods %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
@@ -33,12 +33,22 @@
   </div>
   {% endif %}
 
-  {% if franchises %}
-  <div class="filter-group" data-filter-type="franchise">
-    <span class="filter-label">{{ t('filter_franchise') }}</span>
+  {% if duration_buckets %}
+  <div class="filter-group" data-filter-type="duration">
+    <span class="filter-label">{{ t('filter_duration') }}</span>
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for f in franchises %}
-      <button type="button" class="chip" data-value="{{ f.slug }}">{{ t('franchise_' ~ f.slug) }}</button>
+    {% for b in duration_buckets %}
+      <button type="button" class="chip" data-value="{{ b.slug }}">{{ t('duration_' ~ b.slug) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if moods %}
+  <div class="filter-group" data-filter-type="mood">
+    <span class="filter-label">{{ t('filter_mood') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for m in moods %}
+      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -46,19 +56,19 @@
 </div>
 {% endif %}
 
-{% set has_advanced = duration_buckets or genres or moods or languages or release_decades or seasonal_values or series_list %}
+{% set has_advanced = franchises or genres or languages or release_decades or seasonal_values or series_list %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
 </button>
 
 <div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
-  {% if duration_buckets %}
-  <div class="filter-group" data-filter-type="duration">
-    <span class="filter-label">{{ t('filter_duration') }}</span>
+  {% if franchises %}
+  <div class="filter-group" data-filter-type="franchise">
+    <span class="filter-label">{{ t('filter_franchise') }}</span>
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for b in duration_buckets %}
-      <button type="button" class="chip" data-value="{{ b.slug }}">{{ t('duration_' ~ b.slug) }}</button>
+    {% for f in franchises %}
+      <button type="button" class="chip" data-value="{{ f.slug }}">{{ t('franchise_' ~ f.slug) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -99,16 +109,6 @@
     <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
     {% for code in languages %}
       <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if moods %}
-  <div class="filter-group" data-filter-type="mood">
-    <span class="filter-label">{{ t('filter_mood') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for m in moods %}
-      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
     {% endfor %}
   </div>
   {% endif %}
