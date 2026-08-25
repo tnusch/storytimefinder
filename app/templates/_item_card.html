@@ -11,6 +11,8 @@
   data-awards="{{ 'true' if item.awards else '' }}"
   data-duration="{{ item.duration_seconds | duration_bucket or '' }}"
   data-release-decade="{{ item.source_release_year | release_decade or '' }}"
+  data-duration-seconds="{{ item.duration_seconds or 0 }}"
+  data-release-year="{{ item.source_release_year or 0 }}"
 >
   <a class="card-thumb" href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">
     {% if item.thumbnail_url %}
@@ -29,10 +31,8 @@
 
     <p class="card-meta">
       {% if item.awards %}<span class="tag tag-award" title="{{ item.awards | map(attribute='name') | join(', ') }}">🏆</span>{% endif %}
-      {% if item.franchise %}<span class="tag">{{ t('franchise_' ~ item.franchise) }}</span>{% endif %}
-      {% if item.age_tag %}<span class="tag">{{ t('age_tag_' ~ item.age_tag) }}</span>{% endif %}
+      {% if item.age_tag %}<span class="tag">{{ t('age_tag_short_' ~ item.age_tag) }}</span>{% endif %}
       {% if item.genre %}<span class="tag">{{ t('genre_' ~ item.genre) }}</span>{% endif %}
-      {% if item.source_release_year %}<span class="tag">{{ item.source_release_year }}</span>{% endif %}
     </p>
 
     {% if item.description %}

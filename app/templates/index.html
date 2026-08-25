@@ -13,7 +13,7 @@
   >
 </div>
 
-{% if age_tags or has_awards or duration_buckets or moods %}
+{% if age_tags or has_awards or moods %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
@@ -33,16 +33,6 @@
   </div>
   {% endif %}
 
-  {% if duration_buckets %}
-  <div class="filter-group" data-filter-type="duration">
-    <span class="filter-label">{{ t('filter_duration') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for b in duration_buckets %}
-      <button type="button" class="chip" data-value="{{ b.slug }}">{{ t('duration_' ~ b.slug) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
   {% if moods %}
   <div class="filter-group" data-filter-type="mood">
     <span class="filter-label">{{ t('filter_mood') }}</span>
@@ -56,13 +46,23 @@
 </div>
 {% endif %}
 
-{% set has_advanced = franchises or genres or languages or release_decades or seasonal_values or series_list %}
+{% set has_advanced = duration_buckets or franchises or genres or languages or release_decades or seasonal_values or series_list %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
 </button>
 
 <div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
+  {% if duration_buckets %}
+  <div class="filter-group" data-filter-type="duration">
+    <span class="filter-label">{{ t('filter_duration') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for b in duration_buckets %}
+      <button type="button" class="chip" data-value="{{ b.slug }}">{{ t('duration_' ~ b.slug) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% if franchises %}
   <div class="filter-group" data-filter-type="franchise">
     <span class="filter-label">{{ t('filter_franchise') }}</span>
@@ -126,7 +126,17 @@
 {% endif %}
 
 <section class="results">
-  <h2 id="results-count">{{ t('results_count_one' if items|length == 1 else 'results_count_other', n=items|length) }}</h2>
+  <div class="results-header">
+    <h2 id="results-count">{{ t('results_count_one' if items|length == 1 else 'results_count_other', n=items|length) }}</h2>
+    <select id="sort-select" class="sort-select" aria-label="{{ t('sort_label') }}">
+      <option value="title_asc">{{ t('sort_title_asc') }}</option>
+      <option value="title_desc">{{ t('sort_title_desc') }}</option>
+      <option value="duration_asc">{{ t('sort_duration_asc') }}</option>
+      <option value="duration_desc">{{ t('sort_duration_desc') }}</option>
+      <option value="release_asc">{{ t('sort_release_asc') }}</option>
+      <option value="release_desc">{{ t('sort_release_desc') }}</option>
+    </select>
+  </div>
 
   {% if items %}
     <div class="card-grid" id="card-grid">
@@ -157,6 +167,7 @@
   };
 
   var searchInput = document.getElementById("search-input");
+  var sortSelect = document.getElementById("sort-select");
   var filterBar = document.getElementById("filter-bar");
   var advancedBar = document.getElementById("filter-bar-advanced");
   var advancedToggle = document.getElementById("advanced-toggle");
@@ -169,14 +180,41 @@
   var paginationStatus = document.getElementById("pagination-status");
   var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
 
+  var filterGroups = Array.prototype.slice.call(document.querySelectorAll(".filter-group"));
+
   var active = {};
-  document.querySelectorAll(".filter-group").forEach(function (group) {
+  filterGroups.forEach(function (group) {
     var activeChip = group.querySelector(".chip.is-active") || group.querySelector(".chip");
     active[group.dataset.filterType] = activeChip ? activeChip.dataset.value : "";
+  });
+
+  // Scroll-fade: only fade an edge that actually has more content to
+  // scroll to - starts clean (no left fade) since scrollLeft is 0 on
+  // load, and only grows a left fade once the user has scrolled right.
+  function updateScrollFade(group) {
+    var maxScroll = group.scrollWidth - group.clientWidth;
+    group.classList.toggle("can-scroll-left", group.scrollLeft > 1);
+    group.classList.toggle("can-scroll-right", group.scrollLeft < maxScroll - 1);
+  }
+  filterGroups.forEach(function (group) {
+    updateScrollFade(group);
+    group.addEventListener("scroll", function () { updateScrollFade(group); });
+  });
+  window.addEventListener("resize", function () {
+    filterGroups.forEach(updateScrollFade);
   });
   var query = "";
   var matches = [];
   var currentPage = 1;
+
+  var SORTERS = {
+    title_asc: function (a, b) { return a.dataset.title.localeCompare(b.dataset.title); },
+    title_desc: function (a, b) { return b.dataset.title.localeCompare(a.dataset.title); },
+    duration_asc: function (a, b) { return Number(a.dataset.durationSeconds) - Number(b.dataset.durationSeconds); },
+    duration_desc: function (a, b) { return Number(b.dataset.durationSeconds) - Number(a.dataset.durationSeconds); },
+    release_asc: function (a, b) { return Number(a.dataset.releaseYear) - Number(b.dataset.releaseYear); },
+    release_desc: function (a, b) { return Number(b.dataset.releaseYear) - Number(a.dataset.releaseYear); }
+  };
 
   function renderPage(scrollIntoView) {
     var totalPages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
@@ -185,7 +223,14 @@
     var pageCards = matches.slice(start, start + PAGE_SIZE);
 
     cards.forEach(function (card) { card.hidden = true; });
-    pageCards.forEach(function (card) { card.hidden = false; });
+    pageCards.forEach(function (card) {
+      card.hidden = false;
+      // CSS grid follows DOM order, not JS array order - re-append in the
+      // sorted/paginated sequence so the visual order actually changes
+      // (toggling `hidden` alone would leave every card in its original
+      // server-rendered position regardless of the active sort).
+      grid.appendChild(card);
+    });
 
     resultsCount.textContent = (matches.length === 1 ? I18N.resultsOne : I18N.resultsOther).replace("{n}", matches.length);
     if (emptyMessage) emptyMessage.hidden = matches.length !== 0;
@@ -216,6 +261,8 @@
       }
       return isMatch;
     });
+    var sorter = sortSelect && SORTERS[sortSelect.value];
+    if (sorter) matches.sort(sorter);
     currentPage = 1;
     renderPage(false);
   }
@@ -225,6 +272,10 @@
       query = searchInput.value;
       applyFilters();
     });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener("change", applyFilters);
   }
 
   if (paginationPrev) {
@@ -267,6 +318,12 @@
       advancedToggle.setAttribute("aria-expanded", String(!expanded));
       advancedBar.hidden = expanded;
       advancedToggle.classList.toggle("is-open", !expanded);
+      if (expanded === false) {
+        // Groups inside advancedBar were `hidden` (scrollWidth/clientWidth
+        // both 0) until just now, so their fade state couldn't be computed
+        // correctly on page load - recompute now that they're visible.
+        filterGroups.forEach(updateScrollFade);
+      }
     });
   }
 
