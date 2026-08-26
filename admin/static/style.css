@@ -149,14 +149,14 @@ textarea { resize: vertical; }
 .source-table th, .source-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
 .source-table tr.is-inactive { color: var(--muted); }
 
-.series-warnings {
+.consistency-warnings {
   background: rgba(184, 134, 11, 0.1);
   border: 1px solid var(--warn);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
 }
-.series-warnings h2 { margin-top: 0; }
+.consistency-warnings h2 { margin-top: 0; }
 .warning-list { margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.85rem; }
 .warning-list li { margin-bottom: 0.3rem; }
 

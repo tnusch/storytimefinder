@@ -1505,6 +1505,63 @@ def check_overrides_series_consistency(overrides: dict, labels: dict | None = No
     return _series_consistency_warnings(by_series)
 
 
+def check_duplicate_titles(titles: dict[str, str]) -> list[str]:
+    """Flags any title shared by more than one entry_id - almost always a
+    genuine duplicate catalog listing (the same audiobook added twice from
+    different sources) or a copy-paste mistake while curating, since two
+    unrelated items are never expected to be byte-identical by coincidence.
+    Exact match after stripping surrounding whitespace only - not
+    case-folded, so "Findet Nemo" vs "findet nemo" would NOT be flagged
+    here; this catches accidental duplicates, not near-duplicates.
+
+    `titles` maps entry_id -> title (see admin/file_ops.py's
+    get_item_info() for how the admin UI builds this from
+    data/fetched_items.json + storytimefinder.db). Returns warning strings
+    (doesn't log or raise itself, same as check_overrides_series_consistency()).
+    """
+    by_title: dict[str, list[str]] = {}
+    for entry_id, title in titles.items():
+        key = (title or "").strip()
+        if not key:
+            continue
+        by_title.setdefault(key, []).append(entry_id)
+
+    warnings = []
+    for title, entry_ids in sorted(by_title.items()):
+        if len(entry_ids) > 1:
+            warnings.append(f"{len(entry_ids)} items share the exact title {title!r}: {sorted(entry_ids)}")
+    return warnings
+
+
+# Fields checked by check_missing_fields() - the "core" curated fields
+# expected for every catalog item, unlike franchise/seasonal/awards/series/
+# position_in_series, which are legitimately absent for many items (an
+# original, non-franchise story has no franchise, most titles aren't
+# seasonal, awards are the rare exception rather than the norm, etc).
+CORE_OVERRIDE_FIELDS = ("description", "min_age", "genre", "mood", "source_release_year")
+
+
+def check_missing_fields(overrides: dict, titles: dict[str, str]) -> list[str]:
+    """Flags any known item (has a title in `titles`, i.e. staged or
+    synced) whose ITEM_OVERRIDES entry is missing one of
+    CORE_OVERRIDE_FIELDS. An item with no override entry at all is missing
+    all five by definition and gets flagged too - deliberately, since this
+    is meant to surface real curation gaps (including "never touched yet"),
+    not just inconsistencies among items someone has already started
+    curating.
+
+    Returns warning strings (doesn't log or raise itself, same as
+    check_overrides_series_consistency()).
+    """
+    warnings = []
+    for entry_id, title in sorted(titles.items(), key=lambda kv: kv[1] or kv[0]):
+        override = overrides.get(entry_id, {})
+        missing = [field for field in CORE_OVERRIDE_FIELDS if not override.get(field)]
+        if missing:
+            warnings.append(f"{title!r} ({entry_id}) is missing: {', '.join(missing)}")
+    return warnings
+
+
 def run_sync() -> None:
     conn = get_db()
     sync_sources(conn)

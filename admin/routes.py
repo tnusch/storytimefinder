@@ -196,7 +196,7 @@ def suggestions():
         suggestions=suggestions_data,
         overrides=overrides_data,
         diffs=_compute_override_diffs(overrides_data, suggestions_data),
-        series_warnings=file_ops.get_series_consistency_warnings(),
+        consistency_warnings=file_ops.get_consistency_warnings(),
         item_info=file_ops.get_item_info(),
         genre_values=file_ops.get_genre_values(),
         franchise_values=file_ops.get_franchise_values(),

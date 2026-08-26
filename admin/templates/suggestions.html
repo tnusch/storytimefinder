@@ -90,22 +90,25 @@
 {% endmacro %}
 
 {% block content %}
-{% if series_warnings %}
-<section class="series-warnings">
+{% if consistency_warnings %}
+<section class="consistency-warnings">
   <h2>
-    Series consistency warnings
-    <span class="badge badge-warn">{{ series_warnings|length }}</span>
+    Consistency warnings
+    <span class="badge badge-warn">{{ consistency_warnings|length }}</span>
   </h2>
   <p class="hint">
-    Items sharing a <code>series</code> in <code>overrides.py</code> that
-    disagree on genre/franchise/mood/seasonal, or that claim the same
-    <code>position_in_series</code> - usually a typo or copy-paste mistake,
-    not a hard error. Same two checks <code>refresh.py</code> runs during
-    <code>--sync</code> (and logs to the console), surfaced here as you
-    curate so you don't have to sync first to see them.
+    Three checks against the current <code>overrides.py</code>, all purely
+    informational - not hard errors: items sharing a <code>series</code>
+    that disagree on genre/franchise/mood/seasonal, or that claim the same
+    <code>position_in_series</code>; two different items with the exact
+    same title (usually a genuine duplicate listing or a copy-paste
+    mistake); and known items missing a core curated field
+    (description/min_age/genre/mood/source_release_year), including ones
+    with no override entry at all yet. Surfaced here as you curate so you
+    don't have to sync first to see them.
   </p>
   <ul class="warning-list">
-    {% for w in series_warnings %}
+    {% for w in consistency_warnings %}
       <li>{{ w }}</li>
     {% endfor %}
   </ul>

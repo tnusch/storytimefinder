@@ -148,10 +148,14 @@ def test_get_release_decades_unique_sorted_excludes_missing():
         (1799, "under30"),
         (1800, "30to60"),
         (3599, "30to60"),
-        (3600, "1to2h"),
-        (7199, "1to2h"),
-        (7200, "over2h"),
-        (10800, "over2h"),
+        (3600, "60to90"),
+        (5399, "60to90"),
+        (5400, "90to120"),
+        (7199, "90to120"),
+        (7200, "2to3h"),
+        (10799, "2to3h"),
+        (10800, "over3h"),
+        (14400, "over3h"),
     ],
 )
 def test_duration_bucket_slug_boundaries(seconds, expected_slug):

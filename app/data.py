@@ -98,8 +98,10 @@ def get_series_list() -> list[str]:
 DURATION_BUCKETS = [
     {"slug": "under30", "min": 0, "max": 1800},
     {"slug": "30to60", "min": 1800, "max": 3600},
-    {"slug": "1to2h", "min": 3600, "max": 7200},
-    {"slug": "over2h", "min": 7200, "max": None},
+    {"slug": "60to90", "min": 3600, "max": 5400},
+    {"slug": "90to120", "min": 5400, "max": 7200},
+    {"slug": "2to3h", "min": 7200, "max": 10800},
+    {"slug": "over3h", "min": 10800, "max": None},
 ]
 
 

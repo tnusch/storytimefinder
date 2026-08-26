@@ -13,7 +13,9 @@
   >
 </div>
 
-{% if age_tags or has_awards or moods %}
+{% set has_language_filter = languages and languages|length > 1 %}
+
+{% if age_tags or has_awards or genres %}
 <div class="filter-bar" id="filter-bar">
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
@@ -33,12 +35,12 @@
   </div>
   {% endif %}
 
-  {% if moods %}
-  <div class="filter-group" data-filter-type="mood">
-    <span class="filter-label">{{ t('filter_mood') }}</span>
+  {% if genres %}
+  <div class="filter-group" data-filter-type="genre">
+    <span class="filter-label">{{ t('filter_genre') }}</span>
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for m in moods %}
-      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
+    {% for g in genres %}
+      <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -46,7 +48,7 @@
 </div>
 {% endif %}
 
-{% set has_advanced = duration_buckets or franchises or genres or languages or release_decades or seasonal_values or series_list %}
+{% set has_advanced = duration_buckets or franchises or has_language_filter or moods or release_decades or seasonal_values or series_list %}
 {% if has_advanced %}
 <button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
   {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
@@ -73,16 +75,6 @@
   </div>
   {% endif %}
 
-  {% if genres %}
-  <div class="filter-group" data-filter-type="genre">
-    <span class="filter-label">{{ t('filter_genre') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for g in genres %}
-      <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
   {% if series_list %}
   <div class="filter-group" data-filter-type="series">
     <span class="filter-label">{{ t('filter_series') }}</span>
@@ -103,12 +95,22 @@
   </div>
   {% endif %}
 
-  {% if languages %}
+  {% if has_language_filter %}
   <div class="filter-group" data-filter-type="language">
     <span class="filter-label">{{ t('filter_language') }}</span>
     <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
     {% for code in languages %}
       <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if moods %}
+  <div class="filter-group" data-filter-type="mood">
+    <span class="filter-label">{{ t('filter_mood') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for m in moods %}
+      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
     {% endfor %}
   </div>
   {% endif %}

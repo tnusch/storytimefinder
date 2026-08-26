@@ -142,18 +142,30 @@ def get_item_info() -> dict[str, dict]:
     return info
 
 
-def get_series_consistency_warnings() -> list[str]:
-    """Runs refresh.py's series consistency check (same two rules as
-    overrides.py's own docstring: items sharing a `series` disagreeing on
-    genre/franchise/mood/seasonal, or two items claiming the same
-    position_in_series) directly against the current ITEM_OVERRIDES, via
-    check_overrides_series_consistency() - so these show up on the
+def get_consistency_warnings() -> list[str]:
+    """Runs three independent curation-consistency checks (all pure
+    functions in refresh.py, see their own docstrings) directly against the
+    current ITEM_OVERRIDES plus known item titles, so they show up on the
     Suggestions screen immediately as you edit overrides.py, without
-    needing a --sync first the way the CLI's own version (run during
-    --sync, logged to the console) does."""
+    needing a --sync first:
+      - series consistency - items sharing a `series` disagreeing on
+        genre/franchise/mood/seasonal, or two items claiming the same
+        position_in_series (check_overrides_series_consistency()).
+      - duplicate titles - two different entry ids with the exact same
+        title, almost always a genuine duplicate listing or a copy-paste
+        mistake (check_duplicate_titles()).
+      - missing core fields - a known item whose override is missing
+        description/min_age/genre/mood/source_release_year, including an
+        item with no override entry at all (check_missing_fields()).
+    """
     overrides = list_overrides()
     titles = {entry_id: info["title"] for entry_id, info in get_item_info().items() if info.get("title")}
-    return _reload("refresh").check_overrides_series_consistency(overrides, titles)
+    refresh = _reload("refresh")
+    return (
+        refresh.check_overrides_series_consistency(overrides, titles)
+        + refresh.check_duplicate_titles(titles)
+        + refresh.check_missing_fields(overrides, titles)
+    )
 
 
 def load_suggestions() -> dict:

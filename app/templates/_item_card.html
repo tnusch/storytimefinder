@@ -27,6 +27,7 @@
   <div class="card-body">
     <h3 class="card-title">
       <a href="{{ item.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+      {% if item.source_release_year %}<span class="card-title-year">({{ item.source_release_year }})</span>{% endif %}
     </h3>
 
     <p class="card-meta">
