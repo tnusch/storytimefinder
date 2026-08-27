@@ -64,5 +64,14 @@
       window.location.href = this.value;
     });
   </script>
+
+  <!-- Vercel Web Analytics - framework-agnostic script, not the @vercel/analytics
+       React component: this app has no npm/build step (see CLAUDE.md), so there's
+       nothing to "import" it into. Vercel serves this path automatically on any
+       deployment with Web Analytics enabled in the project dashboard. -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
