@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T21:09:47Z",
+  "generated_at": "2026-09-02T19:52:24Z",
   "items": [
     {
       "id": 43,
@@ -667,6 +667,25 @@
       "language": "de"
     },
     {
+      "id": 140,
+      "title": "Der Grüffelo",
+      "thumbnail_url": "https://i.ytimg.com/vi/g1t5A6Udygc/maxresdefault.jpg",
+      "duration_seconds": 1357,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE",
+      "description": "Ein kleines Waldtier trifft auf ein furchteinflößendes Wesen und entdeckt dabei seine eigene Cleverness.",
+      "series": null,
+      "position_in_series": null,
+      "genre": "adventure",
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2009,
+      "mood": "heartwarming",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
       "id": 3,
       "title": "Der König der Löwen",
       "thumbnail_url": "https://i.ytimg.com/vi/39PFabfFbYA/maxresdefault.jpg",
@@ -1294,6 +1313,44 @@
       "language": "de"
     },
     {
+      "id": 138,
+      "title": "Hexen gibt es doch",
+      "thumbnail_url": "https://i.ytimg.com/vi/JsTyiYK0_GI/maxresdefault.jpg",
+      "duration_seconds": 2056,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kzVrxJgnruXuKhiBk8bc_cqqVUVEtL6-I",
+      "description": "Kinder entdecken, dass übernatürliche Wesen real existieren und müssen sich deren Herausforderungen stellen.",
+      "series": "Bibi Blocksberg",
+      "position_in_series": 1,
+      "genre": "fantasy",
+      "franchise": "bibi_blocksberg",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 1980,
+      "mood": "funny",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 137,
+      "title": "Hexerei in der Schule",
+      "thumbnail_url": "https://i.ytimg.com/vi/JMbCToBqTvg/maxresdefault.jpg",
+      "duration_seconds": 2241,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lhF7sdKpO1AJf3tkSj0ALVsAokKjRHavs",
+      "description": "Eine kleine Hexe setzt in der Schule heimlich ihre Zauberkräfte ein und sorgt damit für jede Menge turbulente Verwicklungen.",
+      "series": "Bibi Blocksberg",
+      "position_in_series": 2,
+      "genre": "fantasy",
+      "franchise": "bibi_blocksberg",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 1980,
+      "mood": "funny",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
       "id": 70,
       "title": "Himmel und Huhn",
       "thumbnail_url": "https://i.ytimg.com/vi/QOFS8OG7rd8/maxresdefault.jpg",
@@ -1574,6 +1631,25 @@
       "age_tag": "3_5",
       "source_release_year": 2012,
       "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 139,
+      "title": "Michel in Der Suppenschüssel",
+      "thumbnail_url": "https://i.ytimg.com/vi/VL1qhY_xRK0/maxresdefault.jpg",
+      "duration_seconds": 2007,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A",
+      "description": "Ein schlitzohriger Bauernjunge im alten Schweden sorgt mit seinen Streichen ständig für Chaos, hat dabei aber ein gutes Herz.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": "classic",
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 1971,
+      "mood": "gentle",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2585,5 +2661,15 @@
       "awards": [],
       "language": "de"
     }
-  ]
+  ],
+  "series": {
+    "Bibi Blocksberg": {
+      "series_type": "episodic",
+      "genre": "fantasy",
+      "franchise": "bibi_blocksberg",
+      "mood": "funny",
+      "min_age": 4,
+      "age_tag": "3_5"
+    }
+  }
 }

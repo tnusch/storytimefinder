@@ -15,6 +15,22 @@ by hand here. refresh.py applies these on every run (merged in after the
 API data), so they're safe from being wiped out by a re-sync and stay
 version-controlled like the rest of the curation.
 
+**`genre`/`franchise`/`mood`/`min_age` are per-item fields here, EXCEPT for
+an item belonging to an `episodic` series** (see `series_type` below and
+`SERIES_OVERRIDES` further down) - for those, the four fields move to a
+single shared entry in `SERIES_OVERRIDES`, keyed by the series name, and
+are simply omitted from every episode's own `ITEM_OVERRIDES` entry. This
+exists because a real episodic series (Bibi Blocksberg, TKKG, ...) is
+expected to agree on all four across every episode anyway (the series
+consistency check below already assumed this and just warned when it
+didn't) - retyping the same genre/franchise/mood/min_age on 20+ episode
+entries was pure duplication and a recurring source of typos (this
+codebase's own Bibi Blocksberg entries once disagreed on both `min_age`
+and `mood` between two episodes before this change). `series`/
+`position_in_series`/`description`/`source_release_year`/`seasonal`/
+`awards` stay per-item regardless of `series_type` - only the four fields
+above move.
+
 For every genuinely new item, refresh.py also asks Claude for best-effort
 suggestions for nine of these ten fields - everything except `awards` (see
 below) - in one combined call, to keep token spend down (see
@@ -39,6 +55,8 @@ override-only with NO fallback to any API value:
   - `genre`: exactly ONE value from this fixed list (not a list/multi-select):
         fairy_tale, adventure, mystery, fantasy, educational, bedtime_story,
         classic, comedy
+    **Omit on an item belonging to an `episodic` series** - set it once in
+    `SERIES_OVERRIDES` instead (see below).
   - `franchise`: IP/brand grouping - NOT genre, NOT publisher. One value
     from this fixed list, or omit/None for a standalone (non-franchise)
     title:
@@ -46,7 +64,8 @@ override-only with NO fallback to any API value:
         benjamin_bluemchen, die_drei_fragezeichen, tkkg
     (refresh.py logs a warning, but doesn't fail the sync, if a genre or
     franchise value isn't in its fixed list - see GENRE_VALUES/
-    FRANCHISE_VALUES in refresh.py.)
+    FRANCHISE_VALUES in refresh.py.) **Omit on an item belonging to an
+    `episodic` series** - set it once in `SERIES_OVERRIDES` instead.
   - `min_age`: the precise minimum age from the publisher/retailer, as an
     int (e.g. 4). This is the only age input - `age_tag` is NOT set
     directly; refresh.py derives it from `min_age` via a fixed bracket
@@ -62,21 +81,28 @@ override-only with NO fallback to any API value:
     resolve that here (not in refresh.py) by using the LOWER of the two
     conflicting values. Leave `min_age` unset for "no age restriction"
     rather than a catch-all value - the item then shows under "Alle" in
-    the age filter, same as before.
+    the age filter, same as before. **Omit on an item belonging to an
+    `episodic` series** - set it once in `SERIES_OVERRIDES` instead (same
+    lower-of-the-two tie-break rule applies there if episodes disagree).
   - `source_release_year`: the year the SOURCE film or book was originally
     released - e.g. 1994 for a "The Lion King" audiobook - NOT the
     audiobook production's own release/upload date. The audiobook's own
     date is often ambiguous (the same title can show several different
     years across editions/reissues/platforms), while the source material's
     release year is a single stable, verifiable fact. Year only (an int),
-    not a full date.
+    not a full date. Stays per-item even for an episodic series' episodes -
+    unlike genre/franchise/mood/min_age, an episode's own release year is
+    never expected to be shared across the series.
   - `series`, `position_in_series`: e.g. "Die drei ???" / 78 for episode 78
-    of that series.
+    of that series. `series_type` used to be a third per-item field here -
+    it's now series-level only, see `SERIES_OVERRIDES` below.
   - `mood`: exactly ONE value from this fixed list (not a list/multi-select),
     a subjective read of the story's overall tone - a creative judgment
     call, not a factual claim, but still gated behind the same human-review
     step as every other field:
         calm, funny, spooky, adventurous, heartwarming, exciting, silly, gentle
+    **Omit on an item belonging to an `episodic` series** - set it once in
+    `SERIES_OVERRIDES` instead.
   - `seasonal`: ONE value from this fixed list, or omit/None for the
     (expected-to-be-majority) non-seasonal case - don't force a value just
     because a title is loosely festive:
@@ -97,6 +123,42 @@ override-only with NO fallback to any API value:
     franchise. Omit the field entirely (not `[]`) for "never checked" -
     `[]` in refresh.py's default just means "no awards found so far".
 
+`SERIES_OVERRIDES` (a `dict[str, dict]`, defined further down in this file
+right before ITEM_OVERRIDES) is the shared home for `series_type`/`genre`/
+`franchise`/`mood`/`min_age` for an EPISODIC series - keyed by the series
+NAME (not an entry id, the only place in this codebase a dict is keyed by
+free text rather than a YouTube/entry id), e.g.:
+    SERIES_OVERRIDES = {
+        "Bibi Blocksberg": {
+            "series_type": "episodic",
+            "genre": "fantasy",
+            "franchise": "bibi_blocksberg",
+            "mood": "funny",
+            "min_age": 4,
+        },
+    }
+`series_type` is exactly ONE value from this fixed list:
+    episodic, sequel
+MANUAL curation only - NEVER auto-inferred from how many entries share a
+`series` name (a trilogy is 3 "sequel" films; a 3-part miniseries is
+"episodic" - count alone can't tell them apart). `episodic` (Bibi
+Blocksberg, TKKG, Die drei ??? - a long-running series where each entry
+stands alone) collapses the series into one card on the site with a
+`/series/<slug>` episode listing, and is what makes this entry's
+`genre`/`franchise`/`mood`/`min_age` take effect for every item sharing
+that `series` name (their own `ITEM_OVERRIDES` entries should omit those
+four fields - see each field's bullet above). `sequel` (Findet Nemo ->
+Findet Dorie, Der König der Löwen 1 -> 2 - a small cluster of direct film
+sequels) keeps every film as its own individual card with a "Teil N von M"
+badge and davor:/danach: cross-links instead - `genre`/`franchise`/`mood`/
+`min_age` are NOT centralized for a `sequel` series (each film keeps its
+own values in `ITEM_OVERRIDES`, same as a standalone title), since a
+`SERIES_OVERRIDES` entry only ever redirects those four fields when
+`series_type == "episodic"`. A series with no `SERIES_OVERRIDES` entry at
+all (the common case for most `series` values today) behaves exactly like
+it did before this field existed - filterable by "Reihe", no collapsing,
+no badge.
+
 Series consistency checks: every entry sharing the same `series` name
 (across every source, not just one - a series could in principle span more
 than one) is compared against the others for two likely mistakes, warned
@@ -106,7 +168,13 @@ about but never a hard failure:
     mismatch is more often a typo or a forgotten field in one entry than a
     deliberate choice. Fix it by aligning the odd one out, or ignore the
     warning if the disagreement really is intentional (some Disney series
-    do shift genre/mood between installments).
+    do shift genre/mood between installments). For an `episodic` series
+    this can only actually fire for `seasonal` now - `genre`/`franchise`/
+    `mood` are meant to be omitted per-item once `SERIES_OVERRIDES` covers
+    them, so there's nothing left on the item entries to disagree about;
+    if this warning still fires for those three on a series you've already
+    migrated to `SERIES_OVERRIDES`, it means some episodes still have
+    stale per-item values worth cleaning up.
   - two entries in the same series claiming the same `position_in_series` -
     almost always a copy-paste mistake (e.g. forgetting to bump the number
     when adding a new episode's override block).
@@ -120,21 +188,29 @@ screen runs the same check directly against this file
 so you see it as you edit, before ever syncing.
 
 Example:
+    SERIES_OVERRIDES = {
+        "Die drei ???": {
+            "series_type": "episodic",
+            "genre": "mystery",
+            "franchise": "die_drei_fragezeichen",
+            "mood": "spooky",
+            "min_age": 8,
+        },
+    }
+
     ITEM_OVERRIDES = {
         "dQw4w9WgXcQ": {
+            # genre/franchise/mood/min_age all come from SERIES_OVERRIDES
+            # above instead - omitted here on purpose, not forgotten.
             "description": "Episode 78 der drei Detektive: ein spurloses Verschwinden im Nebel.",
             "series": "Die drei ???",
             "position_in_series": 78,
-            "genre": "mystery",
-            "franchise": "die_drei_fragezeichen",
-            "min_age": 8,
             "source_release_year": 1999,
-            "mood": "spooky",
             "awards": [
                 {"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2026},
             ],
         },
-        "OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg": {  # an 'album' source
+        "OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg": {  # an 'album' source, not part of a series
             "description": "Ein Clownfisch sucht seinen vermissten Sohn und erlebt dabei ein großes Abenteuer im Meer.",
             "genre": "adventure",
             "franchise": "disney",
@@ -144,7 +220,57 @@ Example:
     }
 """
 
+# Series-level metadata for episodic series - see the docstring above for
+# the full field-by-field spec. Keyed by series NAME, not an entry id.
+SERIES_OVERRIDES: dict[str, dict] = {
+    "Bibi Blocksberg": {
+        "series_type": "episodic",
+        "genre": "fantasy",
+        "franchise": "bibi_blocksberg",
+        # The two episodes below disagreed on mood ("funny" vs
+        # "adventurous") before this field moved here - picked "funny" as
+        # the series-wide value; revisit if a better single read of the
+        # series' overall tone comes up.
+        "mood": "funny",
+        # The two episodes below disagreed on min_age (5 vs 4) before this
+        # field moved here - used the lower of the two, per the same
+        # tie-break rule min_age's own docstring bullet already documents.
+        "min_age": 4,
+    },
+}
+
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE": {
+        "description": "Ein kleines Waldtier trifft auf ein furchteinflößendes Wesen und entdeckt dabei seine eigene Cleverness.",
+        "genre": "adventure",
+        "min_age": 3,
+        "source_release_year": 2009,
+        "mood": "heartwarming",
+    },
+
+    "OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A": {
+        "description": "Ein schlitzohriger Bauernjunge im alten Schweden sorgt mit seinen Streichen ständig für Chaos, hat dabei aber ein gutes Herz.",
+        "series": "Michel aus Lönneberga",
+        "genre": "classic",
+        "min_age": 4,
+        "source_release_year": 1971,
+        "mood": "gentle",
+    },
+
+    "OLAK5uy_lhF7sdKpO1AJf3tkSj0ALVsAokKjRHavs": {
+        "series": "Bibi Blocksberg",
+        "position_in_series": 2,
+        "source_release_year": 1980,
+        "description": "Eine kleine Hexe setzt in der Schule heimlich ihre Zauberkräfte ein und sorgt damit für jede Menge turbulente Verwicklungen.",
+    },
+
+    "OLAK5uy_kzVrxJgnruXuKhiBk8bc_cqqVUVEtL6-I": {
+        "description": "Kinder entdecken, dass übernatürliche Wesen real existieren und müssen sich deren Herausforderungen stellen.",
+        "series": "Bibi Blocksberg",
+        "position_in_series": 1,
+        "source_release_year": 1980,
+    },
+
     "OLAK5uy_nxACHw7AuDsAjktLAmdJrbI1Ortwse45w": {
         "description": "Eine Gruppe tierischer Freunde verwandelt ein harmloses Fußballspiel in ein turbulentes, chaotisches Durcheinander.",
         "series": "Micky Maus",

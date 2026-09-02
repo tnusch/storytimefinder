@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_item_card.html" import item_card %}
+
+{% block title %}{{ group.series }} - StorytimeFinder{% endblock %}
+
+{% block content %}
+<p class="series-back"><a href="{{ url_for('main.index') }}">&larr; {{ t('series_back_to_all') }}</a></p>
+<h1 class="series-title">{{ group.series }}</h1>
+<p class="series-meta">
+  {{ t('series_episode_count_one' if group.episode_count == 1 else 'series_episode_count_other', n=group.episode_count) }}
+  {% if group.age_tag %}&middot; {{ t('age_tag_short_' ~ group.age_tag) }}{% endif %}
+</p>
+
+<div class="card-grid">
+  {% for episode in group.episodes %}{{ item_card(episode) }}{% endfor %}
+</div>
+{% endblock %}

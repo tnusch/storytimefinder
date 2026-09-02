@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import urllib.parse
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
@@ -11,6 +12,43 @@ from . import file_ops
 bp = Blueprint("admin", __name__)
 
 SOURCE_TYPES = ("album", "channel", "playlist")
+
+_YOUTUBE_ID_URL_HOSTS = {"www.youtube.com", "youtube.com", "music.youtube.com", "m.youtube.com"}
+
+
+def _extract_youtube_id(value: str) -> str:
+    """Accepts either a bare YouTube id (returned as-is) or a full YouTube/
+    YouTube Music URL, from which the actual id is pulled out - lets the
+    Sources "Add a new source" form take a pasted URL directly instead of
+    requiring the id to already be extracted by hand. Handles the two
+    shapes sources.py's `youtube_id` actually needs: a `list=` query param
+    (playlist/album - e.g. a music.youtube.com/playlist?list=... or
+    youtube.com/watch?v=...&list=... URL) or a `/channel/<id>` path
+    segment. Anything else - a bare id, or a URL shape that doesn't carry
+    the id directly (e.g. an `@handle` channel URL, which needs a live API
+    lookup to resolve to its real `UC...` id - out of scope for this
+    local, network-free text-file editor) - is returned unchanged, so the
+    existing required-field validation still catches a genuinely bad
+    value instead of this silently swallowing it.
+    """
+    value = value.strip()
+    if "://" not in value:
+        return value
+
+    parsed = urllib.parse.urlparse(value)
+    if parsed.netloc not in _YOUTUBE_ID_URL_HOSTS:
+        return value
+
+    query = urllib.parse.parse_qs(parsed.query)
+    list_id = query.get("list", [""])[0]
+    if list_id:
+        return list_id
+
+    path_parts = [p for p in parsed.path.split("/") if p]
+    if len(path_parts) >= 2 and path_parts[0] == "channel":
+        return path_parts[1]
+
+    return value
 SUGGESTION_FIELDS = (
     "description",
     "series",
@@ -24,6 +62,8 @@ SUGGESTION_FIELDS = (
     "awards",
 )
 INT_FIELDS = {"position_in_series", "min_age", "source_release_year"}
+SERIES_OVERRIDE_FIELDS = ("series_type", "genre", "franchise", "mood", "min_age")
+SERIES_OVERRIDE_INT_FIELDS = {"min_age"}
 
 
 class InvalidAwardsJSON(ValueError):
@@ -39,14 +79,19 @@ def index():
 
 @bp.route("/sources")
 def sources():
-    return render_template("sources.html", sources=file_ops.list_sources(), source_types=SOURCE_TYPES)
+    return render_template(
+        "sources.html",
+        sources=file_ops.list_sources(),
+        source_types=SOURCE_TYPES,
+        source_warnings=file_ops.get_source_warnings(),
+    )
 
 
 @bp.route("/sources/add", methods=["POST"])
 def sources_add():
     entry = {
         "type": request.form.get("type", "").strip(),
-        "youtube_id": request.form.get("youtube_id", "").strip(),
+        "youtube_id": _extract_youtube_id(request.form.get("youtube_id", "")),
         "label": request.form.get("label", "").strip(),
         "language": request.form.get("language", "de").strip() or "de",
         "active": request.form.get("active") == "on",
@@ -63,6 +108,52 @@ def sources_add():
 
     flash(f"Added {entry['label']!r} to sources.py.", "success")
     return redirect(url_for("admin.sources"))
+
+
+@bp.route("/sources/<path:youtube_id>", methods=["POST"])
+def sources_action(youtube_id):
+    action = request.form.get("action")
+    if action == "update":
+        fields = {
+            "type": request.form.get("type", "").strip(),
+            "label": request.form.get("label", "").strip(),
+            "active": request.form.get("active") == "on",
+        }
+        if fields["type"] not in SOURCE_TYPES or not fields["label"]:
+            flash("Type and label are required.", "error")
+            return redirect(url_for("admin.sources"))
+        try:
+            file_ops.update_source(youtube_id, fields)
+        except ValueError as exc:
+            flash(f"Could not update source: {exc}", "error")
+            return redirect(url_for("admin.sources"))
+        flash(f"Updated {fields['label']!r}.", "success")
+    elif action == "remove":
+        try:
+            file_ops.remove_source(youtube_id)
+        except ValueError as exc:
+            flash(f"Could not remove source: {exc}", "error")
+            return redirect(url_for("admin.sources"))
+        flash(f"Removed {youtube_id!r} from sources.py.", "success")
+    return redirect(url_for("admin.sources"))
+
+
+_WARNING_DISMISS_REDIRECTS = {"suggestions": "admin.suggestions", "sources": "admin.sources"}
+
+
+@bp.route("/warnings/dismiss", methods=["POST"])
+def warnings_dismiss():
+    """Shared by every screen with a consistency/source warning box
+    (Suggestions, Sources) - `screen` picks which page to redirect back to,
+    `warning` is the exact warning text to ignore (see
+    file_ops.dismiss_warning())."""
+    warning = request.form.get("warning", "")
+    screen = request.form.get("screen", "")
+    endpoint = _WARNING_DISMISS_REDIRECTS.get(screen, "admin.sources")
+    if warning:
+        file_ops.dismiss_warning(warning)
+        flash("Warning ignored - it won't be shown again unless it changes.", "success")
+    return redirect(url_for(endpoint))
 
 
 def _run_refresh_subprocess(flags: list[str]) -> tuple[str, int | None]:
@@ -202,7 +293,54 @@ def suggestions():
         franchise_values=file_ops.get_franchise_values(),
         mood_values=file_ops.get_mood_values(),
         seasonal_values=file_ops.get_seasonal_values(),
+        series_overrides=file_ops.list_series_overrides(),
+        series_names=file_ops.get_series_names(),
     )
+
+
+def _parse_series_override_form(form) -> dict:
+    fields = {}
+    for name in SERIES_OVERRIDE_FIELDS:
+        raw = form.get(name, "").strip()
+        if not raw:
+            fields[name] = None
+            continue
+        if name in SERIES_OVERRIDE_INT_FIELDS:
+            try:
+                fields[name] = int(raw)
+            except ValueError:
+                fields[name] = None
+        else:
+            fields[name] = raw
+    return fields
+
+
+@bp.route("/series-overrides/add", methods=["POST"])
+def series_overrides_add():
+    name = request.form.get("series", "").strip()
+    if not name:
+        flash("Series name is required.", "error")
+        return redirect(url_for("admin.suggestions"))
+    fields = _parse_series_override_form(request.form)
+    try:
+        file_ops.apply_series_override(name, fields)
+    except ValueError as exc:
+        flash(f"Could not add series metadata: {exc}", "error")
+        return redirect(url_for("admin.suggestions"))
+    flash(f"Added series metadata for {name!r}.", "success")
+    return redirect(url_for("admin.suggestions"))
+
+
+@bp.route("/series-overrides/<path:series_name>", methods=["POST"])
+def series_overrides_action(series_name):
+    fields = _parse_series_override_form(request.form)
+    try:
+        file_ops.apply_series_override(series_name, fields)
+    except ValueError as exc:
+        flash(f"Could not update series metadata: {exc}", "error")
+        return redirect(url_for("admin.suggestions"))
+    flash(f"Updated series metadata for {series_name!r}.", "success")
+    return redirect(url_for("admin.suggestions"))
 
 
 def _parse_suggestion_form(form) -> dict:
@@ -212,6 +350,15 @@ def _parse_suggestion_form(form) -> dict:
     fields = {}
     for name in SUGGESTION_FIELDS:
         raw = form.get(name, "").strip()
+        if name == "series":
+            # The Series field is a "pick an existing one, or add a new
+            # one" picker (see field_grid() in suggestions.html) - a
+            # "__new__" selection means the real value lives in the
+            # companion `series_new` text input instead.
+            if raw == "__new__":
+                raw = form.get("series_new", "").strip()
+            fields[name] = raw or None
+            continue
         if name == "awards":
             if not raw:
                 fields[name] = []

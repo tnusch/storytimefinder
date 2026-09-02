@@ -24,6 +24,11 @@ data/claude_suggestions.json
 # list for removal detection. Local/ephemeral, never curated truth.
 data/fetched_items.json
 
+# Individually-ignored admin-UI consistency/source warnings (see
+# admin/file_ops.py's dismiss_warning()) - local review state, not
+# curated truth, never pruned.
+data/dismissed_warnings.json
+
 # Vercel
 .vercel
 

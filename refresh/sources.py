@@ -36,6 +36,38 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A",
+        "label": "Michel in Der Suppenschüssel",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE",
+        "label": "Der Grüffelo",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lhF7sdKpO1AJf3tkSj0ALVsAokKjRHavs",
+        "label": "Hexerei in der Schule",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kzVrxJgnruXuKhiBk8bc_cqqVUVEtL6-I",
+        "label": "Hexen gibt es doch",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_mk1rApVK6CxC1T7JfYx53jaJE0BtApAaE",
         "label": "Toy Story 4",
         "language": "de",
@@ -132,14 +164,6 @@ SOURCES = [
 
     {
         "type": "album",
-        "youtube_id": "OLAK5uy_mCUNR-Av0GzcrZ9vfuaOIIMlNVBg-95Q8",
-        "label": "Encanto",
-        "language": "de",
-        "active": True,
-    },
-
-    {
-        "type": "album",
         "youtube_id": "OLAK5uy_mWaaL1fk_QUpmiBrEtFRf7UFhdvEO6G2g",
         "label": "Strange World",
         "language": "de",
@@ -174,22 +198,6 @@ SOURCES = [
         "type": "album",
         "youtube_id": "OLAK5uy_lqa1SNw9mLihZLbNKqzV7EHhwcC45smGk",
         "label": "Alice im Wunderland - Hinter den Spiegeln",
-        "language": "de",
-        "active": True,
-    },
-
-    {
-        "type": "album",
-        "youtube_id": "OLAK5uy_mUJXtJvaGm1o19boWNKPn9zU-am8OXRXQ",
-        "label": "Das Dschungelbuch",
-        "language": "de",
-        "active": True,
-    },
-
-    {
-        "type": "album",
-        "youtube_id": "OLAK5uy_loAK3fXOH3uOo3T00so5cPnGsYsspZpEQ",
-        "label": "Dumbo",
         "language": "de",
         "active": True,
     },
@@ -542,14 +550,6 @@ SOURCES = [
         "type": "album",
         "youtube_id": "OLAK5uy_m_hm-SUaGplqMI8ht6iZeN7Js5r_cB-rk",
         "label": "Alles steht Kopf 2",
-        "language": "de",
-        "active": True,
-    },
-
-    {
-        "type": "album",
-        "youtube_id": "OLAK5uy_mDRgeNmjkLEFg78lW_cGP8klR11L6d-0Y",
-        "label": "Tarzan 2",
         "language": "de",
         "active": True,
     },

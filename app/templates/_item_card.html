@@ -1,4 +1,4 @@
-{% macro item_card(item) %}
+{% macro item_card(item, sequel_context={}) %}
 <article class="card"
   data-title="{{ item.title | lower }}"
   data-franchise="{{ item.franchise or '' }}"
@@ -36,6 +36,24 @@
       {% if item.genre %}<span class="tag">{{ t('genre_' ~ item.genre) }}</span>{% endif %}
     </p>
 
+    {# item.series_type no longer exists (moved to catalog.json's series
+       section) - get_sequel_context() already only keys sequel-series
+       items, so a plain lookup here is both correct and sufficient. #}
+    {% set seq = sequel_context.get(item.id) %}
+    {% if seq %}
+    <p class="card-series-nav">
+      {% if seq.position and seq.total %}
+        <span class="tag tag-series">{{ t('series_part_label', n=seq.position, total=seq.total) }}</span>
+      {% endif %}
+      {% if seq.prev %}
+        <a class="series-nav-link" href="{{ seq.prev.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ t('series_before') }} {{ seq.prev.title }}</a>
+      {% endif %}
+      {% if seq.next %}
+        <a class="series-nav-link" href="{{ seq.next.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ t('series_after') }} {{ seq.next.title }}</a>
+      {% endif %}
+    </p>
+    {% endif %}
+
     {% if item.description %}
       <p class="card-description">{{ item.description | truncate(140) }}</p>
     {% endif %}
@@ -47,6 +65,60 @@
         class="card-play-badge"
       >
     </a>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro series_card(group) %}
+<article class="card card-series"
+  data-title="{{ group.series | lower }}"
+  data-franchise="{{ group.franchise or '' }}"
+  data-age="{{ group.age_tag or '' }}"
+  data-series="{{ group.series }}"
+  data-language="{{ group.language or '' }}"
+  data-genre="{{ group.genre or '' }}"
+  data-mood="{{ group.mood or '' }}"
+  data-seasonal="{{ group.seasonal or '' }}"
+  data-awards="{{ 'true' if group.awards else '' }}"
+  data-item-count="{{ group.episode_count }}"
+  data-duration-seconds="0"
+  data-release-year="0"
+  {#- genre/franchise/mood/age_tag are now single, curated series-level
+     values (overrides.py's SERIES_OVERRIDES), so they're safe to filter
+     on directly, unlike before this existed when they were guessed from
+     "the first episode with a value". data-duration/data-release-decade
+     are still deliberately OMITTED though - duration and release year
+     were never part of SERIES_OVERRIDES and genuinely still vary per
+     episode, so there's no single correct value to filter by; this card
+     only ever matches each of those two filter groups' "Alle" option,
+     same "no catch-all value" rule this app already uses for unset
+     min_age. data-duration-seconds/data-release-year are set to a flat
+     "0" (rather than omitted) only because they feed numeric SORT
+     comparators (Number(x) - Number(y)), where a missing attribute
+     produces NaN and scrambles sort order unpredictably - "0" is a safe,
+     defined, if not deeply meaningful, sentinel: series cards cluster at
+     one end when sorting by duration/release year, acceptable since
+     those sorts are inherently less meaningful for a multi-episode
+     collection anyway. -#}
+>
+  <a class="card-thumb" href="{{ url_for('main.series_detail', slug=group.slug) }}">
+    {% if group.thumbnail_url %}
+      <img src="{{ group.thumbnail_url }}" alt="" loading="lazy">
+    {% else %}
+      <div class="card-thumb-fallback" aria-hidden="true">📖</div>
+    {% endif %}
+    <span class="card-duration">{{ t('series_episode_count_one' if group.episode_count == 1 else 'series_episode_count_other', n=group.episode_count) }}</span>
+  </a>
+  <div class="card-body">
+    <h3 class="card-title"><a href="{{ url_for('main.series_detail', slug=group.slug) }}">{{ group.series }}</a></h3>
+
+    <p class="card-meta">
+      {% if group.awards %}<span class="tag tag-award" title="{{ group.awards | map(attribute='name') | join(', ') }}">🏆</span>{% endif %}
+      {% if group.age_tag %}<span class="tag">{{ t('age_tag_short_' ~ group.age_tag) }}</span>{% endif %}
+      {% if group.genre %}<span class="tag">{{ t('genre_' ~ group.genre) }}</span>{% endif %}
+    </p>
+
+    <a class="card-view-series" href="{{ url_for('main.series_detail', slug=group.slug) }}">{{ t('series_view_all_episodes') }}</a>
   </div>
 </article>
 {% endmacro %}

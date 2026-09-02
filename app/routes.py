@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, abort, render_template
 
 from . import data
 
@@ -7,9 +7,14 @@ bp = Blueprint("main", __name__)
 
 @bp.route("/")
 def index():
+    entries = data.get_grid_entries()
     return render_template(
         "index.html",
-        items=data.get_items(),
+        items=entries,
+        total_count=data.get_total_audiobook_count(entries),
+        series_count=data.get_series_card_count(entries),
+        episode_count=data.get_episode_count_in_series(entries),
+        sequel_context=data.get_sequel_context(),
         franchises=data.get_franchises(),
         age_tags=data.get_age_tags(),
         series_list=data.get_series_list(),
@@ -22,6 +27,14 @@ def index():
         release_decades=data.get_release_decades(),
         generated_at=data.get_generated_at(),
     )
+
+
+@bp.route("/series/<slug>")
+def series_detail(slug):
+    group = data.get_series_group_by_slug(slug)
+    if group is None:
+        abort(404)
+    return render_template("series_detail.html", group=group, generated_at=data.get_generated_at())
 
 
 @bp.route("/impressum")

@@ -41,6 +41,7 @@ OVERRIDE_FIELDS = (
     "description",
     "series",
     "position_in_series",
+    "series_type",
     "genre",
     "franchise",
     "min_age",

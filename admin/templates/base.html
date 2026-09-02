@@ -49,6 +49,21 @@
       });
     });
 
+    // Any submit button with data-confirm shows a native confirm() dialog
+    // before its form is allowed to submit - used for destructive actions
+    // (Sources screen's Remove button) where a stray click shouldn't
+    // silently rewrite a source file. document.activeElement at submit
+    // time is the button that was actually clicked/activated, since
+    // clicking a submit button focuses it before the submit event fires.
+    document.querySelectorAll("form").forEach(function (form) {
+      form.addEventListener("submit", function (event) {
+        var btn = document.activeElement;
+        if (btn && btn.dataset && btn.dataset.confirm && !window.confirm(btn.dataset.confirm)) {
+          event.preventDefault();
+        }
+      });
+    });
+
     // Suggestions screen's inline diff hints: clicking "Use" fills the
     // suggested value into that field's own input/select/textarea (found
     // by its enclosing <label>) without submitting anything - lets you

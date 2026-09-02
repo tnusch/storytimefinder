@@ -238,6 +238,77 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 }
 .chip.is-active:hover { background: var(--chip-active-bg); }
 
+/* "Reihe" (series) filter: a searchable combobox instead of a chip row -
+   overrides the generic .filter-group's horizontal-scroll-strip behavior
+   (overflow-x: auto, nowrap), since there's no long chip row here anymore,
+   and - importantly - overflow: visible is needed so the dropdown list
+   below isn't clipped by its own filter-group's overflow box. */
+.filter-group-series {
+  overflow: visible;
+  flex-wrap: wrap;
+}
+.series-combobox {
+  position: relative;
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+.series-search-input {
+  width: 100%;
+  padding: 0.35rem 2rem 0.35rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+.series-search-input:focus {
+  outline: none;
+  border-color: var(--muted);
+}
+.series-clear-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+}
+.series-clear-btn:hover { color: var(--text); }
+.series-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+.series-options[hidden] { display: none; }
+.series-option {
+  padding: 0.4rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.series-option:hover { background: var(--hover-surface); }
+.series-option[hidden] { display: none; }
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -327,6 +398,43 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 .tag-award {
   background: rgba(255, 0, 0, 0.15);
   color: var(--brand);
+}
+.tag-series {
+  background: var(--chip-bg);
+  color: var(--text);
+  font-weight: 600;
+}
+.card-series-nav {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+.series-nav-link {
+  color: var(--muted);
+  text-decoration: underline;
+}
+.card-view-series {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.card-series {
+  border: 1px solid var(--muted);
+}
+.series-back {
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.series-back a { color: var(--muted); }
+.series-title { margin-bottom: 0.2rem; }
+.series-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 .card-description {
   margin: 0;

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_item_card.html" import item_card %}
+{% from "_item_card.html" import item_card, series_card %}
 
 {% block title %}StorytimeFinder{% endblock %}
 
@@ -76,12 +76,24 @@
   {% endif %}
 
   {% if series_list %}
-  <div class="filter-group" data-filter-type="series">
+  <div class="filter-group filter-group-series" data-filter-type="series">
     <span class="filter-label">{{ t('filter_series') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for s in series_list %}
-      <button type="button" class="chip" data-value="{{ s }}">{{ s }}</button>
-    {% endfor %}
+    <div class="series-combobox" id="series-combobox">
+      <input
+        type="text"
+        class="series-search-input"
+        id="series-search-input"
+        placeholder="{{ t('filter_series_placeholder') }}"
+        autocomplete="off"
+        aria-label="{{ t('filter_series') }}"
+      >
+      <button type="button" class="series-clear-btn" id="series-clear-btn" hidden aria-label="{{ t('chip_all') }}">&times;</button>
+      <ul class="series-options" id="series-options" hidden role="listbox">
+        {% for s in series_list %}
+          <li class="series-option" data-value="{{ s }}" role="option">{{ s }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
   {% endif %}
 
@@ -129,7 +141,17 @@
 
 <section class="results">
   <div class="results-header">
-    <h2 id="results-count">{{ t('results_count_one' if items|length == 1 else 'results_count_other', n=items|length) }}</h2>
+    <h2 id="results-count">
+      {% set titles_text = t('results_titles_one' if total_count == 1 else 'results_titles_other', n=total_count) %}
+      {% if series_count == 0 %}
+        {{ titles_text }}
+      {% else %}
+        {{ t('results_count_with_series',
+             titles=titles_text,
+             episodes=t('results_episodes_one' if episode_count == 1 else 'results_episodes_other', n=episode_count),
+             series=t('results_series_one' if series_count == 1 else 'results_series_other', n=series_count)) }}
+      {% endif %}
+    </h2>
     <select id="sort-select" class="sort-select" aria-label="{{ t('sort_label') }}">
       <option value="title_asc">{{ t('sort_title_asc') }}</option>
       <option value="title_desc">{{ t('sort_title_desc') }}</option>
@@ -142,7 +164,9 @@
 
   {% if items %}
     <div class="card-grid" id="card-grid">
-      {% for item in items %}{{ item_card(item) }}{% endfor %}
+      {% for entry in items %}
+        {% if entry.kind == 'series' %}{{ series_card(entry) }}{% else %}{{ item_card(entry, sequel_context) }}{% endif %}
+      {% endfor %}
     </div>
     <p class="empty" id="empty-message" hidden>{{ t('empty_filtered') }}</p>
     <nav class="pagination" id="pagination" aria-label="{{ t('pagination_nav_label') }}" hidden>
@@ -163,8 +187,13 @@
   var PAGE_SIZE = 24;
 
   var I18N = {
-    resultsOne: {{ t('results_count_one') | tojson }},
-    resultsOther: {{ t('results_count_other') | tojson }},
+    titlesOne: {{ t('results_titles_one') | tojson }},
+    titlesOther: {{ t('results_titles_other') | tojson }},
+    episodesOne: {{ t('results_episodes_one') | tojson }},
+    episodesOther: {{ t('results_episodes_other') | tojson }},
+    seriesOne: {{ t('results_series_one') | tojson }},
+    seriesOther: {{ t('results_series_other') | tojson }},
+    countWithSeries: {{ t('results_count_with_series') | tojson }},
     paginationStatus: {{ t('pagination_status') | tojson }}
   };
 
@@ -234,7 +263,22 @@
       grid.appendChild(card);
     });
 
-    resultsCount.textContent = (matches.length === 1 ? I18N.resultsOne : I18N.resultsOther).replace("{n}", matches.length);
+    var titlesCount = matches.reduce(function (sum, card) { return sum + Number(card.dataset.itemCount || 1); }, 0);
+    var seriesCards = matches.filter(function (card) { return card.classList.contains("card-series"); });
+    var seriesCount = seriesCards.length;
+    var episodesCount = seriesCards.reduce(function (sum, card) { return sum + Number(card.dataset.itemCount || 1); }, 0);
+
+    var titlesText = (titlesCount === 1 ? I18N.titlesOne : I18N.titlesOther).replace("{n}", titlesCount);
+    if (seriesCount === 0) {
+      resultsCount.textContent = titlesText;
+    } else {
+      var episodesText = (episodesCount === 1 ? I18N.episodesOne : I18N.episodesOther).replace("{n}", episodesCount);
+      var seriesText = (seriesCount === 1 ? I18N.seriesOne : I18N.seriesOther).replace("{n}", seriesCount);
+      resultsCount.textContent = I18N.countWithSeries
+        .replace("{titles}", titlesText)
+        .replace("{episodes}", episodesText)
+        .replace("{series}", seriesText);
+    }
     if (emptyMessage) emptyMessage.hidden = matches.length !== 0;
 
     if (pagination) {
@@ -313,6 +357,90 @@
 
   bindFilterBar(filterBar);
   bindFilterBar(advancedBar);
+
+  // "Reihe" (series) filter: a searchable combobox instead of a chip row -
+  // there can be a lot of series names, so a scrollable chip strip doesn't
+  // scale the way it does for the smaller fixed vocabularies (age, genre,
+  // ...). Sets active.series / calls applyFilters() the same way
+  // bindFilterBar()'s chip click handler does for every other group - the
+  // rest of the filtering pipeline doesn't know or care which UI widget
+  // produced the value.
+  function initSeriesCombobox() {
+    var combobox = document.getElementById("series-combobox");
+    if (!combobox) return;
+    var input = document.getElementById("series-search-input");
+    var list = document.getElementById("series-options");
+    var clearBtn = document.getElementById("series-clear-btn");
+    var options = Array.prototype.slice.call(list.querySelectorAll(".series-option"));
+
+    function filterOptions(query) {
+      var q = query.trim().toLowerCase();
+      var anyVisible = false;
+      options.forEach(function (opt) {
+        var isMatch = q === "" || opt.dataset.value.toLowerCase().indexOf(q) !== -1;
+        opt.hidden = !isMatch;
+        if (isMatch) anyVisible = true;
+      });
+      list.hidden = !anyVisible;
+    }
+
+    function openList() {
+      filterOptions(input.value);
+    }
+
+    function closeList() {
+      list.hidden = true;
+    }
+
+    function selectSeries(value) {
+      input.value = value;
+      clearBtn.hidden = !value;
+      closeList();
+      active.series = value;
+      applyFilters();
+    }
+
+    input.addEventListener("input", function () {
+      if (input.value === "") selectSeries("");
+      filterOptions(input.value);
+      list.hidden = false;
+    });
+    input.addEventListener("focus", openList);
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeList();
+        input.blur();
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        var firstVisible = options.filter(function (opt) { return !opt.hidden; })[0];
+        if (firstVisible) selectSeries(firstVisible.dataset.value);
+      }
+    });
+
+    list.addEventListener("click", function (event) {
+      var opt = event.target.closest(".series-option");
+      if (!opt) return;
+      selectSeries(opt.dataset.value);
+    });
+
+    clearBtn.addEventListener("click", function () {
+      selectSeries("");
+      input.focus();
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!combobox.contains(event.target)) closeList();
+    });
+
+    // Reflects whatever active.series already is (e.g. seeded from a
+    // server-rendered default, same as the language chip's default) -
+    // there's no chip to read this off of anymore for this group.
+    if (active.series) {
+      input.value = active.series;
+      clearBtn.hidden = false;
+    }
+  }
+  initSeriesCombobox();
 
   if (advancedToggle && advancedBar) {
     advancedToggle.addEventListener("click", function () {

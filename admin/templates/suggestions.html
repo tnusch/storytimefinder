@@ -14,7 +14,7 @@
   {% endif %}
 {% endmacro %}
 
-{% macro field_grid(values, genre_values, franchise_values, mood_values, seasonal_values, diff={}) %}
+{% macro field_grid(values, genre_values, franchise_values, mood_values, seasonal_values, series_names, diff={}) %}
 <div class="field-grid">
   <label>
     Description
@@ -23,7 +23,19 @@
   </label>
   <label>
     Series
-    <input type="text" name="series" value="{{ values.series or "" }}">
+    <select name="series" class="series-picker">
+      <option value="">(none)</option>
+      {% for s in series_names %}
+        <option value="{{ s }}" {% if values.series == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+      <option value="__new__" {% if values.series and values.series not in series_names %}selected{% endif %}>+ Add new series...</option>
+    </select>
+    <input
+      type="text" name="series_new" class="series-new-input"
+      placeholder="New series name"
+      value="{{ values.series if (values.series and values.series not in series_names) else '' }}"
+      {% if not (values.series and values.series not in series_names) %}hidden{% endif %}
+    >
     {{ diff_hint("series", diff) }}
   </label>
   <label>
@@ -33,7 +45,7 @@
   </label>
   <label>
     Genre
-    <select name="genre">
+    <select name="genre" class="series-resolved-field" data-field="genre">
       <option value="">(none)</option>
       {% for g in genre_values %}
         <option value="{{ g }}" {% if values.genre == g %}selected{% endif %}>{{ g }}</option>
@@ -43,7 +55,7 @@
   </label>
   <label>
     Franchise
-    <select name="franchise">
+    <select name="franchise" class="series-resolved-field" data-field="franchise">
       <option value="">(none)</option>
       {% for f in franchise_values %}
         <option value="{{ f }}" {% if values.franchise == f %}selected{% endif %}>{{ f }}</option>
@@ -53,7 +65,7 @@
   </label>
   <label>
     Min age
-    <input type="number" name="min_age" min="0" value="{{ values.min_age if values.min_age is not none else "" }}">
+    <input type="number" name="min_age" min="0" class="series-resolved-field" data-field="min_age" value="{{ values.min_age if values.min_age is not none else "" }}">
     {{ diff_hint("min_age", diff) }}
   </label>
   <label>
@@ -63,7 +75,7 @@
   </label>
   <label>
     Mood
-    <select name="mood">
+    <select name="mood" class="series-resolved-field" data-field="mood">
       <option value="">(none)</option>
       {% for m in mood_values %}
         <option value="{{ m }}" {% if values.mood == m %}selected{% endif %}>{{ m }}</option>
@@ -101,19 +113,136 @@
     informational - not hard errors: items sharing a <code>series</code>
     that disagree on genre/franchise/mood/seasonal, or that claim the same
     <code>position_in_series</code>; two different items with the exact
-    same title (usually a genuine duplicate listing or a copy-paste
-    mistake); and known items missing a core curated field
-    (description/min_age/genre/mood/source_release_year), including ones
-    with no override entry at all yet. Surfaced here as you curate so you
-    don't have to sync first to see them.
+    same title AND the same <code>source_release_year</code> (a known,
+    differing year - e.g. two separate film adaptations sharing a title -
+    is not flagged); and known items missing a core curated field
+    (description/min_age/genre/mood/source_release_year, except
+    genre/mood/min_age on an item covered by an episodic series' entry
+    below), including ones with no override entry at all yet. Surfaced
+    here as you curate so you don't have to sync first to see them.
   </p>
   <ul class="warning-list">
     {% for w in consistency_warnings %}
-      <li>{{ w }}</li>
+      <li>
+        <span>{{ w }}</span>
+        <form method="post" action="{{ url_for('admin.warnings_dismiss') }}" class="warning-dismiss-form">
+          <input type="hidden" name="warning" value="{{ w }}">
+          <input type="hidden" name="screen" value="suggestions">
+          <button type="submit" class="warning-dismiss-btn">Ignore</button>
+        </form>
+      </li>
     {% endfor %}
   </ul>
 </section>
 {% endif %}
+
+<section class="consistency-warnings">
+  <h2>Episodic series metadata</h2>
+  <p class="hint">
+    <code>SERIES_OVERRIDES</code> in <code>refresh/overrides.py</code> - series_type/genre/
+    franchise/mood/min_age for an episodic series, set once here instead of repeated on every
+    episode's own entry above. Picking one of these series in an item's <strong>Series</strong>
+    field above automatically disables and prefills that item's genre/franchise/mood/min_age
+    fields with the values below, once it's marked <code>episodic</code>.
+  </p>
+  {% if series_overrides %}
+  <table class="source-table">
+    <thead>
+      <tr><th>Series</th><th>Type</th><th>Genre</th><th>Franchise</th><th>Mood</th><th>Min age</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for name, meta in series_overrides.items() | sort %}
+      <tr>
+        <td>{{ name }}</td>
+        <td>
+          <select name="series_type" form="series-override-{{ loop.index }}">
+            <option value="">(none)</option>
+            <option value="episodic" {% if meta.series_type == "episodic" %}selected{% endif %}>episodic</option>
+            <option value="sequel" {% if meta.series_type == "sequel" %}selected{% endif %}>sequel</option>
+          </select>
+        </td>
+        <td>
+          <select name="genre" form="series-override-{{ loop.index }}">
+            <option value="">(none)</option>
+            {% for g in genre_values %}
+              <option value="{{ g }}" {% if meta.genre == g %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <select name="franchise" form="series-override-{{ loop.index }}">
+            <option value="">(none)</option>
+            {% for f in franchise_values %}
+              <option value="{{ f }}" {% if meta.franchise == f %}selected{% endif %}>{{ f }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <select name="mood" form="series-override-{{ loop.index }}">
+            <option value="">(none)</option>
+            {% for m in mood_values %}
+              <option value="{{ m }}" {% if meta.mood == m %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <input type="number" name="min_age" min="0" form="series-override-{{ loop.index }}"
+            value="{{ meta.min_age if meta.min_age is not none else '' }}">
+        </td>
+        <td><button type="submit" form="series-override-{{ loop.index }}" class="btn btn-secondary">Save</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% for name, meta in series_overrides.items() | sort %}
+    <form id="series-override-{{ loop.index }}" method="post" action="{{ url_for('admin.series_overrides_action', series_name=name) }}"></form>
+  {% endfor %}
+  {% endif %}
+
+  <h3>Add new series metadata</h3>
+  <form method="post" action="{{ url_for('admin.series_overrides_add') }}" class="field-grid">
+    <label>
+      Series name
+      <input type="text" name="series" required placeholder="Bibi Blocksberg">
+    </label>
+    <label>
+      Type
+      <select name="series_type">
+        <option value="">(none)</option>
+        <option value="episodic">episodic</option>
+        <option value="sequel">sequel</option>
+      </select>
+    </label>
+    <label>
+      Genre
+      <select name="genre">
+        <option value="">(none)</option>
+        {% for g in genre_values %}<option value="{{ g }}">{{ g }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>
+      Franchise
+      <select name="franchise">
+        <option value="">(none)</option>
+        {% for f in franchise_values %}<option value="{{ f }}">{{ f }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>
+      Mood
+      <select name="mood">
+        <option value="">(none)</option>
+        {% for m in mood_values %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>
+      Min age
+      <input type="number" name="min_age" min="0">
+    </label>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Add series metadata</button>
+    </div>
+  </form>
+</section>
 
 <h1>Claude suggestions</h1>
 <p class="hint">
@@ -137,16 +266,24 @@
     {% for entry_id, s in suggestions.items() %}
     <article class="suggestion-card">
       {% set thumb = item_info.get(entry_id, {}).get("thumbnail_url") %}
-      {% if thumb %}<img class="suggestion-thumb" src="{{ thumb }}" alt="">{% endif %}
+      {% set yt_url = item_info.get(entry_id, {}).get("youtube_music_url") %}
+      {% if thumb %}
+        {% if yt_url %}<a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">{% endif %}
+        <img class="suggestion-thumb" src="{{ thumb }}" alt="">
+        {% if yt_url %}</a>{% endif %}
+      {% endif %}
       <h2>{{ s.title }}</h2>
-      <p class="entry-id"><code>{{ entry_id }}</code> &middot; suggested {{ s.suggested_at }}</p>
+      <p class="entry-id">
+        <code>{{ entry_id }}</code> &middot; suggested {{ s.suggested_at }}
+        {% if yt_url %} &middot; <a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">Open in YouTube Music</a>{% endif %}
+      </p>
 
       <form method="post" action="{{ url_for('admin.suggestions_regenerate', entry_id=entry_id) }}" class="regenerate-form">
         <button type="submit" class="btn btn-secondary">Regenerate suggestion</button>
       </form>
 
       <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}">
-        {{ field_grid(s, genre_values, franchise_values, mood_values, seasonal_values) }}
+        {{ field_grid(s, genre_values, franchise_values, mood_values, seasonal_values, series_names) }}
         <div class="actions">
           <button type="submit" name="action" value="apply" class="btn btn-primary">Apply to overrides.py</button>
           <button type="submit" name="action" value="dismiss" class="btn btn-secondary">Dismiss</button>
@@ -182,21 +319,29 @@
     {% set entry_diff = diffs.get(entry_id, {}) %}
     <article class="suggestion-card">
       {% set thumb = item_info.get(entry_id, {}).get("thumbnail_url") %}
-      {% if thumb %}<img class="suggestion-thumb" src="{{ thumb }}" alt="">{% endif %}
+      {% set yt_url = item_info.get(entry_id, {}).get("youtube_music_url") %}
+      {% if thumb %}
+        {% if yt_url %}<a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">{% endif %}
+        <img class="suggestion-thumb" src="{{ thumb }}" alt="">
+        {% if yt_url %}</a>{% endif %}
+      {% endif %}
       <h2>
         {{ item_info.get(entry_id, {}).get("title", entry_id) }}
         {% if entry_diff %}
           <span class="badge badge-warn">{{ entry_diff|length }} suggested change{{ "s" if entry_diff|length != 1 else "" }}</span>
         {% endif %}
       </h2>
-      <p class="entry-id"><code>{{ entry_id }}</code></p>
+      <p class="entry-id">
+        <code>{{ entry_id }}</code>
+        {% if yt_url %} &middot; <a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">Open in YouTube Music</a>{% endif %}
+      </p>
 
       <form method="post" action="{{ url_for('admin.suggestions_regenerate', entry_id=entry_id) }}" class="regenerate-form">
         <button type="submit" class="btn btn-secondary">Regenerate suggestion</button>
       </form>
 
       <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}">
-        {{ field_grid(o, genre_values, franchise_values, mood_values, seasonal_values, entry_diff) }}
+        {{ field_grid(o, genre_values, franchise_values, mood_values, seasonal_values, series_names, entry_diff) }}
         <div class="actions">
           <button type="submit" name="action" value="apply" class="btn btn-primary">Save changes</button>
         </div>
@@ -205,4 +350,59 @@
     {% endfor %}
   </div>
 {% endif %}
+
+<script>
+  // series_type/genre/franchise/mood/min_age for every SERIES_OVERRIDES
+  // entry, keyed by series name - used below to disable and prefill an
+  // item's genre/franchise/mood/min_age fields whenever its Series picker
+  // resolves to an episodic series (those four fields come from here
+  // instead once that's true - see overrides.py's docstring).
+  window.SERIES_OVERRIDES = {{ series_overrides | tojson }};
+
+  (function () {
+    function snapshotOriginal(grid) {
+      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
+        if (field.dataset.originalValue === undefined) {
+          field.dataset.originalValue = field.value;
+        }
+      });
+    }
+
+    function applySeriesLock(select) {
+      var grid = select.closest(".field-grid");
+      if (!grid) return;
+      snapshotOriginal(grid);
+
+      var newInput = grid.querySelector(".series-new-input");
+      if (newInput) newInput.hidden = select.value !== "__new__";
+
+      var seriesName = select.value === "__new__" ? (newInput ? newInput.value.trim() : "") : select.value;
+      var meta = seriesName ? window.SERIES_OVERRIDES[seriesName] : null;
+      var isEpisodic = !!(meta && meta.series_type === "episodic");
+
+      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
+        field.disabled = isEpisodic;
+        if (isEpisodic) {
+          var key = field.dataset.field;
+          field.value = meta && meta[key] != null ? meta[key] : "";
+          field.title = 'Resolved from "' + seriesName + '"\'s episodic series metadata below - edit it there instead.';
+        } else {
+          field.value = field.dataset.originalValue;
+          field.removeAttribute("title");
+        }
+      });
+    }
+
+    document.querySelectorAll(".series-picker").forEach(function (select) {
+      applySeriesLock(select);
+      select.addEventListener("change", function () { applySeriesLock(select); });
+
+      var grid = select.closest(".field-grid");
+      var newInput = grid && grid.querySelector(".series-new-input");
+      if (newInput) {
+        newInput.addEventListener("input", function () { applySeriesLock(select); });
+      }
+    });
+  })();
+</script>
 {% endblock %}
