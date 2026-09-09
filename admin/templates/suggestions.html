@@ -244,6 +244,26 @@
   </form>
 </section>
 
+<section class="consistency-warnings">
+  <h2>Description prompt builder</h2>
+  <p class="hint">
+    Copy this into a separate Claude.ai chat to batch-generate descriptions
+    by hand instead of paying for the API call during Fetch (see
+    <code>refresh/refresh.py --fetch --skip-claude</code>, also available as
+    a checkbox on the <a href="{{ url_for('admin.fetch') }}">Fetch</a>
+    screen). Lists every item below (Claude suggestions and Applied
+    overrides) that has no description yet - either applied or suggested -
+    with its series in parentheses where it has one so episodes of the same
+    series stay distinguishable in Claude's reply. Paste the result back
+    into each item's own Description field below, then Apply/Save as usual
+    - nothing here is ever sent anywhere automatically.
+  </p>
+  <textarea id="description-prompt" class="prompt-textarea" rows="6" readonly>{{ description_prompt }}</textarea>
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" data-copy-target="#description-prompt">Copy to clipboard</button>
+  </div>
+</section>
+
 <h1>Claude suggestions</h1>
 <p class="hint">
   Nothing here is applied automatically. Edit any field before applying if

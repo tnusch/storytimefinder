@@ -36,6 +36,238 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_kKl4DksXY3PwuKkwPC69Sg9G5ieGYriAU",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 06",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kJVI89BcsaAU9uB_t3RdWNoQoD6K9UwC4",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 05",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_keBsBPd8TDHN59RDOvIERlT3CQsIAjeXA",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 04",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mvaFjVIV7l_zOgZ_64ra0iihxzgW1XSP8",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 03",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kR_Nvl28OMVtZSWml1nUIPNPalHx-X3wY",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 02",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nJbbhBPjIUOnM_yHX6kY3tzsdG5uWePc4",
+        "label": "Marvels Iron Man und seine fantastischen Freunde: 01",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kP_Dsbd-F_rpRx0jvMmJZN4kY7WwX8jZA",
+        "label": "Marvels Spidey und seine Super-Freunde: 23",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_m85jEkTItv0lodkpl6D7Uluq18zugoXE0",
+        "label": "Marvels Spidey und seine Super-Freunde: 22",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kGP0rHFspZXCbgDOUNyebn5UYHd7tzonw",
+        "label": "Marvels Spidey und seine Super-Freunde: 21",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l-SqSHZGc9D_PNbGP_r4brLaNqF-FAiWY",
+        "label": "Marvels Spidey und seine Super-Freunde: 20",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_muLJTaMxs6MEsxrZ6VJvW6jOOrnloU66g",
+        "label": "Marvels Spidey und seine Super-Freunde: 19",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mi7X68Tf4KxpRiRminYdsVlZOMXFnD_mE",
+        "label": "Marvels Spidey und seine Super-Freunde: 18",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ldyDIX6FAPvbqzEUYfd7sLHA7RzDnYoGQ",
+        "label": "Marvels Spidey und seine Super-Freunde: 17",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ni1m5jqeaPnKx5RWjvTrPwAKqURbHTGGI",
+        "label": "Marvels Spidey und seine Super-Freunde: 16",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nX2epgcbsva26DJL8cMu5NsXzHruLf2dU",
+        "label": "Marvels Spidey und seine Super-Freunde: 15",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mvvU_2ODkoKDuoM6PafITo48wyMrWwszM",
+        "label": "Marvels Spidey und seine Super-Freunde: 14",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mm4zg2uv8P3vjUA47E193NFSMslUIEjH0",
+        "label": "Marvels Spidey und seine Super-Freunde: 13",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_maiJt1sIyuCSufGA87P44YHIqPLzxfx58",
+        "label": "Marvels Spidey und seine Super-Freunde: 12",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nY4HxEvVh41vD6DxCCD-Z2i2FFBkx8aVE",
+        "label": "Marvels Spidey und seine Super-Freunde: 11",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ndgBGwUTo-lqxlp4IIq9oUdFyU63Hv1EQ",
+        "label": "Marvels Spidey und seine Super-Freunde: 10",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lOF25aD6LsH2daD6ntIeMpQIwozMhdfvY",
+        "label": "Marvels Spidey und seine Super-Freunde: 09",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nIZ-f_K-BjrFVZ7vEk3g3LyNahsSe5owI",
+        "label": "Marvels Spidey und seine Super-Freunde: 08",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mKBoE4bMdsTsmDGfFYZCGazSDX3wSRDg8",
+        "label": "Marvels Spidey und seine Super-Freunde: 07",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lkguizXTDOCO3tby0LlGLicGkTPEe5Hqg",
+        "label": "Marvels Spidey und seine Super-Freunde: 06",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lllMb08cdtPTyBwr82LsfHZmmuTim6VkI",
+        "label": "Marvels Spidey und seine Super-Freunde: 05",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mt4TC0DEyjXo3dJSStdrofG5ayORcAvds",
+        "label": "Marvels Spidey und seine Super-Freunde: 04",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lOEDZb_zTk1vyUEhW4XzZvyGJvMdXd85A",
+        "label": "Marvels Spidey und seine Super-Freunde: 03",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mLxxPGkXvLgED7wYJOwEp8DUSzVOOQtU0",
+        "label": "Marvels Spidey und seine Super-Freunde: 02",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mNkVu8OS4H6AYbj18LmuGQpKwfTrqWy3o",
+        "label": "Marvels Spidey und seine Super-Freunde: 01",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A",
         "label": "Michel in Der Suppenschüssel",
         "language": "de",

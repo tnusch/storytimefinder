@@ -4,7 +4,8 @@
 {% block content %}
 <h1>Fetch</h1>
 <p class="hint">
-  Pulls new items' metadata from YouTube and a Claude suggestion for each,
+  Pulls new items' metadata from YouTube and, unless
+  <code>--skip-claude</code> is checked below, a Claude suggestion for each,
   staging both into <code>data/fetched_items.json</code> and
   <code>data/claude_suggestions.json</code>. Runs <code>refresh/refresh.py
   --fetch</code> as a subprocess, using this machine's <code>.env</code>
@@ -48,6 +49,14 @@
       <input type="checkbox" name="log_responses">
       <span><code>--log-responses</code> - also log raw YouTube API
       responses</span>
+    </label>
+    <label class="checkbox-label checkbox-option">
+      <input type="checkbox" name="skip_claude">
+      <span><code>--skip-claude</code> - skip the Claude suggestion call for
+      new items entirely (item details are still fetched from YouTube as
+      usual). Use this to curate descriptions by hand instead, e.g. with the
+      prompt-builder on the
+      <a href="{{ url_for('admin.suggestions') }}">Suggestions</a> screen</span>
     </label>
   </div>
   <div class="actions">

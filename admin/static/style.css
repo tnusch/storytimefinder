@@ -112,6 +112,13 @@ input[type="text"], input[type="number"], select, textarea {
   font-family: inherit;
 }
 textarea { resize: vertical; }
+.prompt-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
 
 /* A genre/franchise/mood/min_age field disabled by field_grid()'s
    series-lock script (suggestions.html) - resolved from an episodic

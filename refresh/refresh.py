@@ -842,7 +842,7 @@ def save_fetched_items(fetched_items: dict) -> None:
     )
 
 
-def record_suggestion(suggestions: dict, entry_id: str, title: str, result: dict) -> None:
+def record_suggestion(suggestions: dict, entry_id: str, title: str, result: dict, force: bool = False) -> None:
     """Add/update one item's entry in the in-memory suggestions accumulator -
     only if Claude proposed at least one field worth a human reviewing (an
     all-empty suggestion isn't worth cluttering the file with - `[]` counts
@@ -853,9 +853,22 @@ def record_suggestion(suggestions: dict, entry_id: str, title: str, result: dict
     overrides.py by hand. `suggestions` is mutated in place; see
     save_suggestions() for the eventual write, and load_suggestions() for
     why previously-recorded entries for other items are preserved across
-    runs."""
+    runs.
+
+    `force=True` records the entry even if every field is empty - passed by
+    build_track_entries()/build_album_entry() whenever `claude_client` is
+    `None` (either `--skip-claude` or no `ANTHROPIC_API_KEY` configured), so
+    the item still gets an (empty) entry in data/claude_suggestions.json
+    instead of being invisible on the admin UI's Suggestions screen until
+    someone thinks to hand-edit overrides.py directly - see the Description
+    prompt builder there, which needs exactly this to find such items.
+    Without force, an all-empty result from a real Claude call that failed
+    or genuinely suggested nothing is still NOT written, unchanged from
+    before - that case stays decluttered since a future --fetch on the same
+    source could plausibly get a better answer, unlike a deliberately-
+    skipped call which never will."""
     fields = {key: result.get(key) for key in EMPTY_SUGGESTIONS}
-    if not any(value not in (None, []) for value in fields.values()):
+    if not force and not any(value not in (None, []) for value in fields.values()):
         return
     suggestions[entry_id] = {
         "title": title,
@@ -880,7 +893,7 @@ def build_track_entries(
         if info is None:
             continue  # video returned by playlist but not resolvable (private/deleted)
         result = generate_metadata_suggestions(claude_client, info["title"], language)
-        record_suggestion(suggestions, vid, info["title"], result)
+        record_suggestion(suggestions, vid, info["title"], result, force=claude_client is None)
         entries.append(
             {
                 "id": vid,
@@ -940,7 +953,7 @@ def build_album_entry(
     thumbnail_url = (first["thumbnail_url"] if first else None) or album.get("thumbnail_url")
 
     result = generate_metadata_suggestions(claude_client, label, language)
-    record_suggestion(suggestions, playlist_id, label, result)
+    record_suggestion(suggestions, playlist_id, label, result, force=claude_client is None)
 
     return [
         {
@@ -1458,6 +1471,18 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--skip-claude",
+        action="store_true",
+        help=(
+            "With --fetch: skip Claude suggestion calls entirely (still fetches YouTube item "
+            "details as usual) - use when curating descriptions manually instead, e.g. via the "
+            "admin UI's prompt-builder on the Suggestions screen. New items are staged with no "
+            "suggestion at all, same as if ANTHROPIC_API_KEY were unset. No effect on "
+            "--check-removed/--sync (neither ever calls Claude) or --regenerate-suggestion "
+            "(calling Claude for one specific item is the entire point of that mode)."
+        ),
+    )
+    parser.add_argument(
         "--log-responses",
         action="store_true",
         help="With --check-removed/--fetch: also log raw YouTube API responses (verbose - useful for debugging).",
@@ -1539,12 +1564,15 @@ def run_check_removed() -> None:
     )
 
 
-def run_fetch(claude_client) -> None:
+def run_fetch(claude_client, skip_claude: bool = False) -> None:
     api_key = os.environ.get("YOUTUBE_API_KEY")
     if not api_key:
         log.error("YOUTUBE_API_KEY is not set (see .env.example)")
         sys.exit(1)
-    if claude_client is None:
+    if skip_claude:
+        claude_client = None
+        log.info("--skip-claude: fetching item details with no Claude suggestions")
+    elif claude_client is None:
         log.warning("ANTHROPIC_API_KEY is not set - new items will be fetched with no Claude suggestions")
 
     conn = get_db()  # read-only use here: only ever SELECTs, never INSERT/UPDATE/DELETE - see fetch_new_items_for_source()
@@ -1856,7 +1884,7 @@ def main() -> None:
         return
 
     if args.fetch:
-        run_fetch(claude_client)
+        run_fetch(claude_client, skip_claude=args.skip_claude)
         return
 
     run_sync()

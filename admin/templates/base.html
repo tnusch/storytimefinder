@@ -77,6 +77,23 @@
         field.value = btn.dataset.value;
       });
     });
+
+    // A button with data-copy-target="#id" copies that element's value (for
+    // an input/textarea) or text (anything else) to the clipboard - used by
+    // the Suggestions screen's description-prompt builder, written generic
+    // enough to reuse for any future copy-to-clipboard button.
+    document.querySelectorAll("[data-copy-target]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var target = document.querySelector(btn.dataset.copyTarget);
+        if (!target) return;
+        var text = "value" in target ? target.value : target.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          var original = btn.textContent;
+          btn.textContent = "Copied!";
+          setTimeout(function () { btn.textContent = original; }, 1500);
+        });
+      });
+    });
   </script>
 </body>
 </html>

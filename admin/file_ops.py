@@ -181,6 +181,59 @@ def get_item_info() -> dict[str, dict]:
     return info
 
 
+# Fixed instruction text for build_description_prompt() below - written once
+# here rather than inline so the wording only has to be edited in one place.
+DESCRIPTION_PROMPT_INSTRUCTIONS = (
+    "Create a one-sentence, max 130 character, spoiler-light description of "
+    "its story, in German. Describe the plot/theme only - do not use the "
+    "title, franchise name, or any character names from it anywhere in this "
+    "field."
+)
+
+
+def build_description_prompt(suggestions: dict, overrides: dict, item_info: dict) -> str:
+    """Assembles a copy/paste-able prompt for generating descriptions by hand
+    in a separate Claude.ai chat - the manual counterpart to refresh.py's
+    --skip-claude flag, for a curator who fetches item metadata without
+    paying for a Claude API call and wants to batch-generate descriptions
+    themselves instead. Combines DESCRIPTION_PROMPT_INSTRUCTIONS with a
+    de-duplicated, alphabetically-sorted, comma-separated list of every item
+    currently shown on the Suggestions screen (both pending Claude
+    suggestions and already-applied overrides) that has NO description yet
+    anywhere - neither an applied override's `description` nor a pending
+    suggestion's own Claude-suggested one - since an item that already has
+    one doesn't need this manual workflow. Each is written as "Title" or,
+    if it has a series, "Title (Series)" - the series annotation keeps an
+    episodic series' individual episodes distinguishable from each other in
+    the pasted list, since titles alone can otherwise look identical or too
+    similar. For an entry_id present in both dicts, the suggestion's
+    title/series wins (it's the fresher of the two, e.g. after clicking
+    Regenerate suggestion for an already-curated item), but EITHER having a
+    description is enough to exclude the item - checked independently of
+    which title/series ends up used. Never sent anywhere itself - this only
+    builds the text a curator copies out by hand into their own Claude.ai
+    session."""
+    entries: dict[str, tuple[str, str | None]] = {}
+    for entry_id in set(overrides) | set(suggestions):
+        override = overrides.get(entry_id, {})
+        suggestion = suggestions.get(entry_id, {})
+        if override.get("description") or suggestion.get("description"):
+            continue
+        if suggestion:
+            title = suggestion.get("title") or entry_id
+            series = suggestion.get("series")
+        else:
+            title = item_info.get(entry_id, {}).get("title") or entry_id
+            series = override.get("series")
+        entries[entry_id] = (title, series)
+
+    labels = sorted(
+        f"{title} ({series})" if series else title
+        for title, series in entries.values()
+    )
+    return DESCRIPTION_PROMPT_INSTRUCTIONS + "\n\n" + ", ".join(labels)
+
+
 def load_dismissed_warnings() -> dict:
     """{warning_text: {"dismissed_at": ...}} - a human clicking "Ignore" on
     any consistency/source warning (see get_consistency_warnings()/

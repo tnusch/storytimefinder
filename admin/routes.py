@@ -214,6 +214,8 @@ def fetch_run():
         flags.append("--clean-fetched")
     if request.form.get("log_responses") == "on":
         flags.append("--log-responses")
+    if request.form.get("skip_claude") == "on":
+        flags.append("--skip-claude")
 
     output, returncode = _run_refresh_subprocess(flags)
     return render_template("fetch.html", output=output, returncode=returncode, flags=flags)
@@ -282,19 +284,21 @@ def _compute_override_diffs(overrides: dict, suggestions: dict) -> dict[str, dic
 def suggestions():
     suggestions_data = file_ops.load_suggestions()
     overrides_data = file_ops.list_overrides()
+    item_info = file_ops.get_item_info()
     return render_template(
         "suggestions.html",
         suggestions=suggestions_data,
         overrides=overrides_data,
         diffs=_compute_override_diffs(overrides_data, suggestions_data),
         consistency_warnings=file_ops.get_consistency_warnings(),
-        item_info=file_ops.get_item_info(),
+        item_info=item_info,
         genre_values=file_ops.get_genre_values(),
         franchise_values=file_ops.get_franchise_values(),
         mood_values=file_ops.get_mood_values(),
         seasonal_values=file_ops.get_seasonal_values(),
         series_overrides=file_ops.list_series_overrides(),
         series_names=file_ops.get_series_names(),
+        description_prompt=file_ops.build_description_prompt(suggestions_data, overrides_data, item_info),
     )
 
 

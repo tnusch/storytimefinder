@@ -223,6 +223,22 @@ Example:
 # Series-level metadata for episodic series - see the docstring above for
 # the full field-by-field spec. Keyed by series NAME, not an entry id.
 SERIES_OVERRIDES: dict[str, dict] = {
+    "Marvels Iron Man und seine fantastischen Freunde": {
+        "series_type": "episodic",
+        "genre": "adventure",
+        "franchise": "disney",
+        "mood": "adventurous",
+        "min_age": 4,
+    },
+
+    "Marvels Spidey und seine Super-Freunde": {
+        "series_type": "episodic",
+        "genre": "adventure",
+        "franchise": "disney",
+        "mood": "adventurous",
+        "min_age": 4,
+    },
+
     "Bibi Blocksberg": {
         "series_type": "episodic",
         "genre": "fantasy",
@@ -240,6 +256,209 @@ SERIES_OVERRIDES: dict[str, dict] = {
 }
 
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_ni1m5jqeaPnKx5RWjvTrPwAKqURbHTGGI": {
+        "description": "Ein gestohlener Edelstein verwandelt Freund und Feind in Dinosaurier, später steht sogar ein Mondflug an.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 16,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_ndgBGwUTo-lqxlp4IIq9oUdFyU63Hv1EQ": {
+        "description": "Ein misslungener Schrumpfstrahl lässt einen kleinen Störenfried immer größer werden, dazu kommt ein Osterabenteuer.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 10,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_nY4HxEvVh41vD6DxCCD-Z2i2FFBkx8aVE": {
+        "description": "Ein geheimnisvoller Kristall, ein angebliches Filmmonster und ungewollte Superkräfte stellen ein Heldenteam vor Rätsel.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 11,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_nX2epgcbsva26DJL8cMu5NsXzHruLf2dU": {
+        "description": "Zu viel Spaß im Vergnügungspark, ein gestohlenes Vogelei und ein geklauter Riesenmagnet halten ein Heldenteam auf Trab.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 15,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_nJbbhBPjIUOnM_yHX6kY3tzsdG5uWePc4": {
+        "description": "Ein Team gepanzerter junger Helden will einen entspannten Ausflug machen, muss aber Roboter-Schurken aufhalten.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 1,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_nIZ-f_K-BjrFVZ7vEk3g3LyNahsSe5owI": {
+        "description": "Ferngesteuerte Schneemänner, ein verdorbenes Fest und ein listiges Eichhörnchen bringen selbst starke Helden ins Schwitzen.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 8,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mvvU_2ODkoKDuoM6PafITo48wyMrWwszM": {
+        "description": "An Halloween bedrohen ein Museumsdieb und ferngesteuerte Vogelscheuchen ein Fest, später fallen Wasser und Strom der Stadt aus.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 14,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mvaFjVIV7l_zOgZ_64ra0iihxzgW1XSP8": {
+        "description": "Als ein Schurke zu Weihnachten alle Geschenke stiehlt, muss ein Team gepanzerter Freunde das Fest gemeinsam retten.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 3,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_muLJTaMxs6MEsxrZ6VJvW6jOOrnloU66g": {
+        "description": "Ein Turm wird gekapert, ein starker Verbündeter ausgetrickst und ein wichtiges Werkzeug bedroht, während ein Kampfroboter wütet.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 19,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mt4TC0DEyjXo3dJSStdrofG5ayORcAvds": {
+        "description": "Ein verzauberter Haustier-Riese, hypnotisierte Parkbesucher und abgerichtete Tauben sorgen für turbulentes Sommerchaos.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 4,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mm4zg2uv8P3vjUA47E193NFSMslUIEjH0": {
+        "description": "Von einem bedrohten Erntedankfest bis zur Suche nach einem Seeungeheuer erlebt ein Heldenteam Abenteuer durchs ganze Jahr.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 13,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mi7X68Tf4KxpRiRminYdsVlZOMXFnD_mE": {
+        "description": "Zwei Schurken stören abwechselnd ein Rennen und streiten um einen Riesenroboter, bis dem Team die eigenen Kräfte geraubt werden.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 18,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_maiJt1sIyuCSufGA87P44YHIqPLzxfx58": {
+        "description": "Zwei Freunde kleben aneinander fest, ein Schurke friert im Pool ein, und eine Ehrenparade für das Team gerät aus den Fugen.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 12,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mNkVu8OS4H6AYbj18LmuGQpKwfTrqWy3o": {
+        "description": "Drei junge Helden mit Verwandlungskräften lernen, dass Teamarbeit gegen Schurkenpläne mehr bringt als Alleingänge.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 1,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mLxxPGkXvLgED7wYJOwEp8DUSzVOOQtU0": {
+        "description": "Ein wildes Rieseninsekt, ein Lachgas-Diebstahl und ein fallenreicher Freizeitpark bringen ein Heldenteam in Bedrängnis.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 2,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_mKBoE4bMdsTsmDGfFYZCGazSDX3wSRDg8": {
+        "description": "Ein Schurke will sich mit geborgter Technik zum größeren Verbrecher aufrüsten, ein anderer sabotiert eine Halloweenparade.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 7,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_m85jEkTItv0lodkpl6D7Uluq18zugoXE0": {
+        "description": "Eine Riesenechse will einen Turm übernehmen, Tiere geraten auf Diebestour, und eine wichtige Energiequelle wird gestohlen.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 22,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_lllMb08cdtPTyBwr82LsfHZmmuTim6VkI": {
+        "description": "Zwei Schurken tun sich erst zusammen und gehen dann getrennte Wege, während eine Dammkatastrophe eine Tierfamilie gefährdet.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 5,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_lkguizXTDOCO3tby0LlGLicGkTPEe5Hqg": {
+        "description": "Zwei verbündete Schurken planen eine Brückensabotage, einen Piratenschatzraub und eine Parkflutung, die das Team stoppen muss.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 6,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_ldyDIX6FAPvbqzEUYfd7sLHA7RzDnYoGQ": {
+        "description": "Ein unsichtbar gewordener Schurke stiehlt Bienenvölker, während ein anderer Meeresbewohner und Leguane bedroht.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 17,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_lOF25aD6LsH2daD6ntIeMpQIwozMhdfvY": {
+        "description": "Wertvolle Schätze und Erfindungen wecken Begehrlichkeiten, sodass ein Heldenteam Museum, Insel und Freunde beschützen muss.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 9,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_lOEDZb_zTk1vyUEhW4XzZvyGJvMdXd85A": {
+        "description": "Als ein Schurke zu Weihnachten alle Geschenke stiehlt, muss ein Team gepanzerter Freunde das Fest gemeinsam retten.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 3,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_l-SqSHZGc9D_PNbGP_r4brLaNqF-FAiWY": {
+        "description": "Ein Freizeitpark verliert Strom, ein Konzert wird gestört und verzauberte Piratenhüte sorgen für Ärger, das das Team behebt.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 20,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_keBsBPd8TDHN59RDOvIERlT3CQsIAjeXA": {
+        "description": "Ein technisches Heldenteam muss gestohlene Erfindungen zurückholen und dabei quirlige Haustiere und listige Schurken bändigen.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 4,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_kR_Nvl28OMVtZSWml1nUIPNPalHx-X3wY": {
+        "description": "An Halloween verteidigt ein Technik-Heldenteam Süßigkeiten und Kürbisse gegen einen irren Roboter und eine Insektenschurkin.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 2,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_kP_Dsbd-F_rpRx0jvMmJZN4kY7WwX8jZA": {
+        "description": "Ein tobendes Monster, ein gestohlener Edelstein und entführte Leguane fordern das Team, bis Großmutter zur Rettung eilt.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 23,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_kKl4DksXY3PwuKkwPC69Sg9G5ieGYriAU": {
+        "description": "Ein Verjüngungsstrahl geht daneben, während ein Heldenteam Schurken bei einer Autoshow und einem Snackklau aufhalten muss.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 6,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_kJVI89BcsaAU9uB_t3RdWNoQoD6K9UwC4": {
+        "description": "Mit einer neuen fliegenden Drohne ausgestattet, verteidigt ein Heldenteam Stadt und Natur gegen diebische Schurken.",
+        "series": "Marvels Iron Man und seine fantastischen Freunde",
+        "position_in_series": 5,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_kGP0rHFspZXCbgDOUNyebn5UYHd7tzonw": {
+        "description": "Gestohlene Energie legt die U-Bahn lahm, während eine Schatzsuche und eine übergroße Ameise für zusätzliches Chaos sorgen.",
+        "series": "Marvels Spidey und seine Super-Freunde",
+        "position_in_series": 21,
+        "source_release_year": 2021,
+    },
+
     "OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE": {
         "description": "Ein kleines Waldtier trifft auf ein furchteinflößendes Wesen und entdeckt dabei seine eigene Cleverness.",
         "genre": "adventure",
