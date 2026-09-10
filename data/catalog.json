@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T20:36:28Z",
+  "generated_at": "2026-09-10T21:37:07Z",
   "items": [
     {
       "id": 43,
@@ -10,12 +10,13 @@
       "description": "Eine Dalmatinerfamilie muss ihre 99 entführten Welpen vor einem bösen Plan retten.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1961,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -29,12 +30,13 @@
       "description": "Spielzeugen erleben Abenteuer und müssen lernen, zusammenzuarbeiten und Befehle zu befolgen.",
       "series": "Toy Story",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -48,12 +50,13 @@
       "description": "Ein junger Straßendieb findet eine magische Lampe und erhält die Chance, sein Leben völlig zu verändern.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1992,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -67,12 +70,13 @@
       "description": "Ein junger Mann mit bescheidenen Anfängen entdeckt eine magische Lampe und versucht, sein Leben zu verändern und die Liebe einer Prinzessin zu gewinnen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -86,12 +90,13 @@
       "description": "Ein Mädchen folgt einem weißen Kaninchen in eine fantastische Welt voller surrealer Abenteuer und merkwürdiger Begegnungen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2010,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -105,12 +110,13 @@
       "description": "Ein Kind erlebt fantastische Abenteuer in einer Spiegelwelt voller magischer Begegnungen und rätselhafter Wunder.",
       "series": "Alice im Wunderland",
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -124,12 +130,13 @@
       "description": "Eine Geschichte über innere Gefühle und Emotionen, die zum Leben erwachen und gemeinsam Abenteuer erleben.",
       "series": "Alles steht Kopf",
       "position_in_series": 1,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "pixar",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2015,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -143,12 +150,13 @@
       "description": "Eine Gruppe von Jugendlichen muss sich neuen emotionalen Herausforderungen und inneren Konflikten stellen.",
       "series": "Alles steht Kopf",
       "position_in_series": 2,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2024,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -162,12 +170,13 @@
       "description": "Eine wissbegierige Prinzessin der Meere verliebt sich in die Welt über der Wasseroberfläche und wagt einen folgenschweren Tausch.",
       "series": "Arielle",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2023,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -181,12 +190,13 @@
       "description": "Eine neugierige Meeresprinzessin sehnt sich nach dem Leben an Land und geht dafür einen riskanten Handel mit dunklen Mächten ein.",
       "series": "Arielle",
       "position_in_series": 1,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1989,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -200,12 +210,13 @@
       "description": "Bevor Gesang im Unterwasserreich verboten wird, entdeckt eine junge Prinzessin ihre Liebe zur Musik und zur Welt über den Wellen.",
       "series": "Arielle",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -219,12 +230,13 @@
       "description": "Trotz eines Verbots fühlt sich die Tochter eines ungewöhnlichen Paares zum Meer und seinen Geheimnissen hingezogen.",
       "series": "Arielle",
       "position_in_series": 2,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2000,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -238,12 +250,13 @@
       "description": "Eine Katze und ihre Kätzchen werden entführt, aber freundliche Streuner helfen ihnen auf ihrer Reise zurück nach Hause.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1970,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -257,12 +270,13 @@
       "description": "Ein ungleiches Duo begibt sich auf eine abenteuerliche Reise durch die Wildnis, um nach Hause zu finden.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2015,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -276,12 +290,13 @@
       "description": "Eine Gruppe von Abenteurern erforscht die Ruinen einer legendären versunkenen Zivilisation und enthüllt deren mysteriöse Geheimnisse.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2001,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -295,12 +310,13 @@
       "description": "Ein junges Tier wächst in der Natur auf und erlebt Abenteuer, während es die Welt und sich selbst entdeckt.",
       "series": "Bambi",
       "position_in_series": 1,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1942,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -314,12 +330,13 @@
       "description": "Ein junges Tier wächst in der Wildnis auf und muss lernen, sich in seiner Umgebung zurechtzufinden und seine Rolle zu finden.",
       "series": "Bambi",
       "position_in_series": 2,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2006,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -333,12 +350,13 @@
       "description": "Ein aufblasbarer Roboter erlebt chaotische und humorvolle Abenteuer voller unerwarteter Wendungen.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2014,
-      "mood": "funny",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -352,12 +370,13 @@
       "description": "Zwei Mäuse arbeiten als Polizisten und lösen Fälle, um Gerechtigkeit herzustellen und ihre Gemeinschaft zu schützen.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1977,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -371,12 +390,13 @@
       "description": "Ein Superhund-Filmstar muss lernen, dass seine echten Kräfte in Freundschaft und Mut liegen.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -390,12 +410,13 @@
       "description": "Zwei Brüder kämpfen gemeinsam gegen Widrigkeiten und erleben abenteuerliche Herausforderungen in der Wildnis.",
       "series": "Bärenbrüder",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2003,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -409,12 +430,13 @@
       "description": "Zwei Brüder erleben gemeinsam Abenteuer in der Wildnis und müssen zusammenarbeiten, um Herausforderungen zu meistern.",
       "series": "Bärenbrüder",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2006,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -428,12 +450,13 @@
       "description": "Ein Straßenkind und ein verwöhnter Haushund werden unerwartete Freunde und erleben gemeinsam Abenteuer.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1981,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -447,12 +470,13 @@
       "description": "Ein Auto lernt, dass Freundschaft und Gemeinschaft wichtiger sind als Erfolg und Ruhm.",
       "series": "Cars",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2006,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -466,12 +490,13 @@
       "description": "Ein Geheimagent-Auto wird in einen internationalen Spionagefall verwickelt und muss seine Familie schützen.",
       "series": "Cars",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2011,
-      "mood": "exciting",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -485,12 +510,13 @@
       "description": "Ein alternder Rennwagen muss lernen, sich an neue Zeiten anzupassen und findet dabei neue Ziele jenseits des Sieges.",
       "series": "Cars",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2017,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -504,12 +530,13 @@
       "description": "Kinder müssen sich in der digitalen Welt gegen böse Mächte verteidigen und Abenteuer bestehen.",
       "series": "Ralph Reichts",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2018,
-      "mood": "exciting",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -523,12 +550,13 @@
       "description": "Ein Mädchen überwindet Widrigkeiten und findet durch Mut und Güte sein Glück.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1950,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -542,12 +570,13 @@
       "description": "Ein Mädchen überwindet Widrigkeiten und findet sein Glück durch Mut und Güte.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2015,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -561,12 +590,13 @@
       "description": "Ein Mädchen träumt davon, sein Leben zu verändern und findet dabei wahre Freundschaft und innere Stärke.",
       "series": "Cinderella",
       "position_in_series": 2,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2002,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -580,12 +610,13 @@
       "description": "Ein Junge entdeckt die Welt der Toten und muss seine verstorbene Familie finden.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2017,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -599,12 +630,13 @@
       "description": "Ein Junge wächst im Dschungel auf und muss sich gegen Gefahren behaupten, während er seine Identität und seinen Platz in der Welt entdeckt.",
       "series": "Das Dschungelbuch",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1967,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -618,12 +650,113 @@
       "description": "Eine Gruppe von Insekten erlebt Abenteuer in ihrer winzigen Welt voller Gefahren und Überraschungen.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1998,
-      "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 188,
+      "title": "Das kleine WIR",
+      "thumbnail_url": "https://i.ytimg.com/vi/f76zOfw6oFQ/maxresdefault.jpg",
+      "duration_seconds": 2187,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lcSwJzlfKp0lzirfI3KVR6_djT9exCRHc",
+      "description": "Ein besonderes Gefühl der Verbundenheit zeigt Kindern, dass sie nie ganz allein sind, wenn sie mit anderen zusammen sind.",
+      "series": "Das kleine WIR",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2016,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 185,
+      "title": "Das kleine WIR / Gemeinsam durch die Trennung",
+      "thumbnail_url": "https://i.ytimg.com/vi/WoS1XJvsPsQ/maxresdefault.jpg",
+      "duration_seconds": 2255,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_ldSjD9xoq9WWIMfZyFLzaQGuCKxoHAwY0",
+      "description": "Ein Gefühl der Verbundenheit hilft einem Kind, mit den Veränderungen einer Trennung der Eltern zurechtzukommen.",
+      "series": "Das kleine WIR",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2025,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 184,
+      "title": "Das kleine WIR feiert Geburtstag",
+      "thumbnail_url": "https://i.ytimg.com/vi/Pbc_EnpKVe0/maxresdefault.jpg",
+      "duration_seconds": 2692,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lWFk46tu1C5PqYTqem3qmIIGa9DSH-DB4",
+      "description": "Bei einer Geburtstagsfeier zeigt sich, wie ein Gefühl der Verbundenheit große und kleine Momente gemeinsam schöner macht.",
+      "series": "Das kleine WIR",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2026,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 187,
+      "title": "Das kleine WIR im Kindergarten",
+      "thumbnail_url": "https://i.ytimg.com/vi/Jt7aYGQ_FUk/maxresdefault.jpg",
+      "duration_seconds": 2502,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lO-HNfBu8cHuq2tq_lVcq4ukQpTwODSSg",
+      "description": "Ein Gefühl der Verbundenheit begleitet ein Kind durch aufregende und manchmal unsichere Momente im Kindergartenalltag.",
+      "series": "Das kleine WIR",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2021,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 186,
+      "title": "Das kleine WIR zu Hause",
+      "thumbnail_url": "https://i.ytimg.com/vi/dc4l7lRq5zk/maxresdefault.jpg",
+      "duration_seconds": 2212,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_njo7N9q9TTp_plvqgqlGZJ9dAt5pD2vaU",
+      "description": "Ein Gefühl der Verbundenheit zeigt, wie Familienalltag zu Hause auch in schwierigen Momenten Halt geben kann.",
+      "series": "Das kleine WIR",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -637,12 +770,13 @@
       "description": "Ein Gorilla in einem Zirkus träumt von Freiheit und findet unerwartete Freundschaft in seiner Gefangenschaft.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2020,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -656,12 +790,13 @@
       "description": "Ein Mensch mit körperlichen Unterschieden findet Zuflucht in einem Turm und entdeckt Freundschaft, Liebe und seinen Platz in der Welt.",
       "series": null,
       "position_in_series": null,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 1996,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -672,15 +807,17 @@
       "thumbnail_url": "https://i.ytimg.com/vi/g1t5A6Udygc/maxresdefault.jpg",
       "duration_seconds": 1357,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE",
-      "description": "Ein kleines Waldtier trifft auf ein furchteinflößendes Wesen und entdeckt dabei seine eigene Cleverness.",
+      "description": "Ein kleines Waldtier trifft auf ein furchteinfl%F6%DFendes Wesen und entdeckt dabei seine eigene Cleverness.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure",
+        "superhero"
+      ],
       "franchise": null,
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2009,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -694,12 +831,13 @@
       "description": "Ein junger Löwe muss sein Schicksal akzeptieren und seine Heimat vor dunklen Kräften bewahren.",
       "series": "Der König der Löwen",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -713,12 +851,13 @@
       "description": "Ein junger Löwe muss nach tragischen Ereignissen ins Exil fliehen und findet später die Kraft, zu seiner Heimat zurückzukehren.",
       "series": "Der König der Löwen",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1994,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -732,12 +871,13 @@
       "description": "Ein junger Herrscher muss sein Reich verteidigen und seine Verantwortung als Anführer erfüllen.",
       "series": "Der König der Löwen",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1998,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -751,12 +891,34 @@
       "description": "Eine Geschichte über Freundschaft und das Überwinden von Hindernissen in der afrikanischen Savanne.",
       "series": "Der König der Löwen",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2004,
-      "mood": "funny",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 183,
+      "title": "Der Lieselotte Geschichtenschatz",
+      "thumbnail_url": "https://i.ytimg.com/vi/H0NC1r_e9Tw/maxresdefault.jpg",
+      "duration_seconds": 6348,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kPaXIwzMyooY-lYyKWHI420DYd5ltqY8w",
+      "description": "Eine liebenswert tollpatschige Kuh erlebt in mehreren kurzen Geschichten allerlei witzige Alltagsabenteuer auf dem Bauernhof.",
+      "series": "Lieselotte",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -770,12 +932,13 @@
       "description": "Ein Mädchen erhält einen geheimnisvollen Schlüssel und reist durch vier magische Reiche auf der Suche nach ihrer Vergangenheit.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2018,
-      "mood": "adventurous",
       "seasonal": "christmas",
       "awards": [],
       "language": "de"
@@ -789,12 +952,13 @@
       "description": "Eine Gruppe macht sich auf die Suche nach einem legendären Schatz auf einem geheimnisvollen Planeten.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2002,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -808,12 +972,13 @@
       "description": "Eine Prinzessin mit magischen Kräften muss lernen, ihre Fähigkeiten zu akzeptieren und ihre Schwester zu retten.",
       "series": "Die Eiskönigin",
       "position_in_series": 1,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2013,
-      "mood": "heartwarming",
       "seasonal": "winter",
       "awards": [],
       "language": "de"
@@ -827,12 +992,13 @@
       "description": "Eine Königin muss ein mysteriöses Abenteuer bestehen, um ihr Königreich und ihre Familie zu retten.",
       "series": "Die Eiskönigin",
       "position_in_series": 2,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "heartwarming",
       "seasonal": "winter",
       "awards": [],
       "language": "de"
@@ -846,13 +1012,35 @@
       "description": "Ein Schneemann erlebt ein Abenteuer und erfährt, was es bedeutet, in der wärmeren Jahreszeit zu bestehen.",
       "series": "Die Eiskönigin",
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2017,
-      "mood": "heartwarming",
       "seasonal": "winter",
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 174,
+      "title": "Die guten alten Zeiten",
+      "thumbnail_url": "https://i.ytimg.com/vi/MvVhGMLVCA0/maxresdefault.jpg",
+      "duration_seconds": 1512,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kCinBaMQHLf2sGZzDuJ5IMYwN6RlHyBQI",
+      "description": "Eine Rückblende erzählt, wie sich Menschen und geflügelte Fabelwesen einst bekämpften, bevor eine Freundschaft alles veränderte.",
+      "series": "Drachenzähmen leicht gemacht",
+      "position_in_series": null,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2019,
+      "seasonal": null,
       "awards": [],
       "language": "de"
     },
@@ -865,12 +1053,13 @@
       "description": "Bauernhoftiere geraten in chaotische Abenteuer, wenn sie sich selbstständig machen und Unsinn anstellen.",
       "series": null,
       "position_in_series": null,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2004,
-      "mood": "silly",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -884,12 +1073,13 @@
       "description": "Eine Geschichte über unerwartete Freundschaften zwischen zwei sehr unterschiedlichen Charakteren in einer fantastischen Welt.",
       "series": "Die Monster AG",
       "position_in_series": 1,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2001,
-      "mood": "funny",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -903,12 +1093,33 @@
       "description": "Zwei ungleiche und anfangs verfeindete Studierende an einer Schule für furchteinflößende Wesen lernen, echte Freunde zu werden.",
       "series": "Die Monster AG",
       "position_in_series": 2,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2013,
-      "mood": "funny",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 173,
+      "title": "Die Schnecke und der Buckelwal",
+      "thumbnail_url": "https://i.ytimg.com/vi/Nsi2UIDH6Ds/maxresdefault.jpg",
+      "duration_seconds": 1508,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mSgdpKUe0h-7BG-u6A3bxDJnnahf5apAU",
+      "description": "Eine kleine Schnecke sehnt sich nach der weiten Welt und erlebt an der Seite eines riesigen Wals ein großes Abenteuer.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -922,12 +1133,13 @@
       "description": "Ein Mädchen muss lernen, über Äußerlichkeiten hinauszuschauen und wahre innere Schönheit zu erkennen.",
       "series": "Die Schöne und das Biest",
       "position_in_series": 1,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1991,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -941,12 +1153,13 @@
       "description": "Ein junges Mädchen entdeckt die innere Schönheit eines verzauberten Wesens und bricht damit einen bösen Fluch.",
       "series": "Die Schöne und das Biest",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2017,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -960,12 +1173,13 @@
       "description": "Ein verzaubertes Schloss und eine ungewöhnliche Freundschaft während der festlichen Jahreszeit.",
       "series": "Die Schöne und das Biest",
       "position_in_series": 2,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1997,
-      "mood": "heartwarming",
       "seasonal": "christmas",
       "awards": [],
       "language": "de"
@@ -979,12 +1193,13 @@
       "description": "Eine Familie mit Superkräften muss sich aus dem Ruhestand zurückmelden, um die Welt zu retten.",
       "series": "Die Unglaublichen",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2004,
-      "mood": "exciting",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -998,12 +1213,13 @@
       "description": "Eine Familie mit Superkräften muss zusammenarbeiten, um die Welt vor einer neuen Bedrohung zu bewahren.",
       "series": "Die Unglaublichen",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2018,
-      "mood": "exciting",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1017,12 +1233,139 @@
       "description": "Eine Prinzessin verfällt durch einen Fluch in einen magischen Schlaf und kann nur durch wahre Liebe erlöst werden.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1959,
-      "mood": "gentle",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 172,
+      "title": "Dr. Brumm feiert Weihnachten / Dr. Brumm versteht das nicht",
+      "thumbnail_url": "https://i.ytimg.com/vi/G2SzRfiKhxg/maxresdefault.jpg",
+      "duration_seconds": 2068,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_m2D0-24hp4udry6-8DgRBlx8EGaXvDzMY",
+      "description": "Ein liebenswert tollpatschiger Bär erlebt weihnachtliche Missverständnisse und muss so manches erst auf seine Weise verstehen.",
+      "series": "Dr. Brumm",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 171,
+      "title": "Dr. Brumm und der Megasaurus und weitere Geschichten",
+      "thumbnail_url": "https://i.ytimg.com/vi/Gk0hp6HG7YM/maxresdefault.jpg",
+      "duration_seconds": 2268,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kr--flk-x2tuXSt0QFHKjz8aWxfHTtQlY",
+      "description": "Ein tollpatschiger Bär trifft auf ein riesiges, urzeitlich anmutendes Wesen und erlebt dabei weitere kleine Alltagsabenteuer.",
+      "series": "Dr. Brumm",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2018,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 175,
+      "title": "Drachenzähmen leicht gemacht",
+      "thumbnail_url": "https://i.ytimg.com/vi/T5s5Xu8Dzu8/maxresdefault.jpg",
+      "duration_seconds": 4947,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kmeBWumod9y-EgU57lPSrKRqnEIrodndE",
+      "description": "Ein junger Wikinger freundet sich entgegen aller Tradition mit einem gefürchteten Flugtier an und verändert damit sein Dorf.",
+      "series": "Drachenzähmen leicht gemacht",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2025,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 178,
+      "title": "Drachenzähmen leicht gemacht",
+      "thumbnail_url": "https://i.ytimg.com/vi/NSrUyj9xOG0/maxresdefault.jpg",
+      "duration_seconds": 3599,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lp-y5mAS6_UXrwUqn_y1okDAmBKULcOd8",
+      "description": "Ein junger Wikinger freundet sich entgegen aller Tradition mit einem gefürchteten Flugtier an und verändert damit sein Dorf.",
+      "series": "Drachenzähmen leicht gemacht",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2010,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 177,
+      "title": "Drachenzähmen leicht gemacht 2",
+      "thumbnail_url": "https://i.ytimg.com/vi/mF7GpHpeA5I/maxresdefault.jpg",
+      "duration_seconds": 4345,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l_uxeaBeYTHp7YfR_Ysla5Iy3AgFRmczA",
+      "description": "Jahre später entdeckt der junge Wikinger eine verborgene Welt und muss sein Dorf vor einer neuen dunklen Bedrohung schützen.",
+      "series": "Drachenzähmen leicht gemacht",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 176,
+      "title": "Drachenzähmen leicht gemacht 3",
+      "thumbnail_url": "https://i.ytimg.com/vi/v5LIu9fJYf4/maxresdefault.jpg",
+      "duration_seconds": 3678,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kWp1nCuNE9r5z_e03Id1N-3Cu55Z2WxUI",
+      "description": "Eine geheime Welt zwingt einen jungen Anführer, sich zwischen zwei Leben und einem schmerzhaften Abschied zu entscheiden.",
+      "series": "Drachenzähmen leicht gemacht",
+      "position_in_series": 3,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1036,12 +1379,13 @@
       "description": "Ein junger Elefant mit großen Ohren entdeckt seine außergewöhnliche Fähigkeit und findet seinen Platz in der Welt.",
       "series": null,
       "position_in_series": null,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1941,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1055,12 +1399,13 @@
       "description": "Ein junger Elefant mit großen Ohren entdeckt seine besonderen Fähigkeiten und findet seinen Platz in der Welt.",
       "series": null,
       "position_in_series": null,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1074,12 +1419,34 @@
       "description": "Ein Kaiser verliert seine Herrschaft und muss sich in die Wildnis begeben, um seine Macht zurückzugewinnen.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2000,
-      "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 181,
+      "title": "Ein Platz nur für Lieselotte",
+      "thumbnail_url": "https://i.ytimg.com/vi/axH9AictxHI/maxresdefault.jpg",
+      "duration_seconds": 3887,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l1jyFg5fuLBZnZR83ExwIVkHEXECt0_60",
+      "description": "Eine eigensinnige Kuh sucht sich einen ganz eigenen Rückzugsort, nur für sich allein, fernab vom Trubel des Hofes.",
+      "series": "Lieselotte",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1093,12 +1460,13 @@
       "description": "Zwei Freunde entdecken eine magische Welt, in der die Elemente Feuer und Wasser in Konflikt geraten.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2023,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1112,12 +1480,13 @@
       "description": "Ein Junge entdeckt seine außergewöhnlichen Fähigkeiten und begibt sich auf eine kosmische Reise der Selbstfindung.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1131,12 +1500,13 @@
       "description": "Ein Waisenjunge im Wald freundet sich mit einem unsichtbaren Fabelwesen an, das ihn beschützt und Erwachsene misstrauisch macht.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1150,12 +1520,13 @@
       "description": "Eine Familie mit magischen Gaben muss ihre übernatürlichen Kräfte nutzen, um ihre Gemeinde zu retten.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2021,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1169,12 +1540,13 @@
       "description": "Ein Orchesterwerk wird zum Leben erweckt, wenn Musik und Animation in einer fantastischen Welt verschmelzen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1940,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1188,12 +1560,13 @@
       "description": "Ein kleines, ängstliches Waldtier fühlt sich von seinen Freunden übersehen und beweist bei einem Abenteuer unerwarteten Mut.",
       "series": "Winnie Puuh",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2003,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1207,12 +1580,13 @@
       "description": "Eine blaue Fisch sucht nach ihrer Familie und erlebt dabei ein großes Abenteuer im Meer.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1226,12 +1600,13 @@
       "description": "Ein Fisch macht sich auf eine gefährliche Reise durchs Meer, um seinen vermissten Sohn zu finden.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2003,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1245,12 +1620,13 @@
       "description": "Ein Mädchen rettet einen verletzten Eichhörnchen und erlebt gemeinsam mit ihm magische Abenteuer.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 8,
       "age_tag": "6_8",
       "source_release_year": 2021,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1264,13 +1640,34 @@
       "description": "Ein Junge belebt seinen verstorbenen Hund durch wissenschaftliche Experimente wieder zum Leben.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2012,
-      "mood": "heartwarming",
       "seasonal": "halloween",
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 179,
+      "title": "Für Hund und Katz ist auch noch Platz",
+      "thumbnail_url": "https://i.ytimg.com/vi/pOv0QnnukoY/maxresdefault.jpg",
+      "duration_seconds": 1219,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nYGcJxw7VmlWg5YIB8mn3wLi_TUMvx1go",
+      "description": "Immer mehr Tiere ziehen nacheinander in ein Zuhause ein, bis sich zeigt, dass für alle gemeinsam noch genug Platz ist.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "bedtime_story"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2012,
+      "seasonal": null,
       "awards": [],
       "language": "de"
     },
@@ -1283,12 +1680,13 @@
       "description": "Ein neues freundliches Wesen kommt in den Wald und freundet sich mit den bekannten Bewohnern an.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2005,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1302,12 +1700,13 @@
       "description": "Ein sterblicher Held muss seine göttlichen Kräfte nutzen, um gegen das Böse zu kämpfen und seinen Platz in der Welt zu finden.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 1997,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1321,12 +1720,13 @@
       "description": "Kinder entdecken, dass übernatürliche Wesen real existieren und müssen sich deren Herausforderungen stellen.",
       "series": "Bibi Blocksberg",
       "position_in_series": 1,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "bibi_blocksberg",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1980,
-      "mood": "funny",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1340,12 +1740,13 @@
       "description": "Eine kleine Hexe setzt in der Schule heimlich ihre Zauberkräfte ein und sorgt damit für jede Menge turbulente Verwicklungen.",
       "series": "Bibi Blocksberg",
       "position_in_series": 2,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "bibi_blocksberg",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1980,
-      "mood": "funny",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1359,12 +1760,13 @@
       "description": "Eine Geschichte über die ungewöhnliche Freundschaft zwischen zwei Charakteren aus unterschiedlichen Welten, die gemeinsam Abenteuer erleben.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2005,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1378,12 +1780,13 @@
       "description": "Kleine Hüpfer erleben Abenteuer in ihrer Welt und lernen Lektionen über Freundschaft und Mut.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2026,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1397,12 +1800,13 @@
       "description": "Ein Hotelmanager muss seine Unterkunft vor neugierigen Gästen schützen und dabei seine Familie bewahren.",
       "series": null,
       "position_in_series": null,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": null,
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2012,
-      "mood": "spooky",
       "seasonal": "halloween",
       "awards": [],
       "language": "de"
@@ -1416,12 +1820,13 @@
       "description": "Ein unwahrscheinlicher Held muss seine innere Kraft entdecken, um sein Dorf vor einer großen Bedrohung zu bewahren.",
       "series": "Kung Fu Panda",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "dreamworks",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1435,12 +1840,13 @@
       "description": "Ein Krieger muss sich seiner Vergangenheit stellen und gegen eine dunkle Bedrohung kämpfen, um sein Volk zu retten.",
       "series": "Kung Fu Panda",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "dreamworks",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2011,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1454,12 +1860,13 @@
       "description": "Ein Krieger muss seine innere Kraft entdecken und gegen eine dunkle Bedrohung antreten, um sein Volk zu retten.",
       "series": "Kung Fu Panda",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "dreamworks",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1473,12 +1880,55 @@
       "description": "Ein Mädchen muss einen verwunschenen Prinzen erlösen und lernt dabei wichtige Lektionen über Mut und Freundschaft.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2009,
-      "mood": "adventurous",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 180,
+      "title": "Lieselotte macht nicht mit",
+      "thumbnail_url": "https://i.ytimg.com/vi/VIJk9AyQ7sI/maxresdefault.jpg",
+      "duration_seconds": 4927,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mcglAHuM_7wXMvyLeVkS-mMUFYtp2wZuw",
+      "description": "Eine eigenwillige Kuh hat einfach keine Lust mitzumachen und sorgt mit ihrer Sturheit für einige komische Verwicklungen.",
+      "series": "Lieselotte",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2023,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 182,
+      "title": "Lieselotte und der verschwundene Apfelkuchen",
+      "thumbnail_url": "https://i.ytimg.com/vi/N-VGS2ohQ8c/maxresdefault.jpg",
+      "duration_seconds": 3040,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mBrrC_wKDcojNm8UGmx5QC5TWfi6oYY9A",
+      "description": "Als ein frisch gebackener Kuchen spurlos verschwindet, ermittelt eine neugierige Kuh und deckt am Ende die Wahrheit auf.",
+      "series": "Lieselotte",
+      "position_in_series": null,
+      "genre": [
+        "animals",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2017,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1492,12 +1942,13 @@
       "description": "Ein Weltraumabenteuer, in dem ein Astronaut versucht, nach Hause zurückzukehren.",
       "series": "Toy Story",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2022,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1511,12 +1962,13 @@
       "description": "Ein außerirdisches Wesen strandet auf der Erde und freundet sich mit einem einsamen Kind an.",
       "series": "Lilo & Stitch",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1530,12 +1982,13 @@
       "description": "Ein außerirdisches Wesen strandet auf der Erde und freundet sich mit einem einsamen Mädchen an, während es lernt, was Familie bedeutet.",
       "series": "Lilo & Stitch",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2002,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1549,12 +2002,13 @@
       "description": "Ein Junge entdeckt ein Geheimnis über seine Herkunft und findet an der Küste unerwartete Freundschaft.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "heartwarming",
       "seasonal": "summer",
       "awards": [],
       "language": "de"
@@ -1568,12 +2022,13 @@
       "description": "Vier Zootiere landen auf einer exotischen Insel und müssen sich an das Wildleben anpassen.",
       "series": "Madagascar",
       "position_in_series": 1,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "dreamworks",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2005,
-      "mood": "funny",
       "seasonal": "summer",
       "awards": [],
       "language": "de"
@@ -1587,12 +2042,13 @@
       "description": "Eine Gruppe von Tieren muss ihre Heimat verlassen und erlebt aufregende Abenteuer auf ihrer Reise zurück.",
       "series": "Madagascar",
       "position_in_series": 2,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "dreamworks",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "funny",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1606,12 +2062,13 @@
       "description": "Eine dunkle Kreatur kämpft gegen ihre böse Vergangenheit und entdeckt unerwartete Verbindungen zu ihrer Welt.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2014,
-      "mood": "spooky",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1625,12 +2082,13 @@
       "description": "Ein Team gepanzerter junger Helden will einen entspannten Ausflug machen, muss aber Roboter-Schurken aufhalten.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1644,12 +2102,13 @@
       "description": "An Halloween verteidigt ein Technik-Heldenteam Süßigkeiten und Kürbisse gegen einen irren Roboter und eine Insektenschurkin.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1663,12 +2122,13 @@
       "description": "Als ein Schurke zu Weihnachten alle Geschenke stiehlt, muss ein Team gepanzerter Freunde das Fest gemeinsam retten.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1682,12 +2142,13 @@
       "description": "Ein technisches Heldenteam muss gestohlene Erfindungen zurückholen und dabei quirlige Haustiere und listige Schurken bändigen.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 4,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1701,12 +2162,13 @@
       "description": "Mit einer neuen fliegenden Drohne ausgestattet, verteidigt ein Heldenteam Stadt und Natur gegen diebische Schurken.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 5,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1720,12 +2182,13 @@
       "description": "Ein Verjüngungsstrahl geht daneben, während ein Heldenteam Schurken bei einer Autoshow und einem Snackklau aufhalten muss.",
       "series": "Marvels Iron Man und seine fantastischen Freunde",
       "position_in_series": 6,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1739,12 +2202,13 @@
       "description": "Drei junge Helden mit Verwandlungskräften lernen, dass Teamarbeit gegen Schurkenpläne mehr bringt als Alleingänge.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1758,12 +2222,13 @@
       "description": "Ein wildes Rieseninsekt, ein Lachgas-Diebstahl und ein fallenreicher Freizeitpark bringen ein Heldenteam in Bedrängnis.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1777,12 +2242,13 @@
       "description": "Als ein Schurke zu Weihnachten alle Geschenke stiehlt, muss ein Team gepanzerter Freunde das Fest gemeinsam retten.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1796,12 +2262,13 @@
       "description": "Ein verzauberter Haustier-Riese, hypnotisierte Parkbesucher und abgerichtete Tauben sorgen für turbulentes Sommerchaos.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 4,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1815,12 +2282,13 @@
       "description": "Zwei Schurken tun sich erst zusammen und gehen dann getrennte Wege, während eine Dammkatastrophe eine Tierfamilie gefährdet.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 5,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1834,12 +2302,13 @@
       "description": "Zwei verbündete Schurken planen eine Brückensabotage, einen Piratenschatzraub und eine Parkflutung, die das Team stoppen muss.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 6,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1853,12 +2322,13 @@
       "description": "Ein Schurke will sich mit geborgter Technik zum größeren Verbrecher aufrüsten, ein anderer sabotiert eine Halloweenparade.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 7,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1872,12 +2342,13 @@
       "description": "Ferngesteuerte Schneemänner, ein verdorbenes Fest und ein listiges Eichhörnchen bringen selbst starke Helden ins Schwitzen.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 8,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1891,12 +2362,13 @@
       "description": "Wertvolle Schätze und Erfindungen wecken Begehrlichkeiten, sodass ein Heldenteam Museum, Insel und Freunde beschützen muss.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 9,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1910,12 +2382,13 @@
       "description": "Ein misslungener Schrumpfstrahl lässt einen kleinen Störenfried immer größer werden, dazu kommt ein Osterabenteuer.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 10,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1929,12 +2402,13 @@
       "description": "Ein geheimnisvoller Kristall, ein angebliches Filmmonster und ungewollte Superkräfte stellen ein Heldenteam vor Rätsel.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 11,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1948,12 +2422,13 @@
       "description": "Zwei Freunde kleben aneinander fest, ein Schurke friert im Pool ein, und eine Ehrenparade für das Team gerät aus den Fugen.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 12,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1967,12 +2442,13 @@
       "description": "Von einem bedrohten Erntedankfest bis zur Suche nach einem Seeungeheuer erlebt ein Heldenteam Abenteuer durchs ganze Jahr.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 13,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -1986,12 +2462,13 @@
       "description": "An Halloween bedrohen ein Museumsdieb und ferngesteuerte Vogelscheuchen ein Fest, später fallen Wasser und Strom der Stadt aus.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 14,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2005,12 +2482,13 @@
       "description": "Zu viel Spaß im Vergnügungspark, ein gestohlenes Vogelei und ein geklauter Riesenmagnet halten ein Heldenteam auf Trab.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 15,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2024,12 +2502,13 @@
       "description": "Ein gestohlener Edelstein verwandelt Freund und Feind in Dinosaurier, später steht sogar ein Mondflug an.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 16,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2043,12 +2522,13 @@
       "description": "Ein unsichtbar gewordener Schurke stiehlt Bienenvölker, während ein anderer Meeresbewohner und Leguane bedroht.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 17,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2062,12 +2542,13 @@
       "description": "Zwei Schurken stören abwechselnd ein Rennen und streiten um einen Riesenroboter, bis dem Team die eigenen Kräfte geraubt werden.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 18,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2081,12 +2562,13 @@
       "description": "Ein Turm wird gekapert, ein starker Verbündeter ausgetrickst und ein wichtiges Werkzeug bedroht, während ein Kampfroboter wütet.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 19,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2100,12 +2582,13 @@
       "description": "Ein Freizeitpark verliert Strom, ein Konzert wird gestört und verzauberte Piratenhüte sorgen für Ärger, das das Team behebt.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 20,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2119,12 +2602,13 @@
       "description": "Gestohlene Energie legt die U-Bahn lahm, während eine Schatzsuche und eine übergroße Ameise für zusätzliches Chaos sorgen.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 21,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2138,12 +2622,13 @@
       "description": "Eine Riesenechse will einen Turm übernehmen, Tiere geraten auf Diebestour, und eine wichtige Energiequelle wird gestohlen.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 22,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2157,12 +2642,13 @@
       "description": "Ein tobendes Monster, ein gestohlener Edelstein und entführte Leguane fordern das Team, bis Großmutter zur Rettung eilt.",
       "series": "Marvels Spidey und seine Super-Freunde",
       "position_in_series": 23,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2176,12 +2662,13 @@
       "description": "Ein Mädchen kämpft gegen Tradition und Schicksal, um ihr eigenes Abenteuer zu bestimmen.",
       "series": "Merida",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2012,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2195,12 +2682,13 @@
       "description": "Ein schlitzohriger Bauernjunge im alten Schweden sorgt mit seinen Streichen ständig für Chaos, hat dabei aber ein gutes Herz.",
       "series": "Michel aus Lönneberga",
       "position_in_series": null,
-      "genre": "classic",
+      "genre": [
+        "classic"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1971,
-      "mood": "gentle",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2214,12 +2702,13 @@
       "description": "Eine weihnachtliche Geschichte über Großzügigkeit und Zusammensein während der Festzeit.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1983,
-      "mood": "heartwarming",
       "seasonal": "christmas",
       "awards": [],
       "language": "de"
@@ -2233,12 +2722,13 @@
       "description": "Eine Gruppe tierischer Freunde verwandelt ein harmloses Fußballspiel in ein turbulentes, chaotisches Durcheinander.",
       "series": "Micky Maus",
       "position_in_series": null,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2006,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2252,12 +2742,13 @@
       "description": "Ein verwaistes Löwenjunge trifft einen Prinzen und zusammen erleben sie eine schicksalhafte Reise voller Abenteuer und Gefahr.",
       "series": "Der König der Löwen",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2024,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2271,12 +2762,13 @@
       "description": "Ein Mädchen verkleidet sich als Soldat, um ihren kranken Vater vor dem Kriegsdienst zu bewahren.",
       "series": "Mulan",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2020,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2290,12 +2782,13 @@
       "description": "Ein Mädchen verkleidet sich als Soldat, um ihren kranken Vater vor dem Militärdienst zu bewahren.",
       "series": "Mulan",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 1998,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2309,12 +2802,13 @@
       "description": "Ein Junge entdeckt eine verborgene Stadt in den Wolken und muss sich gegen dunkle Kräfte behaupten.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2009,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2328,12 +2822,13 @@
       "description": "Zwei Brüder entdecken einen magischen Weg und müssen sich einer Herausforderung stellen, um ihre Welt zu retten.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2020,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2347,12 +2842,13 @@
       "description": "Ein Junge, der nicht altert, führt Kinder in ein magisches Land voller Abenteuer und Gefahren.",
       "series": "Peter Pan",
       "position_in_series": 1,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1953,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2366,12 +2862,13 @@
       "description": "Ein Junge führt Kinder in ein magisches Land, wo sie Abenteuer erleben und nie erwachsen werden.",
       "series": "Peter Pan",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2023,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2385,12 +2882,13 @@
       "description": "Junge Abenteurer erleben magische Herausforderungen in einer fantastischen Welt ohne Altern und kämpfen gegen dunkle Mächte.",
       "series": "Peter Pan",
       "position_in_series": 2,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2002,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2404,12 +2902,13 @@
       "description": "Ein alter Mann und sein kluges Haustier erleben zusammen alltägliche Abenteuer voller Wärme und Humor.",
       "series": "Pettersson und Findus",
       "position_in_series": 1,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1999,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2423,12 +2922,13 @@
       "description": "Zwei erfinderische Stiefbrüder müssen ihre große Schwester retten, die von Außerirdischen in eine andere Galaxie entführt wurde.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2020,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2442,12 +2942,13 @@
       "description": "Ein Junge aus Holz erlebt Abenteuer und lernt, sich richtig zu verhalten.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": null,
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1940,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2461,12 +2962,13 @@
       "description": "Ein Flugzeug muss eine wichtige Reise absolvieren und erlebt dabei aufregende Abenteuer in der Luft.",
       "series": "Cars",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2013,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2480,12 +2982,13 @@
       "description": "Ein Hubschrauber und seine Freunde arbeiten zusammen, um Rettungseinsätze durchzuführen und Menschen in Not zu helfen.",
       "series": "Planes",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2014,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2499,12 +3002,13 @@
       "description": "Eine junge Frau überbrückt kulturelle Grenzen und findet ihre eigene Stimme in einer Zeit des Konflikts.",
       "series": "Pocahontas",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1995,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2516,14 +3020,15 @@
       "duration_seconds": 4196,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_n-nP-qclR2U3yjcdZ-pvwwoecfo9OGw5A",
       "description": "Ein Kind muss lernen, Probleme durch intelligente Lösungen statt Gewalt zu bewältigen.",
-      "series": "Ralph reichts",
+      "series": "Ralph Reichts",
       "position_in_series": 1,
-      "genre": "educational",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2012,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2537,12 +3042,13 @@
       "description": "Ein Mädchen mit magischen Haaren entdeckt die Welt jenseits seiner Isolation und findet dabei seine wahre Bestimmung.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2010,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2556,12 +3062,13 @@
       "description": "Ein Leidenschaftlicher Kampf um Kulinarischen Erfolg in der Küche einer renommierten Gaststätte.",
       "series": null,
       "position_in_series": null,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2007,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2575,12 +3082,13 @@
       "description": "Ein Krieger kämpft gegen eine Bedrohung und sucht nach einem mythischen Wesen, um sein Reich zu retten.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2021,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2594,12 +3102,13 @@
       "description": "Ein Held kämpft gegen Ungerechtigkeit und hilft den Bedürftigen, indem er sich gegen tyrannische Machthaber aufbegehrt.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1973,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2613,12 +3122,13 @@
       "description": "Ein Kind entdeckt einen gefährlichen Pilz und muss herausfinden, wie man ihn bekämpft, bevor er alles zerstört.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": null,
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2022,
-      "mood": "spooky",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2632,12 +3142,13 @@
       "description": "Eine Prinzessin flieht vor einer bösen Königin und findet Zuflucht bei freundlichen Waldwesen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1937,
-      "mood": "gentle",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2651,12 +3162,13 @@
       "description": "Ein Koala träumt davon, einen Gesangswettbewerb zu gewinnen und findet dabei neue Freunde und Mut.",
       "series": null,
       "position_in_series": null,
-      "genre": "comedy",
+      "genre": [
+        "comedy"
+      ],
       "franchise": "dreamworks",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2670,12 +3182,33 @@
       "description": "Eine Seele muss ihre Bestimmung finden und lernt dabei, was es bedeutet, lebendig zu sein.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "pixar",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2020,
-      "mood": "heartwarming",
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 170,
+      "title": "Stockmann",
+      "thumbnail_url": "https://i.ytimg.com/vi/g3xEgVXtXgs/maxresdefault.jpg",
+      "duration_seconds": 1609,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lXtRqpjY4FVX1IWO-jJTZF2L5uAnEYd5I",
+      "description": "Eine kleine, astähnliche Figur wird von ihrer Familie getrennt und kämpft sich durch Abenteuer rechtzeitig nach Hause zurück.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2689,12 +3222,13 @@
       "description": "Kinder erleben mysteriöse und ungewöhnliche Abenteuer in einer rätselhaften Welt voller Geheimnisse.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2022,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2708,12 +3242,13 @@
       "description": "Ein Straßenhund und ein verwöhnter Haushund werden Freunde und erleben gemeinsame Abenteuer in der Stadt.",
       "series": "Susi und Strolch",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1955,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2727,12 +3262,13 @@
       "description": "Ein junger Hund, hin- und hergerissen zwischen Zuhause und Freiheit, erlebt auf der Straße ein gefährliches Abenteuer.",
       "series": "Susi und Strolch",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2001,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2746,12 +3282,13 @@
       "description": "Ein in der Wildnis aufgewachsener Mensch muss sich zwischen seiner Natur und der Zivilisation entscheiden.",
       "series": "Tarzan",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2013,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2765,12 +3302,13 @@
       "description": "Ein Junge wächst im Dschungel auf und muss sich zwischen seiner wilden Heimat und der Zivilisation zurechtfinden.",
       "series": "Tarzan",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1999,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2784,12 +3322,13 @@
       "description": "Ein junger Mensch, aufgewachsen in der Wildnis, muss seine Identität entdecken und seinen Platz zwischen zwei Welten finden.",
       "series": "Tarzan",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2005,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2803,12 +3342,13 @@
       "description": "Ein Junge wächst im Dschungel auf und muss lernen, seinen Platz in der Welt zwischen Natur und Zivilisation zu finden.",
       "series": "Das Dschungelbuch",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2822,12 +3362,13 @@
       "description": "Tiere erleben wilde Abenteuer in der Natur und lernen dabei wichtige Lektionen über Freundschaft und Zusammenhalt.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2006,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2841,12 +3382,13 @@
       "description": "Ein hüpffreudiges Tier sucht nach Artgenossen und entdeckt dabei, dass wahre Familie auch aus Freunden bestehen kann.",
       "series": "Winnie Puuh",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2000,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2860,12 +3402,13 @@
       "description": "Ein Kürbiskopf-König entdeckt die Weihnachtswelt und plant, das Fest auf seine eigene düstere Weise zu übernehmen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 1993,
-      "mood": "spooky",
       "seasonal": "christmas",
       "awards": [],
       "language": "de"
@@ -2879,12 +3422,13 @@
       "description": "Eine Fee entdeckt ihre magischen Kräfte und findet ihren Platz in einer fantastischen Welt voller Abenteuer.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2898,12 +3442,13 @@
       "description": "Eine kleine Fee reist gefährlich weit, um ein magisches Objekt zu bergen, das die Jahreszeiten ihrer Heimat bedroht.",
       "series": "Peter Pan",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2009,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2917,12 +3462,13 @@
       "description": "Eine kleine Fee gerät versehentlich in die Menschenwelt und muss mit neuen Freunden einen Weg zurück in ihre Heimat finden.",
       "series": "Peter Pan",
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2010,
-      "mood": "adventurous",
       "seasonal": "summer",
       "awards": [],
       "language": "de"
@@ -2936,12 +3482,13 @@
       "description": "Eine Fee muss sich einer Piratin entgegenstellen und ein großes Abenteuer bestehen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2014,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2955,12 +3502,13 @@
       "description": "Ein Spielzeug muss lernen, dass es nicht das Wichtigste in der Welt eines Kindes ist, wenn ein neues Spielzeug ankommt.",
       "series": "Toy Story",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1995,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2974,12 +3522,13 @@
       "description": "Spielzeuge müssen sich einer neuen Herausforderung stellen, als sie in ein Kindergarten-Abenteuer geraten.",
       "series": "Toy Story",
       "position_in_series": 3,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2010,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2993,12 +3542,13 @@
       "description": "Ein Spielzeug muss sich neuen Herausforderungen stellen und lernt, dass Freundschaft verschiedene Formen annehmen kann.",
       "series": "Toy Story",
       "position_in_series": 4,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3012,12 +3562,13 @@
       "description": "Woody und seine Freunde erleben ein neues Abenteuer, wenn sich ihre Welt unerwartet verändert.",
       "series": "Toy Story",
       "position_in_series": 5,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3031,12 +3582,13 @@
       "description": "Eine Familie erlebt Abenteuer auf einer einsamen Insel und muss sich gegen Gefahren behaupten.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2007,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3050,12 +3602,13 @@
       "description": "Ein junges Mädchen aus einem abgelegenen Inselvolk begibt sich auf eine gefährliche Seereise, um ihr Volk zu retten.",
       "series": "Vaiana",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3069,12 +3622,13 @@
       "description": "Eine junge Heldin begibt sich auf eine gefährliche Seereise, um ihr Volk zu retten und ein altes Geheimnis zu enthüllen.",
       "series": "Vaiana",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2024,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3088,12 +3642,13 @@
       "description": "Ein einsamer Aufräumroboter auf verlassener Erde findet durch den Besuch eines anderen Roboters Hoffnung und Zuneigung.",
       "series": null,
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "pixar",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2008,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3107,12 +3662,13 @@
       "description": "Ein Bär und seine Freunde erleben gemeinsam zauberhafte Abenteuer im Wald voller Freundschaft und Wärme.",
       "series": null,
       "position_in_series": null,
-      "genre": "fairy_tale",
+      "genre": [
+        "fairy_tale"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2011,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3126,12 +3682,13 @@
       "description": "Eine Gruppe von Waldfreunden erlebt die wechselnden Jahreszeiten und meistert dabei herzerwärmende Alltagsabenteuer.",
       "series": "Winnie Puuh",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1999,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3145,12 +3702,13 @@
       "description": "Als ein kleines Waldtier plötzlich verschwunden scheint, begeben sich seine Freunde auf eine abenteuerliche Suche nach ihm.",
       "series": "Winnie Puuh",
       "position_in_series": null,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1997,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3164,12 +3722,13 @@
       "description": "Ein Kind macht sich auf eine magische Reise, um einen geheimen Wunsch wahr werden zu lassen.",
       "series": null,
       "position_in_series": null,
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2023,
-      "mood": "heartwarming",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3183,12 +3742,13 @@
       "description": "Ein Abenteuer in einer fantastischen Stadt, wo verschiedene Tiere zusammenleben und gemeinsam Herausforderungen meistern.",
       "series": "Zoomania",
       "position_in_series": 1,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2016,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3202,12 +3762,13 @@
       "description": "Ein Abenteuer im Zoo, in dem Tiere zusammenarbeiten, um ein Geheimnis zu lösen und ihre Gemeinschaft zu schützen.",
       "series": "Zoomania",
       "position_in_series": 2,
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2025,
-      "mood": "adventurous",
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -3216,25 +3777,28 @@
   "series": {
     "Bibi Blocksberg": {
       "series_type": "episodic",
-      "genre": "fantasy",
+      "genre": [
+        "fantasy"
+      ],
       "franchise": "bibi_blocksberg",
-      "mood": "funny",
       "min_age": 4,
       "age_tag": "3_5"
     },
     "Marvels Iron Man und seine fantastischen Freunde": {
       "series_type": "episodic",
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
-      "mood": "adventurous",
       "min_age": 4,
       "age_tag": "3_5"
     },
     "Marvels Spidey und seine Super-Freunde": {
       "series_type": "episodic",
-      "genre": "adventure",
+      "genre": [
+        "adventure"
+      ],
       "franchise": "disney",
-      "mood": "adventurous",
       "min_age": 4,
       "age_tag": "3_5"
     }

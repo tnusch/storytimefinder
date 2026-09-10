@@ -12,7 +12,9 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .hidden_tiles import HIDDEN_TILES
 from .i18n import translate
+from .tile_thumbnails import TILE_THUMBNAILS
 
 CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "catalog.json"
 
@@ -68,12 +70,13 @@ def get_languages() -> list[str]:
 
 
 def get_genres() -> list[str]:
-    values = {item.get("genre") for item in get_items() if item.get("genre")}
-    return sorted(values)
-
-
-def get_moods() -> list[str]:
-    values = {item.get("mood") for item in get_items() if item.get("mood")}
+    """Distinct genre values across the catalog - `item["genre"]` is a
+    list[str] (an item can carry more than one thematic tag), so this
+    flattens every item's list into one set rather than collecting the
+    lists themselves."""
+    values: set[str] = set()
+    for item in get_items():
+        values.update(item.get("genre") or [])
     return sorted(values)
 
 
@@ -121,7 +124,7 @@ _SLUG_INVALID_RE = re.compile(r"[^a-z0-9]+")
 def slugify(text: str) -> str:
     """'Bibi Blocksberg' -> 'bibi-blocksberg', 'Die drei ???' -> 'die-drei'.
     No slugify utility exists anywhere else in this repo (franchise/genre/
-    mood/seasonal "slugs" are pre-enumerated fixed vocab values, never
+    seasonal "slugs" are pre-enumerated fixed vocab values, never
     generated) - this is the first one, written for /series/<slug> only."""
     if not text:
         return ""
@@ -145,11 +148,11 @@ def _first_present(items: list[dict], field: str):
 
 
 def get_series_metadata() -> dict[str, dict]:
-    """catalog.json's "series" section - series_type/genre/franchise/mood/
+    """catalog.json's "series" section - series_type/genre/franchise/
     min_age/age_tag for an episodic series, keyed by series name (see
     refresh.py's export_catalog()/sync_series()). This is the single
     source of truth for series_type now - there's no per-item series_type
-    field anymore (it used to live on each item, but genre/franchise/mood/
+    field anymore (it used to live on each item, but genre/franchise/
     min_age for an episodic series are curated once in overrides.py's
     SERIES_OVERRIDES rather than repeated per episode, and series_type
     moved there with them - see overrides.py's docstring). A series absent
@@ -164,7 +167,7 @@ def get_series_groups() -> list[dict]:
 
     Each group: slug, series, episodes (sorted by _episode_sort_key),
     episode_count, thumbnail_url (first episode's, in sort order, with a
-    non-null thumbnail), age_tag/genre/franchise/mood (straight from the
+    non-null thumbnail), age_tag/genre/franchise (straight from the
     series-level metadata - a single curated value now, not derived by
     scanning episodes), seasonal/language (first non-null value found
     across episodes - seasonal isn't part of SERIES_OVERRIDES, so it's
@@ -193,7 +196,6 @@ def get_series_groups() -> list[dict]:
             "age_tag": meta.get("age_tag"),
             "genre": meta.get("genre"),
             "franchise": meta.get("franchise"),
-            "mood": meta.get("mood"),
             "seasonal": _first_present(episodes, "seasonal"),
             "language": _first_present(episodes, "language"),
             "awards": next((e["awards"] for e in episodes if e.get("awards")), []),
@@ -203,6 +205,84 @@ def get_series_groups() -> list[dict]:
 
 def get_series_group_by_slug(slug: str) -> dict | None:
     return next((g for g in get_series_groups() if g["slug"] == slug), None)
+
+
+TILE_CATEGORIES = ("age", "genre", "series", "franchise")
+
+
+def is_tile_hidden(category: str, value: str) -> bool:
+    """Whether a guided-filter tile is hidden (see hidden_tiles.py) - the
+    value stays fully filterable via the advanced-panel chips either way,
+    this only controls whether it gets its own tile on the home page."""
+    return value in HIDDEN_TILES.get(category, [])
+
+
+def _item_matches_tile(item: dict, category: str, value: str) -> bool:
+    if category == "age":
+        return item.get("age_tag") == value
+    if category == "genre":
+        return value in (item.get("genre") or [])
+    if category == "series":
+        return item.get("series") == value
+    if category == "franchise":
+        return item.get("franchise") == value
+    return False
+
+
+def get_tile_thumbnail(category: str, value: str) -> str | None:
+    """Resolves a guided-filter tile's cover image: a manually curated
+    entry in tile_thumbnails.TILE_THUMBNAILS wins if present. Otherwise,
+    for `series`, an episodic series' own already-computed
+    get_series_groups() thumbnail is reused (first episode with one, see
+    there) rather than re-derived from scratch; every other category (and
+    a non-episodic series) falls back to the first catalog item matching
+    this category/value that has a thumbnail_url at all - same
+    `_first_present()`-style scan get_series_groups() already uses.
+    Returns None only if nothing anywhere has an image for this value -
+    see get_tile_thumbnail_warnings() for how that (and the plain
+    fallback case) get surfaced for manual review."""
+    curated = TILE_THUMBNAILS.get(category, {}).get(value)
+    if curated:
+        return curated
+    if category == "series":
+        group = next((g for g in get_series_groups() if g["series"] == value), None)
+        if group and group.get("thumbnail_url"):
+            return group["thumbnail_url"]
+    matching = [item for item in get_items() if _item_matches_tile(item, category, value)]
+    return _first_present(matching, "thumbnail_url")
+
+
+def get_tile_thumbnail_warnings() -> list[str]:
+    """Pure function (returns strings, doesn't log anything itself) flagging
+    every guided-filter tile that isn't using a manually curated
+    thumbnail - either falling back to a matching catalog item's image, or
+    (rarer) having no image available at all. A hidden tile (see
+    hidden_tiles.py) is skipped entirely - there's no point curating an
+    image nobody will ever see. Same shape as every other
+    warn-only check in this codebase (e.g. refresh.py's
+    check_duplicate_source_ids()); surfaced in the admin UI's Values screen
+    through the same dismissible-warning infrastructure every other check
+    already uses (see admin/file_ops.py's get_consistency_warnings())."""
+    value_lists = {
+        "age": get_age_tags(),
+        "genre": get_genres(),
+        "series": get_series_list(),
+        "franchise": [f["slug"] for f in get_franchises()],
+    }
+    warnings = []
+    for category, values in value_lists.items():
+        curated = TILE_THUMBNAILS.get(category, {})
+        for value in values:
+            if curated.get(value) or is_tile_hidden(category, value):
+                continue
+            url = get_tile_thumbnail(category, value)
+            if url is None:
+                warnings.append(f"Tile {category!r}:{value!r} has NO thumbnail available at all - add one manually")
+            else:
+                warnings.append(
+                    f"Tile {category!r}:{value!r} has no curated thumbnail - falling back to a matching item's image"
+                )
+    return warnings
 
 
 def get_sequel_context() -> dict:

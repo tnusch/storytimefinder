@@ -5,8 +5,7 @@
   data-age="{{ item.age_tag or '' }}"
   data-series="{{ item.series or '' }}"
   data-language="{{ item.language or '' }}"
-  data-genre="{{ item.genre or '' }}"
-  data-mood="{{ item.mood or '' }}"
+  data-genre="{{ item.genre | join(',') }}"
   data-seasonal="{{ item.seasonal or '' }}"
   data-awards="{{ 'true' if item.awards else '' }}"
   data-duration="{{ item.duration_seconds | duration_bucket or '' }}"
@@ -33,7 +32,7 @@
     <p class="card-meta">
       {% if item.awards %}<span class="tag tag-award" title="{{ item.awards | map(attribute='name') | join(', ') }}">🏆</span>{% endif %}
       {% if item.age_tag %}<span class="tag">{{ t('age_tag_short_' ~ item.age_tag) }}</span>{% endif %}
-      {% if item.genre %}<span class="tag">{{ t('genre_' ~ item.genre) }}</span>{% endif %}
+      {% for g in item.genre %}<span class="tag">{{ t('genre_' ~ g) }}</span>{% endfor %}
     </p>
 
     {# item.series_type no longer exists (moved to catalog.json's series
@@ -76,14 +75,13 @@
   data-age="{{ group.age_tag or '' }}"
   data-series="{{ group.series }}"
   data-language="{{ group.language or '' }}"
-  data-genre="{{ group.genre or '' }}"
-  data-mood="{{ group.mood or '' }}"
+  data-genre="{{ group.genre | join(',') }}"
   data-seasonal="{{ group.seasonal or '' }}"
   data-awards="{{ 'true' if group.awards else '' }}"
   data-item-count="{{ group.episode_count }}"
   data-duration-seconds="0"
   data-release-year="0"
-  {#- genre/franchise/mood/age_tag are now single, curated series-level
+  {#- genre/franchise/age_tag are now single, curated series-level
      values (overrides.py's SERIES_OVERRIDES), so they're safe to filter
      on directly, unlike before this existed when they were guessed from
      "the first episode with a value". data-duration/data-release-decade
@@ -115,7 +113,7 @@
     <p class="card-meta">
       {% if group.awards %}<span class="tag tag-award" title="{{ group.awards | map(attribute='name') | join(', ') }}">🏆</span>{% endif %}
       {% if group.age_tag %}<span class="tag">{{ t('age_tag_short_' ~ group.age_tag) }}</span>{% endif %}
-      {% if group.genre %}<span class="tag">{{ t('genre_' ~ group.genre) }}</span>{% endif %}
+      {% for g in group.genre %}<span class="tag">{{ t('genre_' ~ g) }}</span>{% endfor %}
     </p>
 
     <a class="card-view-series" href="{{ url_for('main.series_detail', slug=group.slug) }}">{{ t('series_view_all_episodes') }}</a>

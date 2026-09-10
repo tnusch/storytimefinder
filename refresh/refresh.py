@@ -56,9 +56,9 @@ Environment:
     ANTHROPIC_API_KEY             optional, Claude API key - used to generate each new
                                   item's Claude suggestion (description plus
                                   best-effort series/genre/franchise/min_age/
-                                  source_release_year/mood/seasonal) in one
+                                  source_release_year/seasonal) in one
                                   combined call (see generate_metadata_suggestions()) -
-                                  all nine fields are written to data/claude_suggestions.json
+                                  all eight fields are written to data/claude_suggestions.json
                                   for manual review, NEVER directly into the catalog (see
                                   overrides.py). awards is NOT part of this call at all -
                                   it's curated entirely by hand, see AWARD_VALUES/
@@ -174,6 +174,10 @@ CREATE TABLE IF NOT EXISTS items (
     -- overrides.py's docstring and sync_source()'s resolution logic.
     -- genre/franchise are each checked against a fixed value list (see
     -- GENRE_VALUES/FRANCHISE_VALUES below and overrides.py's docstring).
+    -- genre is JSON-serialized (a list[str], e.g. '["adventure", "horse"]')
+    -- since an item can carry more than one thematic tag - same TEXT-holds-
+    -- JSON-array convention as `awards` below, decoded back to a real list
+    -- in export_catalog(). franchise stays a single scalar string.
     genre TEXT,
     franchise TEXT,
     -- Precise minimum age from the publisher/retailer, e.g. 4. Override-only
@@ -191,11 +195,12 @@ CREATE TABLE IF NOT EXISTS items (
     -- source for this - YouTube's publishedAt is the audiobook upload date,
     -- deliberately not used here).
     source_release_year INTEGER,
-    -- Override-only, no API source (or series-resolved for an episodic
-    -- series member, same as genre/franchise/min_age above). Single value
-    -- from MOOD_VALUES - a subjective/generative read of the story's tone,
-    -- not a factual claim, but still gated behind human review like every
-    -- other field (see overrides.py's docstring).
+    -- DEPRECATED, unused - mood was removed as a curated field entirely
+    -- (it never earned its keep as a filter - see CLAUDE.md's history
+    -- note). Column kept rather than dropped, per this codebase's
+    -- additive-only migration philosophy (see _migrate_schema() and
+    -- items.series_type's own DEPRECATED comment above) - never written
+    -- or read anymore.
     mood TEXT,
     -- Override-only. Single value from SEASONAL_VALUES, or NULL for the
     -- (expected-to-be-majority) non-seasonal case - never force a value.
@@ -216,7 +221,7 @@ CREATE INDEX IF NOT EXISTS idx_items_source ON items(source_id);
 -- SERIES_OVERRIDES docstring) - keyed by series name (matching items.series
 -- text, not a foreign key - a series here can exist before any item
 -- references it, or briefly after the last one referencing it is removed).
--- genre/franchise/mood/min_age/age_tag here are what sync_source() resolves
+-- genre/franchise/min_age/age_tag here are what sync_source() resolves
 -- onto every member item's own row (see there); series_type also decides
 -- app/data.py's episodic-vs-sequel-vs-neither branching once exported into
 -- catalog.json's own "series" section. A sequel series (or any series with
@@ -224,8 +229,10 @@ CREATE INDEX IF NOT EXISTS idx_items_source ON items(source_id);
 CREATE TABLE IF NOT EXISTS series (
     name TEXT PRIMARY KEY,
     series_type TEXT,
+    -- JSON-serialized list[str], same convention as items.genre above.
     genre TEXT,
     franchise TEXT,
+    -- DEPRECATED, unused - see items.mood's own comment above.
     mood TEXT,
     min_age INTEGER,
     age_tag TEXT
@@ -238,6 +245,12 @@ CREATE TABLE IF NOT EXISTS series (
 # override uses a value outside these sets, so a typo is caught without
 # hard-failing the whole refresh run.
 GENRE_VALUES = {
+    "family",
+
+    "friendship",
+
+    "animals",
+
     "fairy_tale",
     "adventure",
     "mystery",
@@ -246,6 +259,8 @@ GENRE_VALUES = {
     "bedtime_story",
     "classic",
     "comedy",
+    "horse",
+    "superhero",
 }
 FRANCHISE_VALUES = {
     "disney",
@@ -257,16 +272,6 @@ FRANCHISE_VALUES = {
     "benjamin_bluemchen",
     "die_drei_fragezeichen",
     "tkkg",
-}
-MOOD_VALUES = {
-    "calm",
-    "funny",
-    "spooky",
-    "adventurous",
-    "heartwarming",
-    "exciting",
-    "silly",
-    "gentle",
 }
 SEASONAL_VALUES = {
     "winter",
@@ -290,7 +295,7 @@ AWARD_VALUES = {
 # Closed 2-value enum, unlike GENRE_VALUES/FRANCHISE_VALUES/etc - never
 # expected to grow a 3rd value, so deliberately NOT wired into the admin
 # "Values" screen's open-vocabulary add-flow (VALUE_LIST_CONFIG in
-# admin/file_ops.py) the way genre/mood are.
+# admin/file_ops.py) the way genre/franchise are.
 SERIES_TYPE_VALUES = {"sequel", "episodic"}
 
 # (slug, inclusive lower bound, exclusive upper bound - None means no upper
@@ -391,7 +396,7 @@ def sync_series(conn: sqlite3.Connection) -> None:
     """Upsert overrides.py's SERIES_OVERRIDES into the series table - the
     write-model counterpart of sync_sources()/the items-table upsert in
     sync_source(), just for series-level metadata instead of source/item
-    metadata. Validates series_type/genre/franchise/mood the same warn-only
+    metadata. Validates series_type/genre/franchise the same warn-only
     way sync_source() does for items (a value outside the fixed vocab logs
     a warning but doesn't fail the sync), and derives age_tag from min_age
     via derive_age_tag(), same as items. Never deletes a row for a series
@@ -399,7 +404,8 @@ def sync_series(conn: sqlite3.Connection) -> None:
     same known limitation (see remove_source()'s docstring in
     admin/file_ops.py); export_catalog() only ever exports rows still
     referenced by at least one active item, so a stale row here is harmless
-    even if never cleaned up.
+    even if never cleaned up. Never writes `mood` - see the column's own
+    DEPRECATED comment in SCHEMA above.
     """
     for name, meta in SERIES_OVERRIDES.items():
         series_type = meta.get("series_type")
@@ -408,35 +414,33 @@ def sync_series(conn: sqlite3.Connection) -> None:
                 "Series %r: series_type %r is not in SERIES_TYPE_VALUES %s",
                 name, series_type, sorted(SERIES_TYPE_VALUES),
             )
-        genre = meta.get("genre")
-        if genre and genre not in GENRE_VALUES:
-            log.warning("Series %r: genre %r is not in GENRE_VALUES %s", name, genre, sorted(GENRE_VALUES))
+        genre = meta.get("genre") or []
+        for g in genre:
+            if g not in GENRE_VALUES:
+                log.warning("Series %r: genre %r is not in GENRE_VALUES %s", name, g, sorted(GENRE_VALUES))
+        genre_json = json.dumps(genre, ensure_ascii=False)
         franchise = meta.get("franchise")
         if franchise and franchise not in FRANCHISE_VALUES:
             log.warning(
                 "Series %r: franchise %r is not in FRANCHISE_VALUES %s", name, franchise, sorted(FRANCHISE_VALUES)
             )
-        mood = meta.get("mood")
-        if mood and mood not in MOOD_VALUES:
-            log.warning("Series %r: mood %r is not in MOOD_VALUES %s", name, mood, sorted(MOOD_VALUES))
         min_age = meta.get("min_age")
         age_tag = derive_age_tag(min_age)
 
         conn.execute(
             """
-            INSERT INTO series (name, series_type, genre, franchise, mood, min_age, age_tag)
-            VALUES (:name, :series_type, :genre, :franchise, :mood, :min_age, :age_tag)
+            INSERT INTO series (name, series_type, genre, franchise, min_age, age_tag)
+            VALUES (:name, :series_type, :genre, :franchise, :min_age, :age_tag)
             ON CONFLICT(name) DO UPDATE SET
                 series_type = excluded.series_type,
                 genre = excluded.genre,
                 franchise = excluded.franchise,
-                mood = excluded.mood,
                 min_age = excluded.min_age,
                 age_tag = excluded.age_tag
             """,
             {
-                "name": name, "series_type": series_type, "genre": genre,
-                "franchise": franchise, "mood": mood, "min_age": min_age, "age_tag": age_tag,
+                "name": name, "series_type": series_type, "genre": genre_json,
+                "franchise": franchise, "min_age": min_age, "age_tag": age_tag,
             },
         )
     conn.commit()
@@ -444,7 +448,7 @@ def sync_series(conn: sqlite3.Connection) -> None:
 
 def get_series_metadata(conn: sqlite3.Connection) -> dict[str, sqlite3.Row]:
     """All series rows, keyed by name - what sync_source() looks up per
-    item to resolve genre/franchise/mood/min_age/age_tag for an episodic
+    item to resolve genre/franchise/min_age/age_tag for an episodic
     series member (see its own docstring)."""
     conn.row_factory = sqlite3.Row
     return {row["name"]: row for row in conn.execute("SELECT * FROM series").fetchall()}
@@ -568,11 +572,10 @@ EMPTY_SUGGESTIONS = {
     "description": None,
     "series": None,
     "position_in_series": None,
-    "genre": None,
+    "genre": [],
     "franchise": None,
     "min_age": None,
     "source_release_year": None,
-    "mood": None,
     "seasonal": None,
     "awards": [],
 }
@@ -643,19 +646,24 @@ def _clean_int(value) -> int | None:
 
 
 def _validate_suggested_fields(raw: dict) -> dict:
-    """Coerce/validate the eight non-description fields Claude is actually
-    asked for (see generate_metadata_suggestions()'s prompt) - genre/
-    franchise/mood/seasonal are dropped (set None) if Claude proposed a
-    value outside their fixed lists, min_age/source_release_year are
+    """Coerce/validate the seven non-description fields Claude is actually
+    asked for (see generate_metadata_suggestions()'s prompt) - franchise/
+    seasonal are dropped (set None) if Claude proposed a value outside
+    their fixed lists; genre (list-valued) drops just the individual
+    out-of-vocab elements rather than the whole suggestion. min_age/
+    source_release_year are
     dropped if not a sane non-negative int / plausible year. `awards` is
     always `[]` here - Claude is no longer asked to suggest it at all (see
     the module-level note above EMPTY_SUGGESTIONS); it's purely manual now,
     curated straight into overrides.py. These are suggestions for a human
     to review (see save_suggestions()), never written to the catalog
-    directly, but there's no reason to keep an obviously-bad value around."""
-    genre = _clean_str(raw.get("genre"))
-    if genre not in GENRE_VALUES:
-        genre = None
+    directly, but there's no reason to keep an obviously-bad value around.
+    `genre` is the one list-valued field here - raw.get("genre") is expected
+    to be a JSON array of strings (see the prompt below); any element
+    outside GENRE_VALUES is silently dropped rather than discarding the
+    whole suggestion, and a non-list value (or no genre at all) becomes []."""
+    raw_genre = raw.get("genre")
+    genre = [g for g in raw_genre if isinstance(g, str) and g in GENRE_VALUES] if isinstance(raw_genre, list) else []
     franchise = _clean_str(raw.get("franchise"))
     if franchise not in FRANCHISE_VALUES:
         franchise = None
@@ -665,9 +673,6 @@ def _validate_suggested_fields(raw: dict) -> dict:
     source_release_year = _clean_int(raw.get("source_release_year"))
     if source_release_year is not None and not (1850 <= source_release_year <= 2100):
         source_release_year = None
-    mood = _clean_str(raw.get("mood"))
-    if mood not in MOOD_VALUES:
-        mood = None
     seasonal = _clean_str(raw.get("seasonal"))
     if seasonal not in SEASONAL_VALUES:
         seasonal = None
@@ -678,7 +683,6 @@ def _validate_suggested_fields(raw: dict) -> dict:
         "franchise": franchise,
         "min_age": min_age,
         "source_release_year": source_release_year,
-        "mood": mood,
         "seasonal": seasonal,
         "awards": [],
     }
@@ -687,8 +691,8 @@ def _validate_suggested_fields(raw: dict) -> dict:
 def generate_metadata_suggestions(claude_client, title: str, language: str) -> dict:
     """One combined Claude call per new item: a description, plus
     best-effort suggestions for series/position_in_series/genre/franchise/
-    min_age/source_release_year/mood/seasonal - a single request instead of
-    nine, to keep token spend down. Only called for items not already in
+    min_age/source_release_year/seasonal - a single request instead of
+    eight, to keep token spend down. Only called for items not already in
     the DB (see sync_source_items) - already-synced items don't trigger
     another call (and more API usage) on every re-sync.
 
@@ -724,7 +728,6 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
     language_name = DESCRIPTION_LANGUAGE_NAMES.get(language, language)
     genre_list = ", ".join(sorted(GENRE_VALUES))
     franchise_list = ", ".join(sorted(FRANCHISE_VALUES))
-    mood_list = ", ".join(sorted(MOOD_VALUES))
     seasonal_list = ", ".join(sorted(SEASONAL_VALUES))
     parsed = None
     for attempt in range(SUGGESTION_MAX_ATTEMPTS):
@@ -738,7 +741,8 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
             'one (e.g. "Die drei ???"), otherwise null.\n'
             '- "position_in_series": that series\' episode/volume number as an integer, '
             "otherwise null.\n"
-            f'- "genre": exactly one of [{genre_list}] that best fits, otherwise null.\n'
+            f'- "genre": a JSON array of 1-3 values from [{genre_list}] that best fit this '
+            "item's themes, or [] if none clearly fit.\n"
             f'- "franchise": exactly one of [{franchise_list}] if this belongs to one of '
             "these IP franchises, otherwise null.\n"
             '- "min_age": the publisher/retailer\'s recommended minimum age as an integer, '
@@ -746,16 +750,12 @@ def generate_metadata_suggestions(claude_client, title: str, language: str) -> d
             '- "source_release_year": the year the SOURCE film or book this is based on was '
             "originally released (not this audiobook's own release) as an integer, only if "
             "known, otherwise null.\n"
-            f'- "mood": exactly one of [{mood_list}] - your best-effort subjective read of the '
-            "overall tone from the title/franchise/description context. This is a creative "
-            "judgment call, not a factual lookup - always provide your best guess rather than "
-            "null.\n"
             f'- "seasonal": exactly one of [{seasonal_list}] if the story is clearly tied to a '
             "specific season or holiday (e.g. explicitly Christmas- or Halloween-themed), "
-            "otherwise null. Most titles are NOT seasonal - like mood, this is a subjective "
-            "judgment call - only set it when obvious, don't force a value.\n"
+            "otherwise null. Most titles are NOT seasonal - this is a subjective judgment "
+            "call - only set it when obvious, don't force a value.\n"
             "Only fill in a field if you're reasonably confident - use null rather than "
-            "guessing, except mood which should always get a value."
+            "guessing."
         )
         if attempt > 0:
             prompt += (
@@ -1179,16 +1179,17 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
         is_episodic = bool(series_meta and series_meta.get("series_type") == "episodic")
 
         if is_episodic:
-            # genre/franchise/mood/min_age come from the series-level entry
+            # genre/franchise/min_age come from the series-level entry
             # instead of this item's own override - see overrides.py's
             # SERIES_OVERRIDES docstring. sync_series() already validated
             # these against the fixed vocab lists, so no need to repeat
-            # that here.
-            genre = series_meta.get("genre")
+            # that here. genre is a list[str] here too, same as the
+            # non-episodic branch below - sync_series() already validated
+            # each value.
+            genre = series_meta.get("genre") or []
             franchise = series_meta.get("franchise")
-            mood = series_meta.get("mood")
             min_age = series_meta.get("min_age")
-            for field in ("genre", "franchise", "mood", "min_age"):
+            for field in ("genre", "franchise", "min_age"):
                 if field in override:
                     log.warning(
                         "Item %s: %r override is ignored - series %r is episodic, set it once in "
@@ -1196,23 +1197,26 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                         entry_id, field, series,
                     )
         else:
-            genre = override.get("genre")
-            if genre and genre not in GENRE_VALUES:
-                log.warning("Item %s: genre %r is not in GENRE_VALUES %s", entry_id, genre, sorted(GENRE_VALUES))
+            genre = override.get("genre") or []
+            for g in genre:
+                if g not in GENRE_VALUES:
+                    log.warning("Item %s: genre %r is not in GENRE_VALUES %s", entry_id, g, sorted(GENRE_VALUES))
             franchise = override.get("franchise")
             if franchise and franchise not in FRANCHISE_VALUES:
                 log.warning(
                     "Item %s: franchise %r is not in FRANCHISE_VALUES %s",
                     entry_id, franchise, sorted(FRANCHISE_VALUES),
                 )
-            mood = override.get("mood")
-            if mood and mood not in MOOD_VALUES:
-                log.warning("Item %s: mood %r is not in MOOD_VALUES %s", entry_id, mood, sorted(MOOD_VALUES))
             min_age = override.get("min_age")
 
         if "age_tag" in override:
             log.warning(
                 "Item %s: 'age_tag' override is ignored - age_tag is now derived from 'min_age' instead",
+                entry_id,
+            )
+        if "mood" in override:
+            log.warning(
+                "Item %s: 'mood' override is ignored - mood was removed as a curated field entirely",
                 entry_id,
             )
         age_tag = derive_age_tag(min_age)
@@ -1228,6 +1232,7 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
             if name and name not in AWARD_VALUES:
                 log.warning("Item %s: award %r is not in AWARD_VALUES %s", entry_id, name, sorted(AWARD_VALUES))
         awards_json = json.dumps(awards, ensure_ascii=False)
+        genre_json = json.dumps(genre, ensure_ascii=False)
 
         if entry_id in existing_ids:
             conn.execute(
@@ -1237,7 +1242,7 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     youtube_music_url = ?, description = ?,
                     series = ?, position_in_series = ?,
                     genre = ?, franchise = ?, min_age = ?, age_tag = ?, source_release_year = ?,
-                    mood = ?, seasonal = ?, awards = ?,
+                    seasonal = ?, awards = ?,
                     last_refreshed = ?
                 WHERE id = ?
                 """,
@@ -1249,12 +1254,11 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     description,
                     series,
                     position_in_series,
-                    genre,
+                    genre_json,
                     franchise,
                     min_age,
                     age_tag,
                     source_release_year,
-                    mood,
                     seasonal,
                     awards_json,
                     now,
@@ -1269,8 +1273,8 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     (source_id, video_id, title, thumbnail_url, duration_seconds,
                      youtube_music_url, description,
                      series, position_in_series, genre, franchise, min_age, age_tag,
-                     source_release_year, mood, seasonal, awards, last_refreshed)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     source_release_year, seasonal, awards, last_refreshed)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     source["id"],
@@ -1282,12 +1286,11 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     description,
                     series,
                     position_in_series,
-                    genre,
+                    genre_json,
                     franchise,
                     min_age,
                     age_tag,
                     source_release_year,
-                    mood,
                     seasonal,
                     awards_json,
                     now,
@@ -1372,7 +1375,7 @@ def export_catalog(conn: sqlite3.Connection) -> int:
                items.youtube_music_url, items.description,
                items.series, items.position_in_series,
                items.genre, items.franchise, items.min_age, items.age_tag, items.source_release_year,
-               items.mood, items.seasonal, items.awards,
+               items.seasonal, items.awards,
                sources.language
         FROM items
         JOIN sources ON sources.id = items.source_id
@@ -1384,10 +1387,11 @@ def export_catalog(conn: sqlite3.Connection) -> int:
     catalog_items = []
     for row in rows:
         item = dict(row)
-        # awards is stored as a JSON TEXT column (see SCHEMA) - decode it
-        # back into a real array so catalog.json holds nested JSON, not a
-        # JSON-string-within-JSON.
+        # awards/genre are each stored as a JSON TEXT column (see SCHEMA) -
+        # decode them back into a real array so catalog.json holds nested
+        # JSON, not a JSON-string-within-JSON.
         item["awards"] = json.loads(item["awards"]) if item.get("awards") else []
+        item["genre"] = json.loads(item["genre"]) if item.get("genre") else []
         catalog_items.append(item)
 
     # Only series still referenced by at least one exported item - a
@@ -1397,13 +1401,19 @@ def export_catalog(conn: sqlite3.Connection) -> int:
     # the public catalog rather than a delete ever needing to happen.
     referenced_series = {item["series"] for item in catalog_items if item.get("series")}
     series_rows = (
-        conn.execute("SELECT * FROM series").fetchall() if referenced_series else []
+        conn.execute(
+            "SELECT name, series_type, genre, franchise, min_age, age_tag FROM series"
+        ).fetchall()
+        if referenced_series
+        else []
     )
-    catalog_series = {
-        row["name"]: {k: row[k] for k in row.keys() if k != "name"}
-        for row in series_rows
-        if row["name"] in referenced_series
-    }
+    catalog_series = {}
+    for row in series_rows:
+        if row["name"] not in referenced_series:
+            continue
+        series_entry = {k: row[k] for k in row.keys() if k != "name"}
+        series_entry["genre"] = json.loads(series_entry["genre"]) if series_entry.get("genre") else []
+        catalog_series[row["name"]] = series_entry
 
     catalog = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -1606,45 +1616,54 @@ def run_fetch(claude_client, skip_claude: bool = False) -> None:
     )
 
 
-def _series_consistency_warnings(by_series: dict[str, list[tuple[str, dict]]]) -> list[str]:
+def _series_consistency_warnings(by_series: dict[str, list[tuple[str, str, dict]]]) -> list[tuple[str, list[str]]]:
     """Core of the series consistency check, shared by the DB-backed
     _check_series_consistency() (run during --sync) and the ITEM_OVERRIDES-
     backed check_overrides_series_consistency() (run against overrides.py
     directly, e.g. from the admin UI, without needing a prior --sync).
 
-    `by_series` maps a series name to a list of (label, fields) tuples -
-    `label` is whatever the caller wants shown in a warning (a title, an
-    entry id, ...), `fields` is a dict with genre/franchise/mood/seasonal/
-    position_in_series keys. Returns human-readable warning strings (never
-    logs or raises itself) for two likely curation mistakes:
-      - items sharing a series disagreeing on genre/franchise/mood/seasonal
-        - a real series is usually consistent on all four, so a mismatch is
-          more often a typo/forgotten field than a deliberate choice.
+    `by_series` maps a series name to a list of (entry_id, label, fields)
+    tuples - `label` is whatever the caller wants shown in a warning (a
+    title, an entry id, ...), `fields` is a dict with genre/franchise/
+    seasonal/position_in_series keys. Returns (warning text, entry_ids)
+    pairs (never logs or raises itself) for two likely curation mistakes:
+      - items sharing a series disagreeing on genre/franchise/seasonal -
+        a real series is usually consistent on all three, so a mismatch is
+        more often a typo/forgotten field than a deliberate choice.
       - two items in the same series claiming the same position_in_series -
         almost always a copy-paste mistake.
-    """
-    warnings = []
+    `entry_ids` lists every item involved in that particular warning, in
+    the same order as `by_series[series]` - callers that just want the text
+    (e.g. CLI logging) can ignore the second element; the admin UI uses it
+    to link a warning straight to the item card(s) it's about."""
+    def hashable(value):
+        # genre is a list[str] (order-insensitive) - franchise/seasonal
+        # stay plain scalar strings and pass through unchanged.
+        return tuple(sorted(value)) if isinstance(value, list) else value
+
+    warnings: list[tuple[str, list[str]]] = []
     for series, entries in sorted(by_series.items()):
         if len(entries) < 2:
             continue
 
-        for field in ("genre", "franchise", "mood", "seasonal"):
-            values = {fields.get(field) for _, fields in entries if fields.get(field)}
+        for field in ("genre", "franchise", "seasonal"):
+            values = {hashable(fields.get(field)) for _, _, fields in entries if fields.get(field)}
             if len(values) > 1:
-                detail = ", ".join(f"{label!r}={fields.get(field)!r}" for label, fields in entries)
-                warnings.append(f"Series {series!r} has inconsistent {field} across its items: {detail}")
+                detail = ", ".join(f"{label!r}={fields.get(field)!r}" for _, label, fields in entries)
+                text = f"Series {series!r} has inconsistent {field} across its items: {detail}"
+                warnings.append((text, [entry_id for entry_id, _, _ in entries]))
 
-        positions: dict[int, list[str]] = {}
-        for label, fields in entries:
+        positions: dict[int, list[tuple[str, str]]] = {}
+        for entry_id, label, fields in entries:
             position = fields.get("position_in_series")
             if position is None:
                 continue
-            positions.setdefault(position, []).append(label)
-        for position, labels in positions.items():
-            if len(labels) > 1:
-                warnings.append(
-                    f"Series {series!r} has {len(labels)} items sharing position_in_series={position}: {labels}"
-                )
+            positions.setdefault(position, []).append((entry_id, label))
+        for position, items in positions.items():
+            if len(items) > 1:
+                labels = [label for _, label in items]
+                text = f"Series {series!r} has {len(labels)} items sharing position_in_series={position}: {labels}"
+                warnings.append((text, [entry_id for entry_id, _ in items]))
     return warnings
 
 
@@ -1658,39 +1677,43 @@ def _check_series_consistency(conn: sqlite3.Connection) -> None:
     """
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
-        "SELECT title, series, position_in_series, genre, franchise, mood, seasonal "
+        "SELECT video_id, title, series, position_in_series, genre, franchise, seasonal "
         "FROM items WHERE series IS NOT NULL"
     ).fetchall()
 
-    by_series: dict[str, list[tuple[str, dict]]] = {}
+    by_series: dict[str, list[tuple[str, str, dict]]] = {}
     for row in rows:
-        by_series.setdefault(row["series"], []).append((row["title"], dict(row)))
+        fields = dict(row)
+        fields["genre"] = json.loads(fields["genre"]) if fields.get("genre") else []
+        by_series.setdefault(row["series"], []).append((row["video_id"], row["title"], fields))
 
-    for warning in _series_consistency_warnings(by_series):
-        log.warning(warning)
+    for text, _entry_ids in _series_consistency_warnings(by_series):
+        log.warning(text)
 
 
-def check_overrides_series_consistency(overrides: dict, labels: dict | None = None) -> list[str]:
+def check_overrides_series_consistency(overrides: dict, labels: dict | None = None) -> list[tuple[str, list[str]]]:
     """Same two checks as _check_series_consistency(), but reading directly
     from an ITEM_OVERRIDES-shaped dict instead of storytimefinder.db - lets
     these warnings surface at curation time (e.g. in the admin UI's
     Suggestions screen) without requiring a --sync first. `labels`
     optionally maps entry_id -> a human-readable name (e.g. a title) for
     nicer messages; an entry_id missing from it is labeled by its raw id.
-    Returns the warning strings (doesn't log them itself - the CLI's
-    --sync path uses _check_series_consistency() instead, which does).
+    Returns (warning text, entry_ids) pairs (doesn't log them itself - the
+    CLI's --sync path uses _check_series_consistency() instead, which does).
     """
     labels = labels or {}
-    by_series: dict[str, list[tuple[str, dict]]] = {}
+    by_series: dict[str, list[tuple[str, str, dict]]] = {}
     for entry_id, override in overrides.items():
         series = override.get("series")
         if not series:
             continue
-        by_series.setdefault(series, []).append((labels.get(entry_id, entry_id), override))
+        by_series.setdefault(series, []).append((entry_id, labels.get(entry_id, entry_id), override))
     return _series_consistency_warnings(by_series)
 
 
-def check_duplicate_titles(titles: dict[str, str], release_years: dict[str, int] | None = None) -> list[str]:
+def check_duplicate_titles(
+    titles: dict[str, str], release_years: dict[str, int] | None = None
+) -> list[tuple[str, list[str]]]:
     """Flags any title shared by more than one entry_id - almost always a
     genuine duplicate catalog listing (the same audiobook added twice from
     different sources) or a copy-paste mistake while curating, since two
@@ -1707,8 +1730,8 @@ def check_duplicate_titles(titles: dict[str, str], release_years: dict[str, int]
     they also share the same release year (including both being unset);
     a known, differing release year means they're legitimately different
     releases of the same title (e.g. two separate film adaptations), not
-    a curation mistake, so that pair is silently allowed. Returns warning
-    strings (doesn't log or raise itself, same as
+    a curation mistake, so that pair is silently allowed. Returns
+    (warning text, entry_ids) pairs (doesn't log or raise itself, same as
     check_overrides_series_consistency()).
     """
     release_years = release_years or {}
@@ -1723,7 +1746,8 @@ def check_duplicate_titles(titles: dict[str, str], release_years: dict[str, int]
     for (title, year), entry_ids in sorted(by_key.items(), key=lambda kv: (kv[0][0], kv[0][1] is None, kv[0][1])):
         if len(entry_ids) > 1:
             year_suffix = f" ({year})" if year else ""
-            warnings.append(f"{len(entry_ids)} items share the exact title {title!r}{year_suffix}: {sorted(entry_ids)}")
+            text = f"{len(entry_ids)} items share the exact title {title!r}{year_suffix}: {sorted(entry_ids)}"
+            warnings.append((text, sorted(entry_ids)))
     return warnings
 
 
@@ -1732,29 +1756,30 @@ def check_duplicate_titles(titles: dict[str, str], release_years: dict[str, int]
 # position_in_series, which are legitimately absent for many items (an
 # original, non-franchise story has no franchise, most titles aren't
 # seasonal, awards are the rare exception rather than the norm, etc).
-CORE_OVERRIDE_FIELDS = ("description", "min_age", "genre", "mood", "source_release_year")
+CORE_OVERRIDE_FIELDS = ("description", "min_age", "genre", "source_release_year")
 
 
 def check_missing_fields(
     overrides: dict, titles: dict[str, str], series_overrides: dict | None = None
-) -> list[str]:
+) -> list[tuple[str, list[str]]]:
     """Flags any known item (has a title in `titles`, i.e. staged or
     synced) whose ITEM_OVERRIDES entry is missing one of
     CORE_OVERRIDE_FIELDS. An item with no override entry at all is missing
-    all five by definition and gets flagged too - deliberately, since this
+    all four by definition and gets flagged too - deliberately, since this
     is meant to surface real curation gaps (including "never touched yet"),
     not just inconsistencies among items someone has already started
     curating.
 
     `series_overrides` is overrides.py's SERIES_OVERRIDES dict - for an
     item whose `series` has a `series_type == "episodic"` entry there,
-    `genre`/`mood`/`min_age` are satisfied by that series-level entry
+    `genre`/`min_age` are satisfied by that series-level entry
     instead of requiring a per-item value (see overrides.py's docstring);
     this function doesn't separately check the series-level entry itself
     for completeness.
 
-    Returns warning strings (doesn't log or raise itself, same as
-    check_overrides_series_consistency()).
+    Returns (warning text, entry_ids) pairs (doesn't log or raise itself,
+    same as check_overrides_series_consistency()) - entry_ids is always a
+    single-element list here, since each warning is about exactly one item.
     """
     series_overrides = series_overrides or {}
     warnings = []
@@ -1766,10 +1791,11 @@ def check_missing_fields(
         missing = [
             field
             for field in CORE_OVERRIDE_FIELDS
-            if not (is_episodic and field in ("genre", "mood", "min_age")) and not override.get(field)
+            if not (is_episodic and field in ("genre", "min_age")) and not override.get(field)
         ]
         if missing:
-            warnings.append(f"{title!r} ({entry_id}) is missing: {', '.join(missing)}")
+            text = f"{title!r} ({entry_id}) is missing: {', '.join(missing)}"
+            warnings.append((text, [entry_id]))
     return warnings
 
 

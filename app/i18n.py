@@ -4,8 +4,8 @@ Minimal UI translation layer - two supported languages, no i18n framework.
 Only site chrome (labels, buttons, messages) is translated here. Catalog
 content (titles, descriptions, series names) is curated data and is never
 translated - there's no bilingual data model for that. The exception is
-genre/franchise/language/mood/seasonal, which map through fixed
-`genre_<slug>` / `franchise_<slug>` / `language_<code>` / `mood_<slug>` /
+genre/franchise/language/seasonal, which map through fixed
+`genre_<slug>` / `franchise_<slug>` / `language_<code>` /
 `seasonal_<slug>` translation keys, since each is a small, known, enumerable
 set (see refresh/overrides.py's docstring for the canonical value lists).
 
@@ -36,12 +36,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "filter_franchise": "Franchise:",
         "filter_age": "Alter:",
         "filter_series": "Reihe:",
-        "filter_series_placeholder": "Reihe suchen...",
         "filter_language": "Sprache:",
         "filter_duration": "Dauer:",
-        "filter_genre": "Genre:",
+        "filter_genre": "Thema:",
         "filter_release": "Veröffentlicht:",
-        "filter_mood": "Stimmung:",
         "filter_seasonal": "Saison:",
         "filter_awards": "Auszeichnung:",
         "awards_chip": "🏆 Preisgekrönt",
@@ -120,14 +118,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "franchise_tkkg": "TKKG",
         "language_de": "Deutsch",
         "language_en": "Englisch",
-        "mood_calm": "Ruhig",
-        "mood_funny": "Lustig",
-        "mood_spooky": "Gruselig",
-        "mood_adventurous": "Abenteuerlich",
-        "mood_heartwarming": "Herzerwärmend",
-        "mood_exciting": "Spannend",
-        "mood_silly": "Albern",
-        "mood_gentle": "Sanft",
         "seasonal_winter": "Winter",
         "seasonal_christmas": "Weihnachten",
         "seasonal_halloween": "Halloween",
@@ -149,12 +139,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "filter_franchise": "Franchise:",
         "filter_age": "Age:",
         "filter_series": "Series:",
-        "filter_series_placeholder": "Search series...",
         "filter_language": "Language:",
         "filter_duration": "Duration:",
         "filter_genre": "Genre:",
         "filter_release": "Released:",
-        "filter_mood": "Mood:",
         "filter_seasonal": "Season:",
         "filter_awards": "Award:",
         "awards_chip": "🏆 Award-winning",
@@ -233,14 +221,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "franchise_tkkg": "TKKG",
         "language_de": "German",
         "language_en": "English",
-        "mood_calm": "Calm",
-        "mood_funny": "Funny",
-        "mood_spooky": "Spooky",
-        "mood_adventurous": "Adventurous",
-        "mood_heartwarming": "Heartwarming",
-        "mood_exciting": "Exciting",
-        "mood_silly": "Silly",
-        "mood_gentle": "Gentle",
         "seasonal_winter": "Winter",
         "seasonal_christmas": "Christmas",
         "seasonal_halloween": "Halloween",

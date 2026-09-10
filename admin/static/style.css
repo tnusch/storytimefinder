@@ -120,7 +120,7 @@ textarea { resize: vertical; }
   margin-top: 0.5rem;
 }
 
-/* A genre/franchise/mood/min_age field disabled by field_grid()'s
+/* A genre/franchise/min_age field disabled by field_grid()'s
    series-lock script (suggestions.html) - resolved from an episodic
    series' SERIES_OVERRIDES entry, not directly editable here. Overrides
    the browser's own (subtle, easy-to-miss on this dark theme) disabled
@@ -183,7 +183,9 @@ a:has(> .suggestion-thumb) {
 .source-table tr.is-inactive { color: var(--muted); }
 .source-table select, .source-table input[type="text"] { padding: 0.25rem 0.4rem; font-size: 0.85rem; width: 100%; }
 .source-table td:has(input[type="text"]) { min-width: 160px; }
+.source-table input[type="url"] { padding: 0.25rem 0.4rem; font-size: 0.85rem; width: 100%; min-width: 220px; }
 .source-actions { display: flex; gap: 0.4rem; white-space: nowrap; }
+.tile-thumb-preview { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; display: block; }
 .source-actions .btn { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
 
 .consistency-warnings {
@@ -202,6 +204,10 @@ a:has(> .suggestion-thumb) {
   justify-content: space-between;
   gap: 0.75rem;
 }
+.warning-body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.warning-links { color: var(--muted); font-size: 0.8rem; }
+.warning-link { color: var(--text); text-decoration: underline; }
+.warning-link:hover { opacity: 0.8; }
 .warning-dismiss-form { flex-shrink: 0; }
 .warning-dismiss-btn {
   border: 1px solid var(--border);

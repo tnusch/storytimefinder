@@ -238,76 +238,97 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 }
 .chip.is-active:hover { background: var(--chip-active-bg); }
 
-/* "Reihe" (series) filter: a searchable combobox instead of a chip row -
-   overrides the generic .filter-group's horizontal-scroll-strip behavior
-   (overflow-x: auto, nowrap), since there's no long chip row here anymore,
-   and - importantly - overflow: visible is needed so the dropdown list
-   below isn't clipped by its own filter-group's overflow box. */
-.filter-group-series {
-  overflow: visible;
-  flex-wrap: wrap;
+/* Guided filter UI: a left sidebar of fixed categories (Alter/Genre/Reihe/
+   Franchise) + a right-hand tile grid for whichever category is selected -
+   the only way to filter by Genre or Reihe now (both were removed from the
+   advanced-panel chips as redundant with their guided tiles); Alter and
+   Franchise still also have an advanced-panel chip group. Two-column flex
+   layout on desktop; the sidebar becomes a horizontal scroll-strip (same
+   recipe as .filter-group) below the 640px breakpoint, since there's no
+   room for a fixed-width column on a narrow screen. */
+.guided-filters {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
 }
-.series-combobox {
-  position: relative;
-  flex: 1 1 220px;
-  min-width: 180px;
+.guided-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 0 0 160px;
 }
-.series-search-input {
-  width: 100%;
-  padding: 0.35rem 2rem 0.35rem 0.9rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--chip-bg);
-  color: var(--chip-text);
-  font-size: 0.85rem;
-  font-family: inherit;
-}
-.series-search-input:focus {
-  outline: none;
-  border-color: var(--muted);
-}
-.series-clear-btn {
-  position: absolute;
-  top: 50%;
-  right: 0.5rem;
-  transform: translateY(-50%);
+.guided-category {
+  text-align: left;
+  padding: 0.55rem 0.9rem;
   border: none;
+  border-radius: var(--radius);
   background: none;
   color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0.15rem 0.3rem;
 }
-.series-clear-btn:hover { color: var(--text); }
-.series-options {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 20;
-  margin: 0;
-  padding: 0.3rem;
-  list-style: none;
-  max-height: 240px;
-  overflow-y: auto;
+.guided-category:hover { background: var(--hover-surface); color: var(--text); }
+.guided-category.is-active {
+  background: var(--chip-active-bg);
+  color: var(--chip-active-text);
+  font-weight: 700;
+}
+.guided-tiles { flex: 1; min-width: 0; }
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.9rem;
+}
+.tile-grid[hidden] { display: none; }
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  text-align: center;
+}
+.tile-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.series-options[hidden] { display: none; }
-.series-option {
-  padding: 0.4rem 0.7rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
+.tile:hover .tile-thumb { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); }
+.tile.is-active .tile-thumb { box-shadow: 0 0 0 3px var(--brand); }
+.tile-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tile-thumb-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+.tile-label {
+  font-size: 0.8rem;
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
-.series-option:hover { background: var(--hover-surface); }
-.series-option[hidden] { display: none; }
+.tile.is-active .tile-label { font-weight: 700; }
 
 .card-grid {
   display: grid;
@@ -520,4 +541,18 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   .card-title { font-size: 0.85rem; }
   .card-meta { font-size: 0.7rem; }
   .card-description { font-size: 0.72rem; }
+
+  /* No room for a fixed-width sidebar column on a narrow screen - same
+     horizontal-scroll-strip treatment .filter-group already uses. */
+  .guided-filters { flex-direction: column; gap: 0.75rem; }
+  .guided-sidebar {
+    flex-direction: row;
+    flex: 0 0 auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.4rem;
+    padding-bottom: 3px;
+  }
+  .guided-category { flex-shrink: 0; white-space: nowrap; }
+  .tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
 }

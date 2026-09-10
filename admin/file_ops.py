@@ -13,7 +13,11 @@ pattern, and only ever touch the specific lines being changed - everything
 else in the file passes through completely untouched.
 
 Never imported by app/ or refresh/ - this module (and the rest of admin/)
-is admin-only tooling, never deployed. See admin/__init__.py.
+is admin-only tooling, never deployed. See admin/__init__.py. The reverse
+does happen once, deliberately: get_tile_thumbnail_warnings() below imports
+app.data (a narrow, one-directional exception) to reuse its tile-thumbnail
+fallback detection against data/catalog.json rather than duplicating it -
+this doesn't affect the "never imported by app/" guarantee above.
 """
 
 from __future__ import annotations
@@ -30,12 +34,16 @@ ROOT = Path(__file__).resolve().parent.parent
 REFRESH_DIR = ROOT / "refresh"
 SOURCES_PATH = REFRESH_DIR / "sources.py"
 OVERRIDES_PATH = REFRESH_DIR / "overrides.py"
+TILE_THUMBNAILS_PATH = ROOT / "app" / "tile_thumbnails.py"
+HIDDEN_TILES_PATH = ROOT / "app" / "hidden_tiles.py"
 SUGGESTIONS_PATH = ROOT / "data" / "claude_suggestions.json"
 FETCHED_ITEMS_PATH = ROOT / "data" / "fetched_items.json"
 DISMISSED_WARNINGS_PATH = ROOT / "data" / "dismissed_warnings.json"
 
 if str(REFRESH_DIR) not in sys.path:
     sys.path.insert(0, str(REFRESH_DIR))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 
 def _reload(name: str):
@@ -60,7 +68,7 @@ def list_overrides() -> dict:
 
 def list_series_overrides() -> dict:
     """overrides.py's SERIES_OVERRIDES - series-level series_type/genre/
-    franchise/mood/min_age for an episodic series, keyed by series name
+    franchise/min_age for an episodic series, keyed by series name
     (not an entry id). Editable via apply_series_override() below (the
     Suggestions screen's "Episodic series metadata" section). Also used by
     get_consistency_warnings() to make check_missing_fields() aware of
@@ -90,7 +98,6 @@ def get_series_names() -> list[str]:
 VALUE_LIST_CONFIG = {
     "genre": {"const": "GENRE_VALUES", "i18n_prefix": "genre"},
     "franchise": {"const": "FRANCHISE_VALUES", "i18n_prefix": "franchise"},
-    "mood": {"const": "MOOD_VALUES", "i18n_prefix": "mood"},
     "seasonal": {"const": "SEASONAL_VALUES", "i18n_prefix": "seasonal"},
     "award": {"const": "AWARD_VALUES", "i18n_prefix": None},
 }
@@ -108,10 +115,6 @@ def get_genre_values() -> list[str]:
 
 def get_franchise_values() -> list[str]:
     return get_value_list("franchise")
-
-
-def get_mood_values() -> list[str]:
-    return get_value_list("mood")
 
 
 def get_seasonal_values() -> list[str]:
@@ -278,26 +281,37 @@ def _filter_dismissed(warnings: list[str]) -> list[str]:
     return [w for w in warnings if w not in dismissed]
 
 
-def get_consistency_warnings() -> list[str]:
+def _filter_dismissed_pairs(warnings: list[tuple[str, list[str]]]) -> list[tuple[str, list[str]]]:
+    """Same as _filter_dismissed() but for the (text, entry_ids) shape
+    get_consistency_warnings()'s three checks return - filters by `text`
+    only, same exact-text dismissal rule as everywhere else in this file."""
+    dismissed = load_dismissed_warnings()
+    return [(text, entry_ids) for text, entry_ids in warnings if text not in dismissed]
+
+
+def get_consistency_warnings() -> list[tuple[str, list[str]]]:
     """Runs three independent curation-consistency checks (all pure
     functions in refresh.py, see their own docstrings) directly against the
     current ITEM_OVERRIDES plus known item titles, so they show up on the
     Suggestions screen immediately as you edit overrides.py, without
     needing a --sync first:
       - series consistency - items sharing a `series` disagreeing on
-        genre/franchise/mood/seasonal, or two items claiming the same
+        genre/franchise/seasonal, or two items claiming the same
         position_in_series (check_overrides_series_consistency()).
       - duplicate titles - two different entry ids with the exact same
         title AND the same source_release_year (including both unset) -
         a known, differing release year (e.g. two separate film
         adaptations sharing a title) is not flagged (check_duplicate_titles()).
       - missing core fields - a known item whose override is missing
-        description/min_age/genre/mood/source_release_year, including an
-        item with no override entry at all - except genre/mood/min_age on
+        description/min_age/genre/source_release_year, including an
+        item with no override entry at all - except genre/min_age on
         an item belonging to an episodic series, which are satisfied by
         that series' SERIES_OVERRIDES entry instead (check_missing_fields()).
-    Individually-ignored warnings (see dismiss_warning()) are filtered out
-    before returning.
+    Each returned entry is a (warning text, entry_ids) pair rather than a
+    bare string - `suggestions.html` uses entry_ids to link the warning
+    straight to the item card(s) it's about (see "entry-<id>" anchors on
+    each card). Individually-ignored warnings (see dismiss_warning(), which
+    still matches by the text half only) are filtered out before returning.
     """
     overrides = list_overrides()
     series_overrides = list_series_overrides()
@@ -309,7 +323,7 @@ def get_consistency_warnings() -> list[str]:
         + refresh.check_duplicate_titles(titles, release_years)
         + refresh.check_missing_fields(overrides, titles, series_overrides)
     )
-    return _filter_dismissed(warnings)
+    return _filter_dismissed_pairs(warnings)
 
 
 def get_source_warnings() -> list[str]:
@@ -322,6 +336,194 @@ def get_source_warnings() -> list[str]:
     return _filter_dismissed(_reload("refresh").check_duplicate_source_ids(list_sources()))
 
 
+def get_tile_thumbnail_warnings() -> list[str]:
+    """Runs app/data.py's get_tile_thumbnail_warnings() (pure, reads
+    data/catalog.json - the same committed, published artifact every other
+    check in this file already treats as authoritative) so a guided-filter
+    tile falling back to a non-curated image is visible on the Values
+    screen for manual review. This is the one place admin/ imports from
+    app/ - a narrow, one-directional exception (nothing in app/ ever
+    imports admin/, so the "never imported by app/" direction this module's
+    own docstring describes still holds) rather than duplicating the tile-
+    thumbnail resolution logic here. Individually-ignored warnings (see
+    dismiss_warning()) are filtered out before returning, same as every
+    other check on this screen."""
+    return _filter_dismissed(_reload("app.data").get_tile_thumbnail_warnings())
+
+
+TILE_THUMBNAILS_ANCHOR_RE = re.compile(r"TILE_THUMBNAILS:\s*dict\[str,\s*dict\[str,\s*str\]\]\s*=\s*\{")
+
+
+def get_tile_categories() -> tuple[str, ...]:
+    """The four guided-filter categories (age/duration/genre/series) -
+    read live off app/data.py's TILE_CATEGORIES rather than hardcoded here,
+    so this can't silently drift from the categories app/data.py actually
+    resolves thumbnails for."""
+    return tuple(_reload("app.data").TILE_CATEGORIES)
+
+
+def get_tile_value_options() -> dict[str, list[str]]:
+    """category -> every value currently offered as a guided-filter tile on
+    the live site (get_age_tags()/get_genres()/get_series_list()/
+    get_franchises(), the exact same functions app/routes.py's
+    _build_tile_data() calls - "duration" is deliberately not one of these
+    four, Dauer was removed as a guided-filter category) - populates the
+    Values screen's "add a curated thumbnail" value dropdown, so it can
+    never offer a value that isn't actually a real tile to begin with."""
+    app_data = _reload("app.data")
+    return {
+        "age": list(app_data.get_age_tags()),
+        "genre": list(app_data.get_genres()),
+        "series": list(app_data.get_series_list()),
+        "franchise": [f["slug"] for f in app_data.get_franchises()],
+    }
+
+
+def get_tile_thumbnails() -> dict[str, dict[str, str]]:
+    """app/tile_thumbnails.py's current TILE_THUMBNAILS, read fresh (same
+    _reload() pattern as every other refresh.py/overrides.py getter here) -
+    the curated tile-image lookup the Values screen lets you edit and
+    app/data.py's get_tile_thumbnail() reads at request time."""
+    return {k: dict(v) for k, v in _reload("app.tile_thumbnails").TILE_THUMBNAILS.items()}
+
+
+def _find_matching_brace(text: str, open_pos: int) -> int:
+    """Index of the `}` that closes the `{` at `open_pos`, tracking nested
+    brace depth - needed because TILE_THUMBNAILS is a two-level dict (a
+    plain regex can't safely span nested braces), and simpler/more robust
+    than trying to hand-write a regex that does."""
+    depth = 0
+    for i in range(open_pos, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return i
+    raise RuntimeError("Unbalanced braces while parsing tile_thumbnails.py")
+
+
+def _format_tile_thumbnails(data: dict[str, dict[str, str]]) -> str:
+    """Pretty-prints the whole TILE_THUMBNAILS assignment, one category per
+    line-group, values sorted by key within each category for a stable,
+    deterministic diff. Unlike overrides.py/sources.py's per-entry text
+    surgery, this regenerates the entire dict literal rather than editing
+    single lines in place - safe to do here because, unlike those two
+    files, TILE_THUMBNAILS has no per-entry comments to preserve, and a
+    series name (used as a genre/series tile's key) can contain spaces/
+    punctuation that a `\\w+`-style field-line regex (see FIELD_LINE_RE
+    above) can't match reliably anyway."""
+    lines = ["TILE_THUMBNAILS: dict[str, dict[str, str]] = {"]
+    for category in get_tile_categories():
+        values = data.get(category, {})
+        if not values:
+            lines.append(f'    "{category}": {{}},')
+            continue
+        lines.append(f'    "{category}": {{')
+        for value in sorted(values):
+            key_literal = json.dumps(value, ensure_ascii=False)
+            url_literal = json.dumps(values[value], ensure_ascii=False)
+            lines.append(f"        {key_literal}: {url_literal},")
+        lines.append("    },")
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def set_tile_thumbnail(category: str, value: str, url: str) -> None:
+    """Adds or updates one curated entry in app/tile_thumbnails.py's
+    TILE_THUMBNAILS - the Values screen's "Guided filter tile thumbnails"
+    section uses this both to fix a fallback flagged there and to edit an
+    already-curated entry. Blank `value`/`url` is a no-op (leaves the file
+    untouched), same "blank means don't write" convention every other
+    apply-style form in this tool already follows. Raises ValueError for
+    an unrecognized category - the form only ever submits one of the four
+    known ones, so this only fires on a malformed/tampered request."""
+    value = value.strip()
+    url = url.strip()
+    if not value or not url:
+        return
+    if category not in get_tile_categories():
+        raise ValueError(f"Unknown tile category {category!r}")
+
+    content = TILE_THUMBNAILS_PATH.read_text(encoding="utf-8")
+    anchor = TILE_THUMBNAILS_ANCHOR_RE.search(content)
+    if not anchor:
+        raise RuntimeError("Could not find 'TILE_THUMBNAILS: dict[str, dict[str, str]] = {' in tile_thumbnails.py")
+    open_brace = anchor.end() - 1
+    close_brace = _find_matching_brace(content, open_brace)
+
+    current = get_tile_thumbnails()
+    current.setdefault(category, {})[value] = url
+
+    new_block = _format_tile_thumbnails(current).rstrip("\n")
+    new_content = content[: anchor.start()] + new_block + content[close_brace + 1 :]
+    TILE_THUMBNAILS_PATH.write_text(new_content, encoding="utf-8")
+
+
+HIDDEN_TILES_ANCHOR_RE = re.compile(r"HIDDEN_TILES:\s*dict\[str,\s*list\[str\]\]\s*=\s*\{")
+
+
+def get_hidden_tiles() -> dict[str, list[str]]:
+    """app/hidden_tiles.py's current HIDDEN_TILES, read fresh (same
+    _reload() pattern as get_tile_thumbnails()) - which guided-filter
+    tiles are currently hidden from the home page, per category."""
+    return {k: list(v) for k, v in _reload("app.hidden_tiles").HIDDEN_TILES.items()}
+
+
+def _format_hidden_tiles(data: dict[str, list[str]]) -> str:
+    """Pretty-prints the whole HIDDEN_TILES assignment - same "regenerate
+    the entire dict literal" approach _format_tile_thumbnails() uses and
+    for the same reason (no per-entry comments to preserve, series-name
+    keys can contain characters a field-line regex can't match reliably)."""
+    lines = ["HIDDEN_TILES: dict[str, list[str]] = {"]
+    for category in get_tile_categories():
+        values = sorted(set(data.get(category, [])))
+        if not values:
+            lines.append(f'    "{category}": [],')
+            continue
+        lines.append(f'    "{category}": [')
+        for value in values:
+            lines.append(f"        {json.dumps(value, ensure_ascii=False)},")
+        lines.append("    ],")
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def set_tile_hidden(category: str, value: str, hidden: bool) -> None:
+    """Adds or removes one value from app/hidden_tiles.py's HIDDEN_TILES -
+    the Values screen's per-row "Hidden" checkbox uses this to toggle
+    whether a tile shows on the home page's guided filter UI (the value
+    stays fully filterable via its chip either way - see hidden_tiles.py's
+    docstring). Blank `value` is a no-op. Idempotent either direction:
+    hiding an already-hidden value, or unhiding an already-visible one,
+    both just rewrite the same (deduplicated, sorted) content. Raises
+    ValueError for an unrecognized category, same as set_tile_thumbnail()."""
+    value = value.strip()
+    if not value:
+        return
+    if category not in get_tile_categories():
+        raise ValueError(f"Unknown tile category {category!r}")
+
+    content = HIDDEN_TILES_PATH.read_text(encoding="utf-8")
+    anchor = HIDDEN_TILES_ANCHOR_RE.search(content)
+    if not anchor:
+        raise RuntimeError("Could not find 'HIDDEN_TILES: dict[str, list[str]] = {' in hidden_tiles.py")
+    open_brace = anchor.end() - 1
+    close_brace = _find_matching_brace(content, open_brace)
+
+    current = get_hidden_tiles()
+    values = set(current.setdefault(category, []))
+    if hidden:
+        values.add(value)
+    else:
+        values.discard(value)
+    current[category] = sorted(values)
+
+    new_block = _format_hidden_tiles(current).rstrip("\n")
+    new_content = content[: anchor.start()] + new_block + content[close_brace + 1 :]
+    HIDDEN_TILES_PATH.write_text(new_content, encoding="utf-8")
+
+
 def load_suggestions() -> dict:
     if not SUGGESTIONS_PATH.exists():
         return {}
@@ -329,6 +531,27 @@ def load_suggestions() -> dict:
         return json.loads(SUGGESTIONS_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return {}
+
+
+def get_next_entry_id(section: str, entry_id: str) -> str | None:
+    """The entry_id immediately after `entry_id` in the current on-screen
+    order of the given section - "suggestion" reads load_suggestions()
+    (whose on-disk order is alphabetical by entry_id, see
+    save_suggestions()'s sort_keys=True), "override" reads list_overrides()
+    (whose order matches ITEM_OVERRIDES's literal order in overrides.py).
+    Neither is re-sorted before rendering in suggestions.html, so this
+    always matches what's actually next on screen. Used by the Suggestions
+    screen's "Apply & Next"/"Save & Next"/Dismiss actions to jump straight
+    to the next card instead of back to the top of a long page - see
+    admin/routes.py's suggestions_action(). Returns None if `entry_id` is
+    last (or no longer present, e.g. already removed) - callers fall back
+    to no anchor (the page top) in that case."""
+    keys = list((load_suggestions() if section == "suggestion" else list_overrides()).keys())
+    try:
+        index = keys.index(entry_id)
+    except ValueError:
+        return None
+    return keys[index + 1] if index + 1 < len(keys) else None
 
 
 def save_suggestions(suggestions: dict) -> None:
@@ -627,10 +850,10 @@ def _add_i18n_labels(prefix: str, slug: str, label_de: str, label_en: str) -> No
 
 def add_value_list_entry(list_name: str, value: str, label_de: str | None = None, label_en: str | None = None) -> None:
     """Add a new value to one of refresh.py's fixed vocabularies
-    (GENRE_VALUES/FRANCHISE_VALUES/MOOD_VALUES/SEASONAL_VALUES/AWARD_VALUES),
-    plus - for the four slug-based lists, not `award` - a matching
+    (GENRE_VALUES/FRANCHISE_VALUES/SEASONAL_VALUES/AWARD_VALUES),
+    plus - for the three slug-based lists, not `award` - a matching
     "<prefix>_<slug>" translation key in both app/i18n.py language blocks.
-    Without the i18n step, a new genre/franchise/mood/seasonal slug would
+    Without the i18n step, a new genre/franchise/seasonal slug would
     still work for filtering/validation but show its raw slug instead of a
     translated label everywhere it's displayed.
 

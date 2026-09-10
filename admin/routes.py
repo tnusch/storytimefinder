@@ -57,12 +57,11 @@ SUGGESTION_FIELDS = (
     "franchise",
     "min_age",
     "source_release_year",
-    "mood",
     "seasonal",
     "awards",
 )
 INT_FIELDS = {"position_in_series", "min_age", "source_release_year"}
-SERIES_OVERRIDE_FIELDS = ("series_type", "genre", "franchise", "mood", "min_age")
+SERIES_OVERRIDE_FIELDS = ("series_type", "genre", "franchise", "min_age")
 SERIES_OVERRIDE_INT_FIELDS = {"min_age"}
 
 
@@ -138,14 +137,14 @@ def sources_action(youtube_id):
     return redirect(url_for("admin.sources"))
 
 
-_WARNING_DISMISS_REDIRECTS = {"suggestions": "admin.suggestions", "sources": "admin.sources"}
+_WARNING_DISMISS_REDIRECTS = {"suggestions": "admin.suggestions", "sources": "admin.sources", "values": "admin.values"}
 
 
 @bp.route("/warnings/dismiss", methods=["POST"])
 def warnings_dismiss():
-    """Shared by every screen with a consistency/source warning box
-    (Suggestions, Sources) - `screen` picks which page to redirect back to,
-    `warning` is the exact warning text to ignore (see
+    """Shared by every screen with a consistency/source/tile warning box
+    (Suggestions, Sources, Values) - `screen` picks which page to redirect
+    back to, `warning` is the exact warning text to ignore (see
     file_ops.dismiss_warning())."""
     warning = request.form.get("warning", "")
     screen = request.form.get("screen", "")
@@ -236,7 +235,16 @@ def sync_run():
 @bp.route("/values")
 def values():
     lists = {name: file_ops.get_value_list(name) for name in file_ops.VALUE_LIST_CONFIG}
-    return render_template("values.html", lists=lists, list_config=file_ops.VALUE_LIST_CONFIG)
+    return render_template(
+        "values.html",
+        lists=lists,
+        list_config=file_ops.VALUE_LIST_CONFIG,
+        tile_thumbnail_warnings=file_ops.get_tile_thumbnail_warnings(),
+        tile_thumbnails=file_ops.get_tile_thumbnails(),
+        tile_categories=file_ops.get_tile_categories(),
+        tile_value_options=file_ops.get_tile_value_options(),
+        hidden_tiles=file_ops.get_hidden_tiles(),
+    )
 
 
 @bp.route("/values/add", methods=["POST"])
@@ -253,6 +261,25 @@ def values_add():
         return redirect(url_for("admin.values"))
 
     flash(f"Added {value.strip()!r} to {list_name}.", "success")
+    return redirect(url_for("admin.values"))
+
+
+@bp.route("/values/tile-thumbnails", methods=["POST"])
+def tile_thumbnails_set():
+    category = request.form.get("category", "")
+    value = request.form.get("value", "")
+    url = request.form.get("url", "")
+    hidden = request.form.get("hidden") == "on"
+
+    try:
+        file_ops.set_tile_thumbnail(category, value, url)
+        file_ops.set_tile_hidden(category, value, hidden)
+    except ValueError as exc:
+        flash(f"Could not save tile: {exc}", "error")
+        return redirect(url_for("admin.values"))
+
+    if value.strip():
+        flash(f"Saved tile {category!r}:{value.strip()!r}.", "success")
     return redirect(url_for("admin.values"))
 
 
@@ -294,7 +321,6 @@ def suggestions():
         item_info=item_info,
         genre_values=file_ops.get_genre_values(),
         franchise_values=file_ops.get_franchise_values(),
-        mood_values=file_ops.get_mood_values(),
         seasonal_values=file_ops.get_seasonal_values(),
         series_overrides=file_ops.list_series_overrides(),
         series_names=file_ops.get_series_names(),
@@ -305,6 +331,11 @@ def suggestions():
 def _parse_series_override_form(form) -> dict:
     fields = {}
     for name in SERIES_OVERRIDE_FIELDS:
+        if name == "genre":
+            # A <select multiple> - see the same special case in
+            # _parse_suggestion_form().
+            fields[name] = form.getlist("genre")
+            continue
         raw = form.get(name, "").strip()
         if not raw:
             fields[name] = None
@@ -353,6 +384,12 @@ def _parse_suggestion_form(form) -> dict:
     letting a typo silently turn into an empty/dropped awards field."""
     fields = {}
     for name in SUGGESTION_FIELDS:
+        if name == "genre":
+            # A <select multiple> - form.get() would only ever return the
+            # first selected value, so this needs getlist() instead of the
+            # generic raw = form.get(...) every other field uses below.
+            fields[name] = form.getlist("genre")
+            continue
         raw = form.get(name, "").strip()
         if name == "series":
             # The Series field is a "pick an existing one, or add a new
@@ -401,13 +438,32 @@ def suggestions_regenerate(entry_id):
 
 @bp.route("/suggestions/<path:entry_id>", methods=["POST"])
 def suggestions_action(entry_id):
+    """Handles Apply/Apply & Next/Save/Save & Next/Dismiss for one card.
+    `section` ("suggestion" or "override", a hidden field on every card's
+    form) tells get_next_entry_id() which on-screen list to look in - the
+    "& Next" actions (and Dismiss, which always removes the item from view)
+    redirect to that next card's own #entry-<id> anchor instead of the page
+    top, so working through many items in a row doesn't mean re-scrolling
+    past everything already done each time; a plain Apply/Save redirects
+    back to this same card's anchor instead, for a quick review-and-fix
+    loop on one item. Both anchors gracefully fall back to no anchor (the
+    page top) if there's nothing to point at (last item in the list, or -
+    for the error path below - genuinely nowhere better to go)."""
     action = request.form.get("action")
-    if action == "apply":
+    section = request.form.get("section", "suggestion")
+    next_entry_id = file_ops.get_next_entry_id(section, entry_id)
+
+    def redirect_to(target_entry_id):
+        if target_entry_id:
+            return redirect(url_for("admin.suggestions", _anchor=f"entry-{target_entry_id}"))
+        return redirect(url_for("admin.suggestions"))
+
+    if action in ("apply", "apply_next"):
         try:
             fields = _parse_suggestion_form(request.form)
         except InvalidAwardsJSON as exc:
             flash(f"Could not parse the awards field as JSON ({exc}) - fix it and try again.", "error")
-            return redirect(url_for("admin.suggestions"))
+            return redirect_to(entry_id)
         file_ops.apply_override(entry_id, fields)
         was_pending = entry_id in file_ops.load_suggestions()
         file_ops.dismiss_suggestion(entry_id)
@@ -415,7 +471,9 @@ def suggestions_action(entry_id):
             flash("Applied to overrides.py and removed from the review queue.", "success")
         else:
             flash("Saved changes to overrides.py.", "success")
+        return redirect_to(next_entry_id if action == "apply_next" else entry_id)
     elif action == "dismiss":
         file_ops.dismiss_suggestion(entry_id)
         flash("Dismissed - nothing was written to overrides.py.", "success")
+        return redirect_to(next_entry_id)
     return redirect(url_for("admin.suggestions"))

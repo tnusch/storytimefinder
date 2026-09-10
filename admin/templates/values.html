@@ -1,14 +1,112 @@
 {% extends "base.html" %}
 {% block title %}Values - StorytimeFinder Admin{% endblock %}
 
+{% macro tile_thumbnail_table(category, label, values, thumbnails, hidden_values) %}
+<section class="value-list-section">
+  <h2>{{ label }} tiles</h2>
+  {% if values %}
+  <table class="source-table">
+    <thead><tr><th>Value</th><th>Preview</th><th>Thumbnail URL</th><th>Hidden</th><th></th></tr></thead>
+    <tbody>
+      {% for value in values %}
+      <tr class="{{ 'is-inactive' if value in hidden_values }}">
+        <td>{{ value }}</td>
+        <td>
+          {% if thumbnails.get(value) %}
+            <img src="{{ thumbnails[value] }}" class="tile-thumb-preview" alt="">
+          {% else %}
+            <span class="hint">(fallback)</span>
+          {% endif %}
+        </td>
+        <td>
+          <input
+            type="url" name="url" form="tile-{{ category }}-{{ loop.index }}"
+            value="{{ thumbnails.get(value, '') }}" placeholder="https://..."
+          >
+        </td>
+        <td>
+          <input
+            type="checkbox" name="hidden" form="tile-{{ category }}-{{ loop.index }}"
+            {% if value in hidden_values %}checked{% endif %}
+            title="Hide this tile from the home page's guided filter UI - {{ value }} stays fully filterable via its chip in Erweiterte Filter either way."
+          >
+        </td>
+        <td><button type="submit" form="tile-{{ category }}-{{ loop.index }}" class="btn btn-secondary">Save</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% for value in values %}
+    <form id="tile-{{ category }}-{{ loop.index }}" method="post" action="{{ url_for('admin.tile_thumbnails_set') }}">
+      <input type="hidden" name="category" value="{{ category }}">
+      <input type="hidden" name="value" value="{{ value }}">
+    </form>
+  {% endfor %}
+  {% else %}
+  <p class="empty">No {{ label | lower }} values in the catalog yet.</p>
+  {% endif %}
+</section>
+{% endmacro %}
+
 {% block content %}
+{% if tile_thumbnail_warnings %}
+<section class="consistency-warnings">
+  <h2>
+    Guided filter tile thumbnails
+    <span class="badge badge-warn">{{ tile_thumbnail_warnings|length }}</span>
+  </h2>
+  <p class="hint">
+    The guided filter sidebar on the home page shows a cover image per
+    Alter/Genre/Reihe/Franchise tile - a manually curated one below if you've
+    picked one, otherwise a fallback borrowed from any one matching catalog
+    item. Every tile listed here is currently using that fallback (or,
+    rarer, has no image at all) - pick a curated image for it in the
+    "Manage tile thumbnails" tables below when you get a chance, or ignore
+    the warning once you're happy with the fallback image it's using.
+  </p>
+  <ul class="warning-list">
+    {% for w in tile_thumbnail_warnings %}
+      <li>
+        <span>{{ w }}</span>
+        <form method="post" action="{{ url_for('admin.warnings_dismiss') }}" class="warning-dismiss-form">
+          <input type="hidden" name="warning" value="{{ w }}">
+          <input type="hidden" name="screen" value="values">
+          <button type="submit" class="warning-dismiss-btn">Ignore</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<h1>Manage tile thumbnails</h1>
+<p class="hint">
+  One row per value currently offered as a guided filter tile on the home
+  page. Paste a cover image URL and hit Save to curate it - writes straight
+  to <code>app/tile_thumbnails.py</code>, no hand-editing required. A blank
+  row is showing the automatic fallback image (borrowed from a matching
+  catalog item), not an error - see the warning box above for which ones
+  those are. Leaving the URL field blank and saving does nothing (an
+  already-curated entry isn't cleared this way - edit
+  <code>app/tile_thumbnails.py</code> by hand for that, same "no delete via
+  this form" philosophy as the value lists below). Check <strong>Hidden</strong>
+  and hit Save to remove a tile from the home page's guided filter grid
+  entirely (writes to <code>app/hidden_tiles.py</code>) - the value stays
+  fully filterable through its chip in "Erweiterte Filter" either way, this
+  only declutters the tile view. Uncheck and Save again to bring it back.
+</p>
+{{ tile_thumbnail_table("age", "Alter", tile_value_options.age, tile_thumbnails.age, hidden_tiles.age) }}
+{{ tile_thumbnail_table("genre", "Genre", tile_value_options.genre, tile_thumbnails.genre, hidden_tiles.genre) }}
+{{ tile_thumbnail_table("series", "Reihe", tile_value_options.series, tile_thumbnails.series, hidden_tiles.series) }}
+{{ tile_thumbnail_table("franchise", "Franchise", tile_value_options.franchise, tile_thumbnails.franchise, hidden_tiles.franchise) }}
+
 <h1>Value lists</h1>
 <p class="hint">
-  The fixed vocabularies genre/franchise/mood/seasonal/award draw from -
+  The fixed vocabularies genre/franchise/seasonal/award draw from -
   used to validate <code>overrides.py</code> entries (a value outside these
   lists just logs a warning, never fails a sync - see <code>refresh.py</code>)
   and to populate the dropdowns on the <a href="{{ url_for('admin.suggestions') }}">Suggestions</a>
-  screen. Adding a genre/franchise/mood/seasonal value here also adds its
+  screen. Adding a genre/franchise/seasonal value here also adds its
   German and English display label to <code>app/i18n.py</code> - without
   that step a new value would still work for filtering but show its raw
   slug instead of a translated label everywhere it's displayed. Award names

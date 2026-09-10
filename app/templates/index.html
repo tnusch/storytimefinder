@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% from "_item_card.html" import item_card, series_card %}
 
+{% macro tile_grid(category, tiles, active=false) %}
+<div class="tile-grid" data-category="{{ category }}" {% if not active %}hidden{% endif %}>
+  {% for tile in tiles %}
+  <button type="button" class="tile" data-category="{{ category }}" data-value="{{ tile.value }}">
+    <span class="tile-thumb">
+      {% if tile.thumbnail_url %}
+        <img src="{{ tile.thumbnail_url }}" alt="" loading="lazy">
+      {% else %}
+        <span class="tile-thumb-fallback" aria-hidden="true">📖</span>
+      {% endif %}
+    </span>
+    <span class="tile-label">{{ tile.label }}</span>
+  </button>
+  {% endfor %}
+</div>
+{% endmacro %}
+
 {% block title %}StorytimeFinder{% endblock %}
 
 {% block content %}
@@ -13,10 +30,42 @@
   >
 </div>
 
+{% set guided_categories = [
+  ("age", tile_data.age),
+  ("franchise", tile_data.franchise),
+  ("genre", tile_data.genre),
+  ("series", tile_data.series),
+] | selectattr("1") | list %}
+{% if guided_categories %}
+<section class="guided-filters" id="guided-filters">
+  <div class="guided-sidebar" id="guided-sidebar" role="tablist">
+    {% for category, tiles in guided_categories %}
+      <button
+        type="button"
+        class="guided-category{% if loop.first %} is-active{% endif %}"
+        data-category="{{ category }}"
+        role="tab"
+        aria-selected="{{ 'true' if loop.first else 'false' }}"
+      >{{ t('filter_' ~ category) }}</button>
+    {% endfor %}
+  </div>
+  <div class="guided-tiles" id="guided-tiles">
+    {% for category, tiles in guided_categories %}
+      {{ tile_grid(category, tiles, active=loop.first) }}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 {% set has_language_filter = languages and languages|length > 1 %}
 
-{% if age_tags or has_awards or genres %}
-<div class="filter-bar" id="filter-bar">
+{% set has_advanced = age_tags or has_awards or duration_buckets or franchises or has_language_filter or release_decades or seasonal_values %}
+{% if has_advanced %}
+<button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
+  {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
+</button>
+
+<div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
     <span class="filter-label">{{ t('filter_age') }}</span>
@@ -35,26 +84,6 @@
   </div>
   {% endif %}
 
-  {% if genres %}
-  <div class="filter-group" data-filter-type="genre">
-    <span class="filter-label">{{ t('filter_genre') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for g in genres %}
-      <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-</div>
-{% endif %}
-
-{% set has_advanced = duration_buckets or franchises or has_language_filter or moods or release_decades or seasonal_values or series_list %}
-{% if has_advanced %}
-<button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
-  {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
-</button>
-
-<div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
   {% if duration_buckets %}
   <div class="filter-group" data-filter-type="duration">
     <span class="filter-label">{{ t('filter_duration') }}</span>
@@ -75,28 +104,6 @@
   </div>
   {% endif %}
 
-  {% if series_list %}
-  <div class="filter-group filter-group-series" data-filter-type="series">
-    <span class="filter-label">{{ t('filter_series') }}</span>
-    <div class="series-combobox" id="series-combobox">
-      <input
-        type="text"
-        class="series-search-input"
-        id="series-search-input"
-        placeholder="{{ t('filter_series_placeholder') }}"
-        autocomplete="off"
-        aria-label="{{ t('filter_series') }}"
-      >
-      <button type="button" class="series-clear-btn" id="series-clear-btn" hidden aria-label="{{ t('chip_all') }}">&times;</button>
-      <ul class="series-options" id="series-options" hidden role="listbox">
-        {% for s in series_list %}
-          <li class="series-option" data-value="{{ s }}" role="option">{{ s }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  {% endif %}
-
   {% if seasonal_values %}
   <div class="filter-group" data-filter-type="seasonal">
     <span class="filter-label">{{ t('filter_seasonal') }}</span>
@@ -113,16 +120,6 @@
     <button type="button" class="chip{% if lang not in languages %} is-active{% endif %}" data-value="">{{ t('chip_all') }}</button>
     {% for code in languages %}
       <button type="button" class="chip{% if code == lang %} is-active{% endif %}" data-value="{{ code }}">{{ t('language_' ~ code) }}</button>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if moods %}
-  <div class="filter-group" data-filter-type="mood">
-    <span class="filter-label">{{ t('filter_mood') }}</span>
-    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
-    {% for m in moods %}
-      <button type="button" class="chip" data-value="{{ m }}">{{ t('mood_' ~ m) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -199,7 +196,6 @@
 
   var searchInput = document.getElementById("search-input");
   var sortSelect = document.getElementById("sort-select");
-  var filterBar = document.getElementById("filter-bar");
   var advancedBar = document.getElementById("filter-bar-advanced");
   var advancedToggle = document.getElementById("advanced-toggle");
   var emptyMessage = document.getElementById("empty-message");
@@ -293,13 +289,22 @@
     }
   }
 
-  function applyFilters() {
+  function applyFilters(scrollIntoView) {
     var q = query.trim().toLowerCase();
     matches = cards.filter(function (card) {
       var isMatch = q === "" || card.dataset.title.indexOf(q) !== -1;
       if (isMatch) {
         for (var type in active) {
-          if (active[type] !== "" && card.dataset[type] !== active[type]) {
+          // A card's data-<type> attribute is a comma-joined list for a
+          // multi-value field (currently just genre - an item can carry
+          // more than one tag) and a single bare value for every other
+          // field. Splitting unconditionally and checking membership is
+          // equivalent to strict equality for a single value (no field's
+          // values ever contain a comma), so one check covers both cases -
+          // this is what makes genre's OR-matching ("card has ANY of the
+          // active tag") work without a special-cased branch per type.
+          var cardValues = (card.dataset[type] || "").split(",");
+          if (active[type] !== "" && cardValues.indexOf(active[type]) === -1) {
             isMatch = false;
             break;
           }
@@ -310,7 +315,34 @@
     var sorter = sortSelect && SORTERS[sortSelect.value];
     if (sorter) matches.sort(sorter);
     currentPage = 1;
-    renderPage(false);
+    renderPage(!!scrollIntoView);
+  }
+
+  // Updates every UI surface that can show a filter type's current value -
+  // the matching chip (if this type has a chip row) and the matching tile
+  // (if it has a tile grid) - so a selection made through either entry
+  // point (chip click, tile click) is immediately reflected in the other,
+  // never just its own origin.
+  function syncFilterUI(type, value) {
+    document.querySelectorAll('.filter-group[data-filter-type="' + type + '"] .chip').forEach(function (chip) {
+      chip.classList.toggle("is-active", chip.dataset.value === value);
+    });
+    document.querySelectorAll('.tile[data-category="' + type + '"]').forEach(function (tile) {
+      tile.classList.toggle("is-active", tile.dataset.value === value);
+    });
+  }
+
+  // The single entry point every filter UI (chips, tiles, the series
+  // combobox) goes through to change a filter value - sets the shared
+  // `active` state, syncs every other UI surface for that type, then
+  // re-filters. `scrollIntoView` is only ever passed by a tile click (a
+  // deliberate "go look at these results" navigation action, unlike a
+  // quick chip refinement) - reuses renderPage()'s existing pagination-only
+  // scroll behavior rather than adding a new one.
+  function setActiveFilter(type, value, scrollIntoView) {
+    active[type] = value;
+    syncFilterUI(type, value);
+    applyFilters(scrollIntoView);
   }
 
   if (searchInput) {
@@ -321,7 +353,7 @@
   }
 
   if (sortSelect) {
-    sortSelect.addEventListener("change", applyFilters);
+    sortSelect.addEventListener("change", function () { applyFilters(); });
   }
 
   if (paginationPrev) {
@@ -343,104 +375,66 @@
       var chip = event.target.closest(".chip");
       if (!chip) return;
       var group = chip.closest(".filter-group");
-      var type = group.dataset.filterType;
-
-      group.querySelectorAll(".chip").forEach(function (c) {
-        c.classList.remove("is-active");
-      });
-      chip.classList.add("is-active");
-
-      active[type] = chip.dataset.value;
-      applyFilters();
+      setActiveFilter(group.dataset.filterType, chip.dataset.value);
     });
   }
 
-  bindFilterBar(filterBar);
   bindFilterBar(advancedBar);
 
-  // "Reihe" (series) filter: a searchable combobox instead of a chip row -
-  // there can be a lot of series names, so a scrollable chip strip doesn't
-  // scale the way it does for the smaller fixed vocabularies (age, genre,
-  // ...). Sets active.series / calls applyFilters() the same way
-  // bindFilterBar()'s chip click handler does for every other group - the
-  // rest of the filtering pipeline doesn't know or care which UI widget
-  // produced the value.
-  function initSeriesCombobox() {
-    var combobox = document.getElementById("series-combobox");
-    if (!combobox) return;
-    var input = document.getElementById("series-search-input");
-    var list = document.getElementById("series-options");
-    var clearBtn = document.getElementById("series-clear-btn");
-    var options = Array.prototype.slice.call(list.querySelectorAll(".series-option"));
+  // Guided filter UI (sidebar + tile grid) - a second, more visual entry
+  // point into the exact same filtering the advanced chips already do.
+  // The sidebar only ever shows/hides which .tile-grid is visible (no
+  // filter state of its own); a tile click goes through the same
+  // setActiveFilter() every other filter UI uses, with scrollIntoView=true
+  // since picking a tile is a deliberate "go look at these results" action.
+  function initGuidedFilters() {
+    var sidebar = document.getElementById("guided-sidebar");
+    if (!sidebar) return;
+    var tilesContainer = document.getElementById("guided-tiles");
 
-    function filterOptions(query) {
-      var q = query.trim().toLowerCase();
-      var anyVisible = false;
-      options.forEach(function (opt) {
-        var isMatch = q === "" || opt.dataset.value.toLowerCase().indexOf(q) !== -1;
-        opt.hidden = !isMatch;
-        if (isMatch) anyVisible = true;
+    sidebar.addEventListener("click", function (event) {
+      var btn = event.target.closest(".guided-category");
+      if (!btn) return;
+      var category = btn.dataset.category;
+      var previousBtn = sidebar.querySelector(".guided-category.is-active");
+      var previousCategory = previousBtn ? previousBtn.dataset.category : null;
+      if (previousCategory === category) return;
+
+      sidebar.querySelectorAll(".guided-category").forEach(function (b) {
+        var isActive = b === btn;
+        b.classList.toggle("is-active", isActive);
+        b.setAttribute("aria-selected", String(isActive));
       });
-      list.hidden = !anyVisible;
-    }
+      tilesContainer.querySelectorAll(".tile-grid").forEach(function (g) {
+        g.hidden = g.dataset.category !== category;
+      });
 
-    function openList() {
-      filterOptions(input.value);
-    }
-
-    function closeList() {
-      list.hidden = true;
-    }
-
-    function selectSeries(value) {
-      input.value = value;
-      clearBtn.hidden = !value;
-      closeList();
-      active.series = value;
-      applyFilters();
-    }
-
-    input.addEventListener("input", function () {
-      if (input.value === "") selectSeries("");
-      filterOptions(input.value);
-      list.hidden = false;
-    });
-    input.addEventListener("focus", openList);
-    input.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closeList();
-        input.blur();
-      } else if (event.key === "Enter") {
-        event.preventDefault();
-        var firstVisible = options.filter(function (opt) { return !opt.hidden; })[0];
-        if (firstVisible) selectSeries(firstVisible.dataset.value);
+      // Guided categories are meant to be browsed one dimension at a
+      // time - without this, a tile picked in a previous category (e.g.
+      // Alter) stays active after switching tabs, so it silently keeps
+      // combining (AND) with whatever gets picked in the new category
+      // (e.g. Genre) even though it's no longer visible anywhere.
+      // Switching tabs clears it instead.
+      if (previousCategory && active[previousCategory]) {
+        setActiveFilter(previousCategory, "");
       }
     });
 
-    list.addEventListener("click", function (event) {
-      var opt = event.target.closest(".series-option");
-      if (!opt) return;
-      selectSeries(opt.dataset.value);
+    tilesContainer.addEventListener("click", function (event) {
+      var tile = event.target.closest(".tile");
+      if (!tile) return;
+      var category = tile.dataset.category;
+      var value = tile.dataset.value;
+      // Clicking the already-active tile again deselects it (back to
+      // "Alle") instead of re-applying the same filter - there's no "Alle"
+      // tile per category (see the markup comment above), so toggling the
+      // active one off is the only way to clear a guided-filter selection
+      // without dropping into the advanced chips.
+      var isAlreadyActive = active[category] === value;
+      setActiveFilter(category, isAlreadyActive ? "" : value, true);
     });
-
-    clearBtn.addEventListener("click", function () {
-      selectSeries("");
-      input.focus();
-    });
-
-    document.addEventListener("click", function (event) {
-      if (!combobox.contains(event.target)) closeList();
-    });
-
-    // Reflects whatever active.series already is (e.g. seeded from a
-    // server-rendered default, same as the language chip's default) -
-    // there's no chip to read this off of anymore for this group.
-    if (active.series) {
-      input.value = active.series;
-      clearBtn.hidden = false;
-    }
   }
-  initSeriesCombobox();
+  initGuidedFilters();
 
   if (advancedToggle && advancedBar) {
     advancedToggle.addEventListener("click", function () {

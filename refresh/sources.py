@@ -36,6 +36,158 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_lXtRqpjY4FVX1IWO-jJTZF2L5uAnEYd5I",
+        "label": "Stockmann",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kr--flk-x2tuXSt0QFHKjz8aWxfHTtQlY",
+        "label": "Dr. Brumm und der Megasaurus und weitere Geschichten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_m2D0-24hp4udry6-8DgRBlx8EGaXvDzMY",
+        "label": "Dr. Brumm feiert Weihnachten / Dr. Brumm versteht das nicht",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mSgdpKUe0h-7BG-u6A3bxDJnnahf5apAU",
+        "label": "Die Schnecke und der Buckelwal",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kCinBaMQHLf2sGZzDuJ5IMYwN6RlHyBQI",
+        "label": "Die guten alten Zeiten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kmeBWumod9y-EgU57lPSrKRqnEIrodndE",
+        "label": "Drachenzähmen leicht gemacht",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kWp1nCuNE9r5z_e03Id1N-3Cu55Z2WxUI",
+        "label": "Drachenzähmen leicht gemacht 3",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l_uxeaBeYTHp7YfR_Ysla5Iy3AgFRmczA",
+        "label": "Drachenzähmen leicht gemacht 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lp-y5mAS6_UXrwUqn_y1okDAmBKULcOd8",
+        "label": "Drachenzähmen leicht gemacht",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nYGcJxw7VmlWg5YIB8mn3wLi_TUMvx1go",
+        "label": "Für Hund und Katz ist auch noch Platz",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mcglAHuM_7wXMvyLeVkS-mMUFYtp2wZuw",
+        "label": "Lieselotte macht nicht mit",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l1jyFg5fuLBZnZR83ExwIVkHEXECt0_60",
+        "label": "Ein Platz nur für Lieselotte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mBrrC_wKDcojNm8UGmx5QC5TWfi6oYY9A",
+        "label": "Lieselotte und der verschwundene Apfelkuchen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kPaXIwzMyooY-lYyKWHI420DYd5ltqY8w",
+        "label": "Der Lieselotte Geschichtenschatz",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lWFk46tu1C5PqYTqem3qmIIGa9DSH-DB4",
+        "label": "Das kleine WIR feiert Geburtstag",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ldSjD9xoq9WWIMfZyFLzaQGuCKxoHAwY0",
+        "label": "Das kleine WIR / Gemeinsam durch die Trennung",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_njo7N9q9TTp_plvqgqlGZJ9dAt5pD2vaU",
+        "label": "Das kleine WIR zu Hause",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lO-HNfBu8cHuq2tq_lVcq4ukQpTwODSSg",
+        "label": "Das kleine WIR im Kindergarten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lcSwJzlfKp0lzirfI3KVR6_djT9exCRHc",
+        "label": "Das kleine WIR",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_kKl4DksXY3PwuKkwPC69Sg9G5ieGYriAU",
         "label": "Marvels Iron Man und seine fantastischen Freunde: 06",
         "language": "de",

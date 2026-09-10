@@ -25,8 +25,7 @@ FAKE_CATALOG = {
             "source_release_year": 2020,
             "series": None,
             "position_in_series": None,
-            "genre": "adventure",
-            "mood": "calm",
+            "genre": ["adventure", "superhero"],
             "seasonal": None,
             "awards": [{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2020}],
         },
@@ -44,8 +43,7 @@ FAKE_CATALOG = {
             "source_release_year": 2019,
             "series": "Die drei ???",
             "position_in_series": 78,
-            "genre": "mystery",
-            "mood": "exciting",
+            "genre": ["mystery"],
             "seasonal": "halloween",
             "awards": [],
         },
@@ -63,8 +61,8 @@ FAKE_CATALOG = {
             "source_release_year": None,
             "series": None,
             "position_in_series": None,
-            "genre": "fairy_tale",
-            # mood/seasonal/awards deliberately omitted - verifies the
+            "genre": ["fairy_tale"],
+            # seasonal/awards deliberately omitted - verifies the
             # getters tolerate an item synced before this schema existed.
         },
     ],
@@ -102,7 +100,10 @@ def test_get_languages_unique_and_sorted():
 
 
 def test_get_genres_unique_and_sorted():
-    assert data.get_genres() == ["adventure", "fairy_tale", "mystery"]
+    # item 1 carries two genres (["adventure", "superhero"]) - verifies
+    # get_genres() flattens each item's list rather than collecting the
+    # lists themselves, and still de-duplicates/sorts across all items.
+    assert data.get_genres() == ["adventure", "fairy_tale", "mystery", "superhero"]
 
 
 def test_get_series_list_excludes_empty_and_franchise_redundant_series():
@@ -113,12 +114,6 @@ def test_get_series_list_excludes_empty_and_franchise_redundant_series():
     # test_get_series_list_franchise_suppression below for a fixture that
     # isolates just that rule).
     assert data.get_series_list() == []
-
-
-def test_get_moods_unique_and_sorted():
-    # item 3 has no "mood" key at all (pre-schema item) - must not error or
-    # produce a bogus entry.
-    assert data.get_moods() == ["calm", "exciting"]
 
 
 def test_get_seasonal_values_excludes_unset():
@@ -271,56 +266,56 @@ SERIES_CATALOG = {
     "generated_at": "2026-08-01T00:00:00Z",
     "series": {
         "Bibi Blocksberg": {
-            "series_type": "episodic", "genre": "adventure", "franchise": None,
-            "mood": "funny", "min_age": 4, "age_tag": "3_5",
+            "series_type": "episodic", "genre": ["adventure"], "franchise": None,
+            "min_age": 4, "age_tag": "3_5",
         },
         "Findet Nemo": {
-            "series_type": "sequel", "genre": None, "franchise": None,
-            "mood": None, "min_age": None, "age_tag": None,
+            "series_type": "sequel", "genre": [], "franchise": None,
+            "min_age": None, "age_tag": None,
         },
     },
     "items": [
         {
             "id": 10, "title": "Bibi Ep2", "series": "Bibi Blocksberg",
             "position_in_series": 2, "thumbnail_url": None,
-            # genre/mood/age_tag deliberately NOT set here - they're
+            # genre/age_tag deliberately NOT set here - they're
             # series-resolved now (see the "series" section above),
             # matching how sync_source() actually writes an episodic
             # item's row (identical values copied from the series row).
-            "genre": "adventure", "age_tag": "3_5",
-            "franchise": None, "mood": "funny", "seasonal": None, "language": "de", "awards": [],
+            "genre": ["adventure"], "age_tag": "3_5",
+            "franchise": None, "seasonal": None, "language": "de", "awards": [],
             "youtube_music_url": "https://music.youtube.com/watch?v=bibi2",
         },
         {
             "id": 11, "title": "Bibi Ep1", "series": "Bibi Blocksberg",
             "position_in_series": 1, "thumbnail_url": "https://x/thumb1.jpg",
-            "genre": "adventure", "age_tag": "3_5",
-            "franchise": None, "mood": "funny", "seasonal": None, "language": "de", "awards": [],
+            "genre": ["adventure"], "age_tag": "3_5",
+            "franchise": None, "seasonal": None, "language": "de", "awards": [],
             "youtube_music_url": "https://music.youtube.com/watch?v=bibi1",
         },
         {
             "id": 12, "title": "Bibi Ep3", "series": "Bibi Blocksberg",
             "position_in_series": None, "thumbnail_url": None,
-            "genre": "adventure", "age_tag": "3_5",
-            "franchise": None, "mood": "funny", "seasonal": None, "language": "de", "awards": [],
+            "genre": ["adventure"], "age_tag": "3_5",
+            "franchise": None, "seasonal": None, "language": "de", "awards": [],
             "youtube_music_url": "https://music.youtube.com/watch?v=bibi3",
         },
         {
             "id": 13, "title": "Findet Nemo", "series": "Findet Nemo",
             "position_in_series": 1, "age_tag": "3_5", "youtube_music_url": "https://music.youtube.com/watch?v=nemo",
-            "genre": "adventure", "franchise": "disney", "mood": "heartwarming", "seasonal": None,
+            "genre": ["adventure"], "franchise": "disney", "seasonal": None,
             "language": "de", "awards": [],
         },
         {
             "id": 14, "title": "Findet Dorie", "series": "Findet Nemo",
             "position_in_series": 2, "age_tag": "3_5", "youtube_music_url": "https://music.youtube.com/watch?v=dorie",
-            "genre": "adventure", "franchise": "disney", "mood": "heartwarming", "seasonal": None,
+            "genre": ["adventure"], "franchise": "disney", "seasonal": None,
             "language": "de", "awards": [],
         },
         {
             "id": 15, "title": "Old Show", "series": "Old Show",
             "position_in_series": None, "age_tag": None, "youtube_music_url": "https://music.youtube.com/watch?v=old",
-            "genre": None, "franchise": None, "mood": None, "seasonal": None, "language": "de", "awards": [],
+            "genre": [], "franchise": None, "seasonal": None, "language": "de", "awards": [],
         },
         {
             "id": 16, "title": "Standalone", "series": None,
@@ -353,8 +348,7 @@ def test_get_series_groups_slug_thumbnail_and_series_level_metadata(monkeypatch)
     # A single curated value now, straight from the "series" section -
     # not derived/spanned from episodes.
     assert group["age_tag"] == "3_5"
-    assert group["genre"] == "adventure"
-    assert group["mood"] == "funny"
+    assert group["genre"] == ["adventure"]
 
 
 def test_get_series_group_by_slug_found_and_none_for_unknown(monkeypatch):
@@ -463,3 +457,94 @@ def test_get_series_card_count_zero_when_nothing_collapsed():
     entries = data.get_grid_entries()
     assert data.get_series_card_count(entries) == 0
     assert data.get_episode_count_in_series(entries) == 0
+
+
+TILE_CATALOG = {
+    "generated_at": "2026-08-01T00:00:00Z",
+    "series": {
+        "Bibi Blocksberg": {
+            "series_type": "episodic", "genre": ["fantasy"], "franchise": None,
+            "min_age": 4, "age_tag": "3_5",
+        },
+    },
+    "items": [
+        {
+            "id": 1, "title": "A", "series": None, "position_in_series": None,
+            "thumbnail_url": "https://x/a.jpg", "duration_seconds": 1000,
+            "genre": ["adventure"], "age_tag": "3_5", "franchise": "disney",
+            "seasonal": None, "language": "de", "awards": [],
+            "youtube_music_url": "https://music.youtube.com/watch?v=a",
+        },
+        {
+            # No thumbnail anywhere for its genre ("mystery") - the one
+            # value get_tile_thumbnail_warnings() should flag as "no image
+            # at all", not just "using a fallback".
+            "id": 2, "title": "B", "series": None, "position_in_series": None,
+            "thumbnail_url": None, "duration_seconds": 5000,
+            "genre": ["mystery"], "age_tag": None, "franchise": None,
+            "seasonal": None, "language": "de", "awards": [],
+            "youtube_music_url": "https://music.youtube.com/watch?v=b",
+        },
+        {
+            "id": 10, "title": "Bibi Ep1", "series": "Bibi Blocksberg", "position_in_series": 1,
+            "thumbnail_url": "https://x/bibi1.jpg", "duration_seconds": 1200,
+            "genre": ["fantasy"], "age_tag": "3_5", "franchise": None,
+            "seasonal": None, "language": "de", "awards": [],
+            "youtube_music_url": "https://music.youtube.com/watch?v=bibi1",
+        },
+    ],
+}
+
+EMPTY_TILE_THUMBNAILS = {"age": {}, "genre": {}, "series": {}, "franchise": {}}
+
+
+def test_get_tile_thumbnail_prefers_curated_entry(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(
+        data, "TILE_THUMBNAILS", {**EMPTY_TILE_THUMBNAILS, "genre": {"adventure": "https://curated/adventure.jpg"}}
+    )
+    assert data.get_tile_thumbnail("genre", "adventure") == "https://curated/adventure.jpg"
+
+
+def test_get_tile_thumbnail_falls_back_to_matching_item(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(data, "TILE_THUMBNAILS", EMPTY_TILE_THUMBNAILS)
+    assert data.get_tile_thumbnail("genre", "adventure") == "https://x/a.jpg"
+
+
+def test_get_tile_thumbnail_returns_none_when_nothing_matches(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(data, "TILE_THUMBNAILS", EMPTY_TILE_THUMBNAILS)
+    # No item in TILE_CATALOG has this genre at all.
+    assert data.get_tile_thumbnail("genre", "classic") is None
+
+
+def test_get_tile_thumbnail_series_reuses_episodic_group_thumbnail(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(data, "TILE_THUMBNAILS", EMPTY_TILE_THUMBNAILS)
+    # Same "first episode with a thumbnail" value get_series_groups()
+    # already computes - not re-derived from scratch.
+    assert data.get_tile_thumbnail("series", "Bibi Blocksberg") == "https://x/bibi1.jpg"
+
+
+def test_get_tile_thumbnail_franchise_falls_back_to_matching_item(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(data, "TILE_THUMBNAILS", EMPTY_TILE_THUMBNAILS)
+    assert data.get_tile_thumbnail("franchise", "disney") == "https://x/a.jpg"
+
+
+def test_get_tile_thumbnail_warnings_flags_fallback_and_missing(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(data, "TILE_THUMBNAILS", EMPTY_TILE_THUMBNAILS)
+    warnings = data.get_tile_thumbnail_warnings()
+    assert any("'genre':'adventure'" in w and "falling back" in w for w in warnings)
+    assert any("'genre':'mystery'" in w and "NO thumbnail available" in w for w in warnings)
+
+
+def test_get_tile_thumbnail_warnings_silent_for_curated_value(monkeypatch):
+    monkeypatch.setattr(data, "_catalog_cache", TILE_CATALOG)
+    monkeypatch.setattr(
+        data, "TILE_THUMBNAILS", {**EMPTY_TILE_THUMBNAILS, "genre": {"adventure": "https://curated/adventure.jpg"}}
+    )
+    warnings = data.get_tile_thumbnail_warnings()
+    assert not any("'genre':'adventure'" in w for w in warnings)

@@ -53,7 +53,7 @@ body:
     attributes:
       label: Anything else worth knowing?
       description: >-
-        Series/franchise it belongs to, genre, mood, whether it's won an
+        Series/franchise it belongs to, genre, whether it's won an
         award, or anything else that'd help with curating it.
       placeholder: e.g. Part of the "Die drei ???" series, spooky/mystery genre
     validations:
