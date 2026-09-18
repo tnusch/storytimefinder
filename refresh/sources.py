@@ -36,6 +36,286 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_k-aHXnvyhnC0p4MNew35XinqIbS5Jvu6A",
+        "label": "Die unendliche Geschichte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lpeOSlCQ8RBlILpLlDR3Dz-uJLJtuSZpw",
+        "label": "Michel muss mehr Männchen machen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lmOJ1gTwh30H-TrvMDMoJ0Be9tRO0qoN8",
+        "label": "Michel bringt die Welt in Ordnung",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mkvpySvpPKL798u7sVB9QOjUktXNf9ujE",
+        "label": "Weihnachten mit Astrid Lindgren",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kbJDfgokRifVHGPKcvNyBaYZqBIz7U03c",
+        "label": "Schulbeginn mit Astrid Lindgren",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lhfkB_yItthzO_C1F_dYkObZgVH_O1vyU",
+        "label": "Pippi außer Rand und Band",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nDascpKMwl-XKJgHvO7JRsOsyifohwdek",
+        "label": "Pippi im Taka-Tuka-Land",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kavr8OpgdL8Qtw2ub1MVC8b0vH80vwwHI",
+        "label": "Pippi geht von Bord",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nY3qxurbWZa4pzbm8JA3MMsioemOZSVT0",
+        "label": "Pippi Langstrumpf",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lfvKt1ir8O7DL8jyN5QAHtlwLdC1bcl4w",
+        "label": "Die Wilden Hühner",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lVVg83AXD4QkbSCAhKDZA5q2EvVHIm9SU",
+        "label": "Die Wilden Hühner",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kOc5vs0YA5NABjQPNRHBOcLfqszgQVc7M",
+        "label": "Die Pinguine aus Madagascar",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kxipbeZe4CHEDGG1IBNMOE1q3BGCBgFrc",
+        "label": "Madagaskar 3 - Flucht durch Europa",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nHgfEWQDvuyKHUT0kvzngSzSUSjllsTKg",
+        "label": "Für immer Shrek",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kmiqlQPkr6sSI4PRvR3CjCdbFqPomUAbY",
+        "label": "Shrek der Dritte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mQFbkCAfkXkVlkb-f2jCISNXOgaBul4YU",
+        "label": "Shrek 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_n3Ek0cI8PqEMMGp3cL3U6voDqM9A6MZ30",
+        "label": "Shrek",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lf8B7Rto_FygtNXHgTIdYBMSjvxxQyG6U",
+        "label": "Vulkane (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nMxG6i6DEkViOWjdGLAYngZopGWJRcT1E",
+        "label": "Wale und Delfine (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nGenFwsRj9UiyyW_JeToWUcO0etjOh4Ew",
+        "label": "Weltraum (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nH3xWRvDFx8sDNPhnGHy2-iMd7Dublbgc",
+        "label": "Dinosaurier (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mL2Ydsjrz__6YtptLzkVTGpN0z5ZJ3LLo",
+        "label": "Unsere Erde (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kitKFs_XpbGaVTHs9ZRGYY3trDOOzNmEc",
+        "label": "Pferde (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ns497l-VGiCDHY8isQtKoh4o0ZI4sJD8g",
+        "label": "Fußball (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_ndeAfpo0H_mtFpkFOFbP0eEWgjh_B_Yhc",
+        "label": "In der Natur (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kZBkWFFqzaqgwwZGF1AwSUGL_wHIG9v-Q",
+        "label": "Das alte Ägypten (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kGp0YUtjUPAWWvwOEIeqsY-71h68udgdk",
+        "label": "Detektive und Ermittler (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_na3dYToTEBsVvR33aA_z95Sr3pvtfYkdA",
+        "label": "Haustiere (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mbB340T6ZWP1Ye3KeWjC4ytHkuiDvkaSU",
+        "label": "Umweltschutz (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lKbxnL7WVRObRcYz5Tp2fa32E0HX-4Esg",
+        "label": "Roboter (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lAqv091MpJfrFD0SEzyVcEGfLNBgK08IA",
+        "label": "Mein Körper (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nAlhlyxHDGjVpvRs-W4LM8j50-F2xAdgc",
+        "label": "Gefährliche Tiere (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kY0Cy58kGjyp9Ov0JEl5v9gqK4YIPpNkU",
+        "label": "Im Wald (Wieso? Weshalb? Warum? ERSTLESER)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_m1vGyI1cCVDDIrlQ3E1aE2nf_YHp8fznM",
+        "label": "National Geographic Kids: Amazonas-Regenwald",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_n4vQH1g4_Qk9Ij7Sn4zD3eAwVDKKjdOS8",
+        "label": "National Geographic Kids: Elefanten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_lXtRqpjY4FVX1IWO-jJTZF2L5uAnEYd5I",
         "label": "Stockmann",
         "language": "de",

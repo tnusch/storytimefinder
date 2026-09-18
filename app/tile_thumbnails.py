@@ -23,8 +23,22 @@ filterable, just only via its advanced-panel chip, same as seasonal/etc.)
 from __future__ import annotations
 
 TILE_THUMBNAILS: dict[str, dict[str, str]] = {
-    "age": {},
-    "genre": {},
+    "age": {
+        "3_5": "https://i.ytimg.com/vi/g1t5A6Udygc/maxresdefault.jpg",
+        "6_8": "https://i.ytimg.com/vi/mkINOECXZco/maxresdefault.jpg",
+    },
+    "genre": {
+        "adventure": "https://i.ytimg.com/vi/cw14Cu7SVCw/maxresdefault.jpg",
+        "educational": "https://i.ytimg.com/vi/6wwOk4JB7Bg/maxresdefault.jpg",
+        "fairy_tale": "https://i.ytimg.com/vi/6C7N4V9rJHU/maxresdefault.jpg",
+        "family": "https://i.ytimg.com/vi/f76zOfw6oFQ/maxresdefault.jpg",
+        "fantasy": "https://i.ytimg.com/vi/NSrUyj9xOG0/maxresdefault.jpg",
+    },
     "series": {},
-    "franchise": {},
+    "franchise": {
+        "disney": "https://i.ytimg.com/vi/sSMW7l5FhQ4/maxresdefault.jpg",
+        "dreamworks": "https://i.ytimg.com/vi/_XPCVG0ZMOM/maxresdefault.jpg",
+        "marvel": "https://i.ytimg.com/vi/_wI3nCkcm04/maxresdefault.jpg",
+        "pixar": "https://i.ytimg.com/vi/dBgjB3PLnNI/maxresdefault.jpg",
+    },
 }

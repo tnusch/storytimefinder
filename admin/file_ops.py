@@ -326,6 +326,26 @@ def get_consistency_warnings() -> list[tuple[str, list[str]]]:
     return _filter_dismissed_pairs(warnings)
 
 
+def order_by_consistency_warnings(entries: dict, warnings: list[tuple[str, list[str]]]) -> dict:
+    """Reorders an entry_id-keyed dict (load_suggestions()'s or
+    list_overrides()'s shape) so every entry_id named in at least one
+    get_consistency_warnings() pair's entry_ids comes first - the
+    Suggestions screen's whole point in flagging these is to get a curator
+    to fix them, so they shouldn't be buried below every already-clean
+    item on a long page. A stable partition, not a full re-sort: each of
+    the two groups (flagged / not flagged) keeps its original relative
+    order, so this doesn't fight load_suggestions()'s alphabetical order or
+    ITEM_OVERRIDES's own literal order any more than necessary. Also used
+    by get_next_entry_id() below, applying the identical reordering, so
+    Suggestions' Apply & Next/Save & Next/Dismiss buttons keep jumping to
+    whatever's actually next on screen rather than the pre-reorder
+    position."""
+    flagged_ids = {entry_id for _, entry_ids in warnings for entry_id in entry_ids}
+    flagged = {eid: v for eid, v in entries.items() if eid in flagged_ids}
+    rest = {eid: v for eid, v in entries.items() if eid not in flagged_ids}
+    return {**flagged, **rest}
+
+
 def get_source_warnings() -> list[str]:
     """Runs refresh.py's check_duplicate_source_ids() directly against
     sources.py's current SOURCES list, so a duplicate youtube_id (see
@@ -538,15 +558,20 @@ def get_next_entry_id(section: str, entry_id: str) -> str | None:
     order of the given section - "suggestion" reads load_suggestions()
     (whose on-disk order is alphabetical by entry_id, see
     save_suggestions()'s sort_keys=True), "override" reads list_overrides()
-    (whose order matches ITEM_OVERRIDES's literal order in overrides.py).
-    Neither is re-sorted before rendering in suggestions.html, so this
-    always matches what's actually next on screen. Used by the Suggestions
-    screen's "Apply & Next"/"Save & Next"/Dismiss actions to jump straight
-    to the next card instead of back to the top of a long page - see
-    admin/routes.py's suggestions_action(). Returns None if `entry_id` is
-    last (or no longer present, e.g. already removed) - callers fall back
-    to no anchor (the page top) in that case."""
-    keys = list((load_suggestions() if section == "suggestion" else list_overrides()).keys())
+    (whose order matches ITEM_OVERRIDES's literal order in overrides.py) -
+    then applies the exact same order_by_consistency_warnings() reordering
+    admin/routes.py's suggestions() view applies before rendering, so this
+    always matches what's actually next on screen (consistency-warning-
+    flagged entries first, then everything else in its original order).
+    Used by the Suggestions screen's "Apply & Next"/"Save & Next"/Dismiss
+    actions to jump straight to the next card instead of back to the top
+    of a long page - see admin/routes.py's suggestions_action(). Returns
+    None if `entry_id` is last (or no longer present, e.g. already
+    removed) - callers fall back to no anchor (the page top) in that
+    case."""
+    entries = load_suggestions() if section == "suggestion" else list_overrides()
+    entries = order_by_consistency_warnings(entries, get_consistency_warnings())
+    keys = list(entries.keys())
     try:
         index = keys.index(entry_id)
     except ValueError:

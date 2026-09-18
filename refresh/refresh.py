@@ -246,21 +246,11 @@ CREATE TABLE IF NOT EXISTS series (
 # hard-failing the whole refresh run.
 GENRE_VALUES = {
     "family",
-
-    "friendship",
-
-    "animals",
-
     "fairy_tale",
     "adventure",
     "mystery",
     "fantasy",
     "educational",
-    "bedtime_story",
-    "classic",
-    "comedy",
-    "horse",
-    "superhero",
 }
 FRANCHISE_VALUES = {
     "disney",

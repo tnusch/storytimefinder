@@ -151,25 +151,33 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   outline: none;
   border-color: var(--muted);
 }
-.advanced-toggle {
+/* "Search" (guided filter cards) vs "Advanced search" (advanced chip
+   pills) - a single exclusive switch above both filter UIs. Deliberately
+   understated - a plain text tab pair with a thin underline on the active
+   one, not a filled pill - since this switches which *filter UI* is
+   showing, not a filter value itself, and shouldn't visually compete with
+   the chips/tiles it reveals. */
+.search-mode-toggle {
   display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 1rem;
-  padding: 0;
+  gap: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+.search-mode-btn {
+  padding: 0.15rem 0;
   border: none;
+  border-bottom: 2px solid transparent;
   background: none;
-  color: var(--text);
-  font-size: 0.85rem;
+  color: var(--muted);
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
 }
-.advanced-toggle:hover { text-decoration: underline; }
-.advanced-toggle-icon {
-  display: inline-block;
-  transition: transform 0.15s;
+.search-mode-btn:hover { color: var(--text); }
+.search-mode-btn.is-active {
+  color: var(--text);
+  border-bottom-color: var(--muted);
+  font-weight: 600;
 }
-.advanced-toggle.is-open .advanced-toggle-icon { transform: rotate(180deg); }
 
 .filter-bar {
   display: flex;
@@ -177,8 +185,15 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   gap: 0.6rem;
   margin-bottom: 1.5rem;
 }
-.filter-bar-advanced { margin-top: -0.5rem; }
 .filter-bar[hidden] { display: none; }
+/* Same panel treatment as .guided-filters below - the two sit behind the
+   same "Suche"/"Erweiterte Suche" toggle, so they should read as the same
+   kind of surface even though only one is ever visible at a time. */
+.filter-bar-advanced {
+  padding: 0.9rem;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+}
 .filter-group {
   display: flex;
   flex-wrap: nowrap;
@@ -248,9 +263,24 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
    room for a fixed-width column on a narrow screen. */
 .guided-filters {
   display: flex;
-  gap: 1.25rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+  /* Shared panel around both the sidebar and the tile grid - a smaller
+     inter-column gap plus this lighter-than-page background is what reads
+     as "one coherent control" rather than two loosely-related floating
+     blocks. A background instead of a border, since a visible border line
+     read as heavier/more boxed-in than this app's otherwise borderless
+     card/chip aesthetic. */
+  padding: 0.9rem;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
 }
+/* display: flex above silently beats the browser's default
+   [hidden] { display: none } (author styles always win over user-agent
+   styles) - same gotcha .card[hidden]/.filter-bar[hidden] already work
+   around elsewhere in this file. Needed now that the search-mode toggle
+   sets #guided-filters's `hidden` attribute via JS. */
+.guided-filters[hidden] { display: none; }
 .guided-sidebar {
   display: flex;
   flex-direction: column;
@@ -258,6 +288,10 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   flex: 0 0 160px;
 }
 .guided-category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
   text-align: left;
   padding: 0.55rem 0.9rem;
   border: none;
@@ -268,7 +302,19 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   font-weight: 500;
   cursor: pointer;
 }
+/* A small "there's more here, click to switch" hint on every inactive
+   category - without it, nothing about a plain, unselected sidebar
+   button signals it's clickable rather than just a label. Omitted on the
+   active one, which is already unambiguous (bold, filled background). */
+.guided-category::after {
+  content: "\25B8";
+  color: var(--muted);
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.guided-category.is-active::after { content: ""; }
 .guided-category:hover { background: var(--hover-surface); color: var(--text); }
+.guided-category:hover::after { color: var(--text); }
 .guided-category.is-active {
   background: var(--chip-active-bg);
   color: var(--chip-active-text);
@@ -277,7 +323,15 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
 .guided-tiles { flex: 1; min-width: 0; }
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  /* Fixed at 6 columns (rather than auto-fill) so a row always shows up to
+     six cards next to each other - matches genre's own fixed 6-value
+     vocabulary exactly, so its row never wraps on desktop - regardless of
+     how many tiles a given category actually has; a category with fewer
+     just leaves the row's trailing columns empty instead of stretching
+     its cards wider. Mobile drops back to 3 columns (see the 640px
+     breakpoint below) - six columns' worth of cards is too cramped on a
+     narrow screen, so a genre row does wrap there. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.9rem;
 }
 .tile-grid[hidden] { display: none; }
@@ -321,12 +375,23 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
   font-size: 1.8rem;
 }
 .tile-label {
+  /* Exactly matches .tile-thumb's own width: 100% (not just a max-width
+     cap) so the label's box - not just its text when it happens to be
+     long enough to fill it - is always precisely as wide as the card. */
+  width: 100%;
   font-size: 0.8rem;
   font-weight: 500;
+  line-height: 1.25;
+  /* Wraps instead of single-line-truncating - needed for longer Genre/
+     Reihe (series) names that don't fit on one line at this card width.
+     Still capped at two lines (not unbounded) so one very long series
+     name doesn't blow out its whole tile row's height; a name longer than
+     that still ellipsizes on the second line. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
 }
 .tile.is-active .tile-label { font-weight: 700; }
 

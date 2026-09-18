@@ -312,12 +312,17 @@ def suggestions():
     suggestions_data = file_ops.load_suggestions()
     overrides_data = file_ops.list_overrides()
     item_info = file_ops.get_item_info()
+    consistency_warnings = file_ops.get_consistency_warnings()
     return render_template(
         "suggestions.html",
-        suggestions=suggestions_data,
-        overrides=overrides_data,
+        # Consistency-warning-flagged entries render first within each
+        # section - see order_by_consistency_warnings()'s own docstring.
+        # diffs/description_prompt below still key off the *un*reordered
+        # dicts, since neither cares about iteration order.
+        suggestions=file_ops.order_by_consistency_warnings(suggestions_data, consistency_warnings),
+        overrides=file_ops.order_by_consistency_warnings(overrides_data, consistency_warnings),
         diffs=_compute_override_diffs(overrides_data, suggestions_data),
-        consistency_warnings=file_ops.get_consistency_warnings(),
+        consistency_warnings=consistency_warnings,
         item_info=item_info,
         genre_values=file_ops.get_genre_values(),
         franchise_values=file_ops.get_franchise_values(),

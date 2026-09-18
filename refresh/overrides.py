@@ -53,10 +53,9 @@ override-only with NO fallback to any API value:
     that writes it for you; an item with no `description` override just has
     no description shown, until you add one.
   - `genre`: a list of ONE OR MORE values from this fixed list (an item can
-    carry more than one thematic tag, e.g. `["adventure", "superhero"]` -
+    carry more than one thematic tag, e.g. `["adventure", "family"]` -
     filtering matches if ANY selected genre is present):
-        fairy_tale, adventure, mystery, fantasy, educational, bedtime_story,
-        classic, comedy, horse, superhero
+        adventure, fairy_tale, family, fantasy, mystery, educational
     Always a list, even for a single tag (`["adventure"]`, not
     `"adventure"`) - `[]`/omitted means no genre set, same "no catch-all
     value" convention as every other unset field in this file. **Omit on an
@@ -130,7 +129,7 @@ free text rather than a YouTube/entry id), e.g.:
         "Bibi Blocksberg": {
             "series_type": "episodic",
             "genre": ["fantasy"],
-            "franchise": "bibi_blocksberg",
+            "franchise": "",
             "min_age": 4,
         },
     }
@@ -221,21 +220,21 @@ SERIES_OVERRIDES: dict[str, dict] = {
     "Marvels Iron Man und seine fantastischen Freunde": {
         "series_type": "episodic",
         "genre": ["adventure"],
-        "franchise": "disney",
+        "franchise": "marvel",
         "min_age": 4,
     },
 
     "Marvels Spidey und seine Super-Freunde": {
         "series_type": "episodic",
         "genre": ["adventure"],
-        "franchise": "disney",
+        "franchise": "marvel",
         "min_age": 4,
     },
 
     "Bibi Blocksberg": {
         "series_type": "episodic",
         "genre": ["fantasy"],
-        "franchise": "bibi_blocksberg",
+        "franchise": "",
         # The two episodes below disagreed on min_age (5 vs 4) before this
         # field moved here - used the lower of the two, per the same
         # tie-break rule min_age's own docstring bullet already documents.
@@ -244,11 +243,301 @@ SERIES_OVERRIDES: dict[str, dict] = {
 }
 
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_nY3qxurbWZa4pzbm8JA3MMsioemOZSVT0": {
+        "description": "Ein außergewöhnlich starkes, freies Mädchen lebt ganz ohne Erwachsene und stellt mit Witz alle Regeln auf den Kopf.",
+        "series": "Pippi Langstrumpf",
+        "position_in_series": 1,
+        "min_age": 4,
+        "source_release_year": 1969,
+        "genre": ["family"],
+    },
+
+    "OLAK5uy_nHgfEWQDvuyKHUT0kvzngSzSUSjllsTKg": {
+        "description": "Ein enttäuschter Ogre schließt einen fatalen Handel und muss in einer veränderten Welt seinen Platz zurückerobern.",
+        "series": "Shrek",
+        "position_in_series": 4,
+        "genre": ["fantasy"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2010,
+    },
+
+    "OLAK5uy_nDascpKMwl-XKJgHvO7JRsOsyifohwdek": {
+        "description": "Ein ungewöhnlich starkes Mädchen segelt über den Ozean, um auf einer fernen Insel ihrem Vater wiederzubegegnen.",
+        "series": "Pippi Langstrumpf",
+        "min_age": 4,
+        "source_release_year": 1970,
+        "genre": ["family"],
+    },
+
+    "OLAK5uy_n3Ek0cI8PqEMMGp3cL3U6voDqM9A6MZ30": {
+        "description": "Ein mürrischer Ogre muss eine verzauberte Prinzessin retten, um sein geliebtes Sumpfgrundstück zurückzubekommen.",
+        "series": "Shrek",
+        "genre": ["fantasy"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2001,
+    },
+
+    "OLAK5uy_mkvpySvpPKL798u7sVB9QOjUktXNf9ujE": {
+        "description": "Mehrere stimmungsvolle Geschichten erzählen von Vorfreude, Bräuchen und kleinen Wundern rund um die Weihnachtszeit.",
+        "series": "Pippi Langstrumpf",
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 2023,
+    },
+
+    "OLAK5uy_mQFbkCAfkXkVlkb-f2jCISNXOgaBul4YU": {
+        "description": "Ein frisch verheirateter Ogre besucht die Schwiegereltern und gerät dabei in einen verhängnisvollen Zaubertrank-Plan.",
+        "series": "Shrek",
+        "position_in_series": 2,
+        "genre": ["fantasy"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2004,
+    },
+
+    "OLAK5uy_lpeOSlCQ8RBlILpLlDR3Dz-uJLJtuSZpw": {
+        "description": "Nach einem seiner Streiche muss ein einfallsreicher Bauernjunge zur Strafe geduldig kleine Schnitzfiguren anfertigen.",
+        "series": "Michel aus Lönneberga",
+        "position_in_series": 2,
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 1972,
+    },
+
+    "OLAK5uy_lmOJ1gTwh30H-TrvMDMoJ0Be9tRO0qoN8": {
+        "description": "Ein gutmütiger, aber tollpatschiger Junge sorgt mit seinen wohlgemeinten Einfällen auf dem Hof für herrliches Chaos.",
+        "series": "Michel aus Lönneberga",
+        "position_in_series": 3,
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 1973,
+    },
+
+    "OLAK5uy_lhfkB_yItthzO_C1F_dYkObZgVH_O1vyU": {
+        "description": "Ein freches, überstarkes Mädchen bringt mit seinen ungewöhnlichen Ideen Schule und feine Gesellschaft durcheinander.",
+        "series": "Pippi Langstrumpf",
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 1970,
+    },
+
+    "OLAK5uy_lfvKt1ir8O7DL8jyN5QAHtlwLdC1bcl4w": {
+        "description": "Eine Mädchenclique gründet ihre eigene Geheimbande und legt sich dabei mit einer rivalisierenden Jungsbande an.",
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 1998,
+    },
+
+    "OLAK5uy_lVVg83AXD4QkbSCAhKDZA5q2EvVHIm9SU": {
+        "description": "Eine eingeschworene Mädchenclique meistert gemeinsam neue Herausforderungen und hält trotz mancher Streitereien zusammen.",
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 2006,
+    },
+
+    "OLAK5uy_kxipbeZe4CHEDGG1IBNMOE1q3BGCBgFrc": {
+        "description": "Ausgebrochene Zootiere schließen sich einem Wanderzirkus an, um quer durch Europa nach Hause zu gelangen.",
+        "series": "Madagascar",
+        "position_in_series": 3,
+        "genre": ["adventure"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2012,
+    },
+
+    "OLAK5uy_kmiqlQPkr6sSI4PRvR3CjCdbFqPomUAbY": {
+        "description": "Ein widerwilliger Thronerbe sucht auf einem chaotischen Roadtrip einen Ersatz, während zu Hause eine Rebellion droht.",
+        "series": "Shrek",
+        "position_in_series": 3,
+        "genre": ["fantasy"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2007,
+    },
+
+    "OLAK5uy_kbJDfgokRifVHGPKcvNyBaYZqBIz7U03c": {
+        "description": "Mehrere warmherzige Geschichten begleiten Kinder durch die aufregende Zeit rund um ihren ersten Schultag.",
+        "series": "Pippi Langstrumpf",
+        "genre": ["family"],
+        "min_age": 4,
+        "source_release_year": 2013,
+    },
+
+    "OLAK5uy_kavr8OpgdL8Qtw2ub1MVC8b0vH80vwwHI": {
+        "series": "Pippi Langstrumpf",
+        "source_release_year": 1969,
+        "description": "Ein ungewöhnlich starkes Mädchen gerät mit seinen Freunden in ein Abenteuer rund um Schmuggler und eine alte Schatzkarte.",
+        "genre": ["family"],
+        "min_age": 4,
+    },
+
+    "OLAK5uy_kOc5vs0YA5NABjQPNRHBOcLfqszgQVc7M": {
+        "description": "Ein Team schlagfertiger Pinguine muss einen finsteren Tintenfisch aufhalten, der niedliche Tiere in Monster verwandeln will.",
+        "series": "Madagascar",
+        "genre": ["adventure"],
+        "franchise": "dreamworks",
+        "min_age": 4,
+        "source_release_year": 2014,
+    },
+
+    "OLAK5uy_k-aHXnvyhnC0p4MNew35XinqIbS5Jvu6A": {
+        "description": "Ein einsamer Junge taucht durch ein magisches Buch in ein Fantasiereich ein, das er vor dem drohenden Verschwinden retten muss.",
+        "genre": ["fantasy"],
+        "min_age": 6,
+        "source_release_year": 1984,
+    },
+
+    "OLAK5uy_mL2Ydsjrz__6YtptLzkVTGpN0z5ZJ3LLo": {
+        "description": "Ein Sachbuch erklärt kindgerecht den Aufbau unseres Planeten und seine unterschiedlichen Lebensräume.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_mbB340T6ZWP1Ye3KeWjC4ytHkuiDvkaSU": {
+        "description": "Ein Sachbuch erklärt kindgerecht, warum unsere Umwelt geschützt werden muss und wie jeder helfen kann.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2024,
+    },
+
+    "OLAK5uy_n4vQH1g4_Qk9Ij7Sn4zD3eAwVDKKjdOS8": {
+        "description": "Ein Sachbuch stellt eines der größten Landtiere der Welt vor und erklärt sein Leben in freier Wildbahn.",
+        "series": "National Geographic Kids",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_nGenFwsRj9UiyyW_JeToWUcO0etjOh4Ew": {
+        "description": "Ein Sachbuch erklärt kindgerecht Planeten, Sterne und wie Menschen den Weltraum erforschen.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_nAlhlyxHDGjVpvRs-W4LM8j50-F2xAdgc": {
+        "description": "Ein Sachbuch stellt Tiere vor, die mit Gift, Kraft oder scharfen Zähnen zu den gefährlichsten der Welt zählen.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_ns497l-VGiCDHY8isQtKoh4o0ZI4sJD8g": {
+        "description": "Ein Sachbuch erklärt kindgerecht Regeln, Technik und Geschichte des beliebtesten Mannschaftssports der Welt.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_ndeAfpo0H_mtFpkFOFbP0eEWgjh_B_Yhc": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie Pflanzen, Tiere und Jahreszeiten in der Natur zusammenhängen.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2023,
+    },
+
+    "OLAK5uy_na3dYToTEBsVvR33aA_z95Sr3pvtfYkdA": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie man verschiedene Haustiere richtig versorgt und glücklich macht.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2023,
+    },
+
+    "OLAK5uy_nMxG6i6DEkViOWjdGLAYngZopGWJRcT1E": {
+        "description": "Ein Sachbuch stellt beeindruckende Meeresbewohner vor und erklärt ihr Leben in den Ozeanen der Welt.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_nH3xWRvDFx8sDNPhnGHy2-iMd7Dublbgc": {
+        "description": "Ein Sachbuch stellt urzeitliche Riesenechsen vor und erklärt, wie sie lebten und warum sie ausstarben.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_m1vGyI1cCVDDIrlQ3E1aE2nf_YHp8fznM": {
+        "series": "National Geographic Kids",
+        "source_release_year": 2025,
+        "description": "Ein Sachbuch entführt in einen artenreichen Regenwald voller ungewöhnlicher Pflanzen und Tiere.",
+        "genre": ["educational"],
+        "min_age": 4,
+    },
+
+    "OLAK5uy_lf8B7Rto_FygtNXHgTIdYBMSjvxxQyG6U": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie Vulkane entstehen, ausbrechen und die Landschaft verändern.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2021,
+    },
+
+    "OLAK5uy_lKbxnL7WVRObRcYz5Tp2fa32E0HX-4Esg": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie Roboter funktionieren und wofür Menschen sie heute einsetzen.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "source_release_year": 2024,
+        "min_age": 4,
+    },
+
+    "OLAK5uy_lAqv091MpJfrFD0SEzyVcEGfLNBgK08IA": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie der eigene Körper aufgebaut ist und wie seine Organe zusammenarbeiten.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2025,
+    },
+
+    "OLAK5uy_kitKFs_XpbGaVTHs9ZRGYY3trDOOzNmEc": {
+        "description": "Ein Sachbuch erklärt kindgerecht, wie Pferde leben, sich verhalten und richtig gepflegt werden.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_kY0Cy58kGjyp9Ov0JEl5v9gqK4YIPpNkU": {
+        "description": "Ein Sachbuch nimmt junge Leser mit auf eine Entdeckungstour durch das Ökosystem eines dichten Waldes.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2026,
+    },
+
+    "OLAK5uy_kZBkWFFqzaqgwwZGF1AwSUGL_wHIG9v-Q": {
+        "description": "Ein Sachbuch nimmt junge Leser mit auf eine Zeitreise zu Pyramiden, Pharaonen und dem Alltag einer alten Hochkultur.",
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "source_release_year": 2023,
+        "min_age": 4,
+        "genre": ["educational"],
+    },
+
+    "OLAK5uy_kGp0YUtjUPAWWvwOEIeqsY-71h68udgdk": {
+        "series": "Wieso? Weshalb? Warum? ERSTLESER",
+        "description": "Ein Sachbuch erklärt kindgerecht, wie Ermittler Spuren lesen, Rätsel lösen und knifflige Fälle aufklären.",
+        "genre": ["educational"],
+        "min_age": 4,
+        "source_release_year": 2023,
+    },
+
     "OLAK5uy_nYGcJxw7VmlWg5YIB8mn3wLi_TUMvx1go": {
         "description": "Immer mehr Tiere ziehen nacheinander in ein Zuhause ein, bis sich zeigt, dass für alle gemeinsam noch genug Platz ist.",
         "min_age": 3,
         "source_release_year": 2012,
-        "genre": ["bedtime_story"],
+        "genre": ["family"],
     },
 
     "OLAK5uy_mSgdpKUe0h-7BG-u6A3bxDJnnahf5apAU": {
@@ -276,7 +565,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_mcglAHuM_7wXMvyLeVkS-mMUFYtp2wZuw": {
         "series": "Lieselotte",
         "description": "Eine eigenwillige Kuh hat einfach keine Lust mitzumachen und sorgt mit ihrer Sturheit für einige komische Verwicklungen.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "min_age": 3,
         "source_release_year": 2023,
     },
@@ -284,7 +573,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_mBrrC_wKDcojNm8UGmx5QC5TWfi6oYY9A": {
         "series": "Lieselotte",
         "description": "Als ein frisch gebackener Kuchen spurlos verschwindet, ermittelt eine neugierige Kuh und deckt am Ende die Wahrheit auf.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "min_age": 3,
         "source_release_year": 2017,
     },
@@ -292,7 +581,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_m2D0-24hp4udry6-8DgRBlx8EGaXvDzMY": {
         "series": "Dr. Brumm",
         "description": "Ein liebenswert tollpatschiger Bär erlebt weihnachtliche Missverständnisse und muss so manches erst auf seine Weise verstehen.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "min_age": 3,
         "source_release_year": 2014,
     },
@@ -350,7 +639,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_l1jyFg5fuLBZnZR83ExwIVkHEXECt0_60": {
         "series": "Lieselotte",
         "description": "Eine eigensinnige Kuh sucht sich einen ganz eigenen Rückzugsort, nur für sich allein, fernab vom Trubel des Hofes.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "source_release_year": 2019,
         "min_age": 3,
     },
@@ -358,7 +647,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_kr--flk-x2tuXSt0QFHKjz8aWxfHTtQlY": {
         "series": "Dr. Brumm",
         "description": "Ein tollpatschiger Bär trifft auf ein riesiges, urzeitlich anmutendes Wesen und erlebt dabei weitere kleine Alltagsabenteuer.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "min_age": 3,
         "source_release_year": 2018,
     },
@@ -375,7 +664,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_kPaXIwzMyooY-lYyKWHI420DYd5ltqY8w": {
         "series": "Lieselotte",
         "description": "Eine liebenswert tollpatschige Kuh erlebt in mehreren kurzen Geschichten allerlei witzige Alltagsabenteuer auf dem Bauernhof.",
-        "genre": ["animals", "family"],
+        "genre": ["family"],
         "min_age": 3,
         "source_release_year": 2015,
     },
@@ -602,7 +891,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_l-P6wjCCtVMqwx7s8rAgS4nGGjZra-reE": {
         "description": "Ein kleines Waldtier trifft auf ein furchteinfl%F6%DFendes Wesen und entdeckt dabei seine eigene Cleverness.",
-        "genre": ["adventure", "superhero"],
+        "genre": ["adventure"],
         "min_age": 3,
         "source_release_year": 2009,
     },
@@ -610,7 +899,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A": {
         "description": "Ein schlitzohriger Bauernjunge im alten Schweden sorgt mit seinen Streichen ständig für Chaos, hat dabei aber ein gutes Herz.",
         "series": "Michel aus Lönneberga",
-        "genre": ["classic"],
+        "genre": ["family"],
         "min_age": 4,
         "source_release_year": 1971,
     },
@@ -632,7 +921,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
     "OLAK5uy_nxACHw7AuDsAjktLAmdJrbI1Ortwse45w": {
         "description": "Eine Gruppe tierischer Freunde verwandelt ein harmloses Fußballspiel in ein turbulentes, chaotisches Durcheinander.",
         "series": "Micky Maus",
-        "genre": ["comedy"],
+        "genre": ["family"],
         "franchise": "disney",
         "min_age": 4,
         "source_release_year": 2006,
@@ -669,7 +958,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Zwei ungleiche und anfangs verfeindete Studierende an einer Schule für furchteinflößende Wesen lernen, echte Freunde zu werden.",
         "series": "Die Monster AG",
         "position_in_series": 2,
-        "genre": ["comedy"],
+        "genre": ["fantasy"],
         "franchise": "pixar",
         "min_age": 4,
         "source_release_year": 2013,
@@ -920,7 +1209,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_mRA_lATsy2YhZrrOCkTYMVQ9mBtJSwQYU": {
         "description": "Ein Koala träumt davon, einen Gesangswettbewerb zu gewinnen und findet dabei neue Freunde und Mut.",
-        "genre": ["comedy"],
+        "genre": ["family"],
         "franchise": "dreamworks",
         "min_age": 4,
         "source_release_year": 2016,
@@ -1125,7 +1414,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_mNqk3ri39BDq8HqCdr6vftp0EJ04JRp7g": {
         "description": "Ein Mensch mit körperlichen Unterschieden findet Zuflucht in einem Turm und entdeckt Freundschaft, Liebe und seinen Platz in der Welt.",
-        "genre": ["classic"],
+        "genre": ["fairy_tale"],
         "franchise": "disney",
         "min_age": 5,
         "source_release_year": 1996,
@@ -1133,7 +1422,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_mIHDTjeetGqr7X1LLJrNQdhLAiHO6bVbA": {
         "description": "Ein Leidenschaftlicher Kampf um Kulinarischen Erfolg in der Küche einer renommierten Gaststätte.",
-        "genre": ["comedy"],
+        "genre": ["adventure"],
         "franchise": "pixar",
         "min_age": 4,
         "source_release_year": 2007,
@@ -1160,7 +1449,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Eine Gruppe von Jugendlichen muss sich neuen emotionalen Herausforderungen und inneren Konflikten stellen.",
         "series": "Alles steht Kopf",
         "position_in_series": 2,
-        "genre": ["comedy"],
+        "genre": ["family"],
         "franchise": "pixar",
         "min_age": 6,
         "source_release_year": 2024,
@@ -1264,7 +1553,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Ein junges Tier wächst in der Natur auf und erlebt Abenteuer, während es die Welt und sich selbst entdeckt.",
         "series": "Bambi",
         "position_in_series": 1,
-        "genre": ["classic"],
+        "genre": ["fairy_tale"],
         "franchise": "disney",
         "min_age": 4,
         "source_release_year": 1942,
@@ -1299,7 +1588,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_loAK3fXOH3uOo3T00so5cPnGsYsspZpEQ": {
         "description": "Ein junger Elefant mit großen Ohren entdeckt seine außergewöhnliche Fähigkeit und findet seinen Platz in der Welt.",
-        "genre": ["classic"],
+        "genre": ["fairy_tale"],
         "franchise": "disney",
         "min_age": 3,
         "source_release_year": 1941,
@@ -1413,7 +1702,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_kundgUTfQdcOpKXKaj6VVik5VxrVXv8qw": {
         "description": "Bauernhoftiere geraten in chaotische Abenteuer, wenn sie sich selbstständig machen und Unsinn anstellen.",
-        "genre": ["comedy"],
+        "genre": ["adventure"],
         "franchise": "disney",
         "min_age": 4,
         "source_release_year": 2004,
@@ -1470,7 +1759,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Ein junges Tier wächst in der Wildnis auf und muss lernen, sich in seiner Umgebung zurechtzufinden und seine Rolle zu finden.",
         "series": "Bambi",
         "position_in_series": 2,
-        "genre": ["classic"],
+        "genre": ["fairy_tale"],
         "franchise": "disney",
         "min_age": 4,
         "source_release_year": 2006,
@@ -1542,7 +1831,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Eine Gruppe von Tieren muss ihre Heimat verlassen und erlebt aufregende Abenteuer auf ihrer Reise zurück.",
         "series": "Madagascar",
         "position_in_series": 2,
-        "genre": ["comedy"],
+        "genre": ["adventure"],
         "franchise": "dreamworks",
         "min_age": 4,
         "source_release_year": 2008,
@@ -1552,7 +1841,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Eine Geschichte über innere Gefühle und Emotionen, die zum Leben erwachen und gemeinsam Abenteuer erleben.",
         "series": "Alles steht Kopf",
         "position_in_series": 1,
-        "genre": ["comedy"],
+        "genre": ["family"],
         "franchise": "pixar",
         "min_age": 5,
         "source_release_year": 2015,
@@ -1608,7 +1897,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Eine Geschichte über unerwartete Freundschaften zwischen zwei sehr unterschiedlichen Charakteren in einer fantastischen Welt.",
         "series": "Die Monster AG",
         "position_in_series": 1,
-        "genre": ["comedy"],
+        "genre": ["fantasy"],
         "franchise": "pixar",
         "min_age": 4,
         "source_release_year": 2001,
@@ -1672,7 +1961,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_k1NtuVYsO5k0pEW4qvx9DYL7ZiJHJ95S0": {
         "description": "Ein Hotelmanager muss seine Unterkunft vor neugierigen Gästen schützen und dabei seine Familie bewahren.",
-        "genre": ["comedy"],
+        "genre": ["fantasy"],
         "source_release_year": 2012,
         "seasonal": "halloween",
         "min_age": 6,
@@ -1680,7 +1969,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
 
     "OLAK5uy_k0su_4jE-pvnaRx3DR_uzgqvnzVHqHO_k": {
         "description": "Ein junger Elefant mit großen Ohren entdeckt seine besonderen Fähigkeiten und findet seinen Platz in der Welt.",
-        "genre": ["classic"],
+        "genre": ["fairy_tale"],
         "franchise": "disney",
         "min_age": 4,
         "source_release_year": 2019,
@@ -1690,7 +1979,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Ein alter Mann und sein kluges Haustier erleben zusammen alltägliche Abenteuer voller Wärme und Humor.",
         "series": "Pettersson und Findus",
         "position_in_series": 1,
-        "genre": ["comedy"],
+        "genre": ["family"],
         "min_age": 4,
         "source_release_year": 1999,
     },
@@ -1709,7 +1998,7 @@ ITEM_OVERRIDES: dict[str, dict] = {
         "description": "Vier Zootiere landen auf einer exotischen Insel und müssen sich an das Wildleben anpassen.",
         "series": "Madagascar",
         "position_in_series": 1,
-        "genre": ["comedy"],
+        "genre": ["adventure"],
         "franchise": "dreamworks",
         "min_age": 4,
         "source_release_year": 2005,

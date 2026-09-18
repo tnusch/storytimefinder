@@ -55,6 +55,7 @@ def index():
         franchises=franchises,
         age_tags=age_tags,
         languages=data.get_languages(),
+        genres=genres,
         seasonal_values=data.get_seasonal_values(),
         has_awards=data.has_awards(),
         duration_buckets=duration_buckets,

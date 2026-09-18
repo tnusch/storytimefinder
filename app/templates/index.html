@@ -36,6 +36,16 @@
   ("genre", tile_data.genre),
   ("series", tile_data.series),
 ] | selectattr("1") | list %}
+{% set has_language_filter = languages and languages|length > 1 %}
+{% set has_advanced = age_tags or has_awards or duration_buckets or franchises or genres or has_language_filter or release_decades or seasonal_values %}
+
+{% if guided_categories and has_advanced %}
+<div class="search-mode-toggle" id="search-mode-toggle" role="tablist">
+  <button type="button" class="search-mode-btn is-active" data-mode="search" role="tab" aria-selected="true">{{ t('search_mode_search') }}</button>
+  <button type="button" class="search-mode-btn" data-mode="advanced" role="tab" aria-selected="false">{{ t('search_mode_advanced') }}</button>
+</div>
+{% endif %}
+
 {% if guided_categories %}
 <section class="guided-filters" id="guided-filters">
   <div class="guided-sidebar" id="guided-sidebar" role="tablist">
@@ -57,15 +67,8 @@
 </section>
 {% endif %}
 
-{% set has_language_filter = languages and languages|length > 1 %}
-
-{% set has_advanced = age_tags or has_awards or duration_buckets or franchises or has_language_filter or release_decades or seasonal_values %}
 {% if has_advanced %}
-<button type="button" class="advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="filter-bar-advanced">
-  {{ t('advanced_toggle') }} <span class="advanced-toggle-icon" aria-hidden="true">&#9662;</span>
-</button>
-
-<div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" hidden>
+<div class="filter-bar filter-bar-advanced" id="filter-bar-advanced" {% if guided_categories %}hidden{% endif %}>
   {% if age_tags %}
   <div class="filter-group" data-filter-type="age">
     <span class="filter-label">{{ t('filter_age') }}</span>
@@ -100,6 +103,16 @@
     <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
     {% for f in franchises %}
       <button type="button" class="chip" data-value="{{ f.slug }}">{{ t('franchise_' ~ f.slug) }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if genres %}
+  <div class="filter-group" data-filter-type="genre">
+    <span class="filter-label">{{ t('filter_genre') }}</span>
+    <button type="button" class="chip is-active" data-value="">{{ t('chip_all') }}</button>
+    {% for g in genres %}
+      <button type="button" class="chip" data-value="{{ g }}">{{ t('genre_' ~ g) }}</button>
     {% endfor %}
   </div>
   {% endif %}
@@ -197,7 +210,8 @@
   var searchInput = document.getElementById("search-input");
   var sortSelect = document.getElementById("sort-select");
   var advancedBar = document.getElementById("filter-bar-advanced");
-  var advancedToggle = document.getElementById("advanced-toggle");
+  var searchModeToggle = document.getElementById("search-mode-toggle");
+  var guidedFilters = document.getElementById("guided-filters");
   var emptyMessage = document.getElementById("empty-message");
   var resultsCount = document.getElementById("results-count");
   var resultsSection = document.querySelector(".results");
@@ -436,16 +450,29 @@
   }
   initGuidedFilters();
 
-  if (advancedToggle && advancedBar) {
-    advancedToggle.addEventListener("click", function () {
-      var expanded = advancedToggle.getAttribute("aria-expanded") === "true";
-      advancedToggle.setAttribute("aria-expanded", String(!expanded));
-      advancedBar.hidden = expanded;
-      advancedToggle.classList.toggle("is-open", !expanded);
-      if (expanded === false) {
-        // Groups inside advancedBar were `hidden` (scrollWidth/clientWidth
-        // both 0) until just now, so their fade state couldn't be computed
-        // correctly on page load - recompute now that they're visible.
+  // "Search" (guided filter cards) vs "Advanced search" (advanced chip
+  // pills) - a single exclusive switch above both, replacing the old
+  // expand/collapse-in-place toggle: only one of the two filter UIs is
+  // ever visible at a time, "Search" being the default.
+  if (searchModeToggle && guidedFilters && advancedBar) {
+    searchModeToggle.addEventListener("click", function (event) {
+      var btn = event.target.closest(".search-mode-btn");
+      if (!btn) return;
+      var mode = btn.dataset.mode;
+
+      searchModeToggle.querySelectorAll(".search-mode-btn").forEach(function (b) {
+        var isActive = b === btn;
+        b.classList.toggle("is-active", isActive);
+        b.setAttribute("aria-selected", String(isActive));
+      });
+
+      guidedFilters.hidden = mode !== "search";
+      advancedBar.hidden = mode !== "advanced";
+
+      if (mode === "advanced") {
+        // advancedBar was `hidden` (scrollWidth/clientWidth both 0) until
+        // just now, so its groups' fade state couldn't be computed
+        // correctly on page load - recompute now that it's visible.
         filterGroups.forEach(updateScrollFade);
       }
     });
