@@ -619,5 +619,10 @@ h2 { font-size: 1.3rem; margin-top: 0; font-weight: 500; }
     padding-bottom: 3px;
   }
   .guided-category { flex-shrink: 0; white-space: nowrap; }
+  /* No room for the extra arrow width in this already-narrow horizontal
+     scroll strip - it was pushing labels further off the visible edge
+     than before, making more of them read as cut off. Desktop keeps it
+     (see .guided-category::after above). */
+  .guided-category::after { content: none; }
   .tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
 }
