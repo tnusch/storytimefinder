@@ -243,6 +243,76 @@ SERIES_OVERRIDES: dict[str, dict] = {
 }
 
 ITEM_OVERRIDES: dict[str, dict] = {
+    "OLAK5uy_mxe83gXRcV-vpR7KXHM_SbLW6hgzAw5eg": {
+        "description": "Nach einem seiner Streiche muss ein einfallsreicher Bauernjunge zur Strafe geduldig kleine Schnitzfiguren anfertigen.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2006,
+    },
+
+    "OLAK5uy_mwEsI9hkHG6ZqR2xj2CrhRFZpuFqwWpbs": {
+        "description": "Mehrere kurze Geschichten erzählen von den Streichen eines einfallsreichen Jungen auf einem alten schwedischen Bauernhof.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2006,
+    },
+
+    "OLAK5uy_mgZx2NeY8E2oDeS0foWwg9-kdhvI5aMEk": {
+        "description": "Ein einfallsreicher Junge beschließt, sein Leben besonders lustig zu gestalten, und sorgt damit prompt für neue Verwicklungen.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_mcXFSFjoT4GZOScOR06oBQG5Sm6sqDYpM": {
+        "description": "Ein gut gemeinter, aber improvisierter Versuch, einem schmerzenden Zahn Abhilfe zu verschaffen, gerät gründlich aus den Fugen.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2023,
+    },
+
+    "OLAK5uy_llBB5F09mR-y59xOqfXtfxSUZudMv-JGg": {
+        "description": "Ein gutmütiger, aber tollpatschiger Junge sorgt mit seinen wohlgemeinten Einfällen auf dem Hof für herrliches Chaos.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2006,
+    },
+
+    "OLAK5uy_lV7PzLThlgVveps5dBBB5qerDijjowsf8": {
+        "description": "Ein gutgemeinter Aufräum-Eifer sorgt dafür, dass auf dem heimischen Hof am Ende mehr Chaos herrscht als vorher.",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_lCSZHmbFIwd-aqQxqpg_5ka6NxrDQze44": {
+        "description": "Ein Junge erreicht nach zahllosen kleinen Streichen einen besonderen Meilenstein beim Schnitzen hölzerner Figuren.",
+        "genre": ["family"],
+        "source_release_year": 2022,
+        "min_age": 3,
+    },
+
+    "OLAK5uy_kpve6O1MFeJC2innaukfOraWOEHyomjHE": {
+        "description": "Ein kleiner Schabernack endet damit, dass ein Junge mit dem Kopf in einer Schüssel feststeckt und alle in Aufregung versetzt.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2022,
+    },
+
+    "OLAK5uy_kd0_YxNi0eb3vdTqZi6QmNDSDtwlAFnzE": {
+        "description": "Mitten in einer gefährlichen Situation beweist ein kleiner Schlingel unerwarteten Mut und rettet damit den Tag.",
+        "series": "Michel aus Lönneberga",
+        "genre": ["family"],
+        "min_age": 3,
+        "source_release_year": 2023,
+    },
+
     "OLAK5uy_nY3qxurbWZa4pzbm8JA3MMsioemOZSVT0": {
         "description": "Ein außergewöhnlich starkes, freies Mädchen lebt ganz ohne Erwachsene und stellt mit Witz alle Regeln auf den Kopf.",
         "series": "Pippi Langstrumpf",

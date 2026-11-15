@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T20:39:04Z",
+  "generated_at": "2026-11-15T22:05:38Z",
   "items": [
     {
       "id": 43,
@@ -157,6 +157,126 @@
       "min_age": 6,
       "age_tag": "6_8",
       "source_release_year": 2024,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 230,
+      "title": "Als Michel \"Das große Aufräumen von Katthult\" veranstaltete",
+      "thumbnail_url": "https://i.ytimg.com/vi/y53411cGfFo/maxresdefault.jpg",
+      "duration_seconds": 3254,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lV7PzLThlgVveps5dBBB5qerDijjowsf8",
+      "description": "Ein gutgemeinter Aufräum-Eifer sorgt dafür, dass auf dem heimischen Hof am Ende mehr Chaos herrscht als vorher.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2022,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 227,
+      "title": "Als Michel den Kopf in die Suppenschüssel steckte",
+      "thumbnail_url": "https://i.ytimg.com/vi/mXJOfJoLCC4/maxresdefault.jpg",
+      "duration_seconds": 3182,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kpve6O1MFeJC2innaukfOraWOEHyomjHE",
+      "description": "Ein kleiner Schabernack endet damit, dass ein Junge mit dem Kopf in einer Schüssel feststeckt und alle in Aufregung versetzt.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2022,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 228,
+      "title": "Als Michel ein \"Lustiges Leben führte\"",
+      "thumbnail_url": "https://i.ytimg.com/vi/AjfAmO5oAmM/maxresdefault.jpg",
+      "duration_seconds": 1600,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mgZx2NeY8E2oDeS0foWwg9-kdhvI5aMEk",
+      "description": "Ein einfallsreicher Junge beschließt, sein Leben besonders lustig zu gestalten, und sorgt damit prompt für neue Verwicklungen.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2022,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 231,
+      "title": "Als Michel eine Heldentat vollbrachte",
+      "thumbnail_url": "https://i.ytimg.com/vi/sML4LXWXYe8/maxresdefault.jpg",
+      "duration_seconds": 3710,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kd0_YxNi0eb3vdTqZi6QmNDSDtwlAFnzE",
+      "description": "Mitten in einer gefährlichen Situation beweist ein kleiner Schlingel unerwarteten Mut und rettet damit den Tag.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2023,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 229,
+      "title": "Als Michel sein hundertstes Holzmännchen schnitzte",
+      "thumbnail_url": "https://i.ytimg.com/vi/ypkLtTqrz7I/maxresdefault.jpg",
+      "duration_seconds": 4060,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lCSZHmbFIwd-aqQxqpg_5ka6NxrDQze44",
+      "description": "Ein Junge erreicht nach zahllosen kleinen Streichen einen besonderen Meilenstein beim Schnitzen hölzerner Figuren.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2022,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 232,
+      "title": "Als Michel versuchte, Linas Backenzahn zu ziehen",
+      "thumbnail_url": "https://i.ytimg.com/vi/fsQkqmPFyUM/maxresdefault.jpg",
+      "duration_seconds": 4717,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mcXFSFjoT4GZOScOR06oBQG5Sm6sqDYpM",
+      "description": "Ein gut gemeinter, aber improvisierter Versuch, einem schmerzenden Zahn Abhilfe zu verschaffen, gerät gründlich aus den Fugen.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
       "language": "de"
@@ -2047,6 +2167,26 @@
       "language": "de"
     },
     {
+      "id": 225,
+      "title": "Immer dieser Michel",
+      "thumbnail_url": "https://i.ytimg.com/vi/olEK4KRBLPE/maxresdefault.jpg",
+      "duration_seconds": 3615,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mwEsI9hkHG6ZqR2xj2CrhRFZpuFqwWpbs",
+      "description": "Mehrere kurze Geschichten erzählen von den Streichen eines einfallsreichen Jungen auf einem alten schwedischen Bauernhof.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2006,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
       "id": 196,
       "title": "In der Natur (Wieso? Weshalb? Warum? ERSTLESER)",
       "thumbnail_url": "https://i.ytimg.com/vi/Mwnfh3yiMRg/maxresdefault.jpg",
@@ -2987,6 +3127,26 @@
       "language": "de"
     },
     {
+      "id": 226,
+      "title": "Michel bringt die Welt in Ordnung",
+      "thumbnail_url": "https://i.ytimg.com/vi/gfJuvfBj9aA/maxresdefault.jpg",
+      "duration_seconds": 3110,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_llBB5F09mR-y59xOqfXtfxSUZudMv-JGg",
+      "description": "Ein gutmütiger, aber tollpatschiger Junge sorgt mit seinen wohlgemeinten Einfällen auf dem Hof für herrliches Chaos.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2006,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
       "id": 139,
       "title": "Michel in Der Suppenschüssel",
       "thumbnail_url": "https://i.ytimg.com/vi/VL1qhY_xRK0/maxresdefault.jpg",
@@ -3022,6 +3182,26 @@
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1972,
+      "seasonal": null,
+      "awards": [],
+      "language": "de"
+    },
+    {
+      "id": 224,
+      "title": "Michel muss mehr Männchen machen",
+      "thumbnail_url": "https://i.ytimg.com/vi/KJ_66CHuIkY/maxresdefault.jpg",
+      "duration_seconds": 3634,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mxe83gXRcV-vpR7KXHM_SbLW6hgzAw5eg",
+      "description": "Nach einem seiner Streiche muss ein einfallsreicher Bauernjunge zur Strafe geduldig kleine Schnitzfiguren anfertigen.",
+      "series": "Michel aus Lönneberga",
+      "position_in_series": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
       "language": "de"

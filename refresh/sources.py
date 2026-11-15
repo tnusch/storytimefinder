@@ -36,6 +36,78 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_mxe83gXRcV-vpR7KXHM_SbLW6hgzAw5eg",
+        "label": "Michel muss mehr Männchen machen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mwEsI9hkHG6ZqR2xj2CrhRFZpuFqwWpbs",
+        "label": "Immer dieser Michel",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_llBB5F09mR-y59xOqfXtfxSUZudMv-JGg",
+        "label": "Michel bringt die Welt in Ordnung",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kpve6O1MFeJC2innaukfOraWOEHyomjHE",
+        "label": "Als Michel den Kopf in die Suppenschüssel steckte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mgZx2NeY8E2oDeS0foWwg9-kdhvI5aMEk",
+        "label": "Als Michel ein \"Lustiges Leben führte\"",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lCSZHmbFIwd-aqQxqpg_5ka6NxrDQze44",
+        "label": "Als Michel sein hundertstes Holzmännchen schnitzte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lV7PzLThlgVveps5dBBB5qerDijjowsf8",
+        "label": "Als Michel \"Das große Aufräumen von Katthult\" veranstaltete",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kd0_YxNi0eb3vdTqZi6QmNDSDtwlAFnzE",
+        "label": "Als Michel eine Heldentat vollbrachte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mcXFSFjoT4GZOScOR06oBQG5Sm6sqDYpM",
+        "label": "Als Michel versuchte, Linas Backenzahn zu ziehen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_k-aHXnvyhnC0p4MNew35XinqIbS5Jvu6A",
         "label": "Die unendliche Geschichte",
         "language": "de",
