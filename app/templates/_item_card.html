@@ -39,9 +39,16 @@
        section) - get_sequel_context() already only keys sequel-series
        items, so a plain lookup here is both correct and sufficient. #}
     {% set seq = sequel_context.get(item.id) %}
-    {% if seq %}
+    {% set variant = item.variant if item.series else None %}
+    {% if seq or variant %}
     <p class="card-series-nav">
-      {% if seq.position and seq.total %}
+      {% if variant %}
+        <span class="tag tag-series">{{ t('variant_' ~ variant) }}</span>
+      {% endif %}
+      {% if seq and seq.original %}
+        <a class="series-nav-link" href="{{ seq.original.youtube_music_url }}" target="_blank" rel="noopener noreferrer">{{ t('variant_original') }} {{ seq.original.title }}{% if seq.original.source_release_year %} ({{ seq.original.source_release_year }}){% endif %}</a>
+      {% endif %}
+      {% if seq and seq.position and seq.total %}
         <span class="tag tag-series">{{ t('series_part_label', n=seq.position, total=seq.total) }}</span>
       {% endif %}
       {% if seq.prev %}

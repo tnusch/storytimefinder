@@ -21,7 +21,7 @@
   while for many new items - the page waits for it to finish before showing
   output. To regenerate a single item's suggestion, use its
   <strong>Regenerate suggestion</strong> button on the
-  <a href="{{ url_for('admin.suggestions') }}">Suggestions</a> screen instead.
+  <a href="{{ url_for('admin.suggestions') }}">Review</a> screen instead.
 </p>
 
 <form method="post" action="{{ url_for('admin.fetch_run') }}">
@@ -51,12 +51,12 @@
       responses</span>
     </label>
     <label class="checkbox-label checkbox-option">
-      <input type="checkbox" name="skip_claude">
+      <input type="checkbox" name="skip_claude" checked>
       <span><code>--skip-claude</code> - skip the Claude suggestion call for
       new items entirely (item details are still fetched from YouTube as
       usual). Use this to curate descriptions by hand instead, e.g. with the
       prompt-builder on the
-      <a href="{{ url_for('admin.suggestions') }}">Suggestions</a> screen</span>
+      <a href="{{ url_for('admin.suggestions') }}">Review</a> screen</span>
     </label>
   </div>
   <div class="actions">

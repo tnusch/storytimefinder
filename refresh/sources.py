@@ -36,6 +36,502 @@ treat it as a starting skeleton for curation, not a finished catalog.
 SOURCES = [
     {
         "type": "album",
+        "youtube_id": "OLAK5uy_nKlD7cYYo8KyInjqQBpomB2CN4dUCSMdQ",
+        "label": "Woozle Goozle - Der woozelige Schrank",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mevSprrlnuRBvRFA1Uea9OStKs-Q5m0ns",
+        "label": "Woozle Goozle - Der neue Mitbewohner",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mFc2YnxX8zB1ouLPkg7-OmMR0u-RkM96E",
+        "label": "Woozle Goozle - Umweltschutz",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lnLOLZ3J_uDb7VbbgnDGFn9rMbm7LgMpA",
+        "label": "Woozle Goozle - Raumfahrt",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_meWNxB9thLqeRT9V4RbA5L8p4NARi2hFE",
+        "label": "Woozle Goozle - Altes Ägypten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_k9c8uu09srJKPjTzfCYvrvRv13e25pPt8",
+        "label": "Woozle Goozle - Dinosaurier",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lC5tPsq9j9nSwnGryjSRnbxejSZ9PkPZU",
+        "label": "Woozle Goozle - Wüste",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nS7sTCy2vEvzEVXoHAvs-YL38vrTDl7W4",
+        "label": "Woozle Goozle - Raubtiere",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l4XO4NTh3dMZBcWhBODAe-untZECmit3o",
+        "label": "Woozle Goozle - Luft",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nFNmIE5tMHRgeno4JUYCZLsyf7AzYG-wY",
+        "label": "Woozle Goozle - Haie",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kw-kphVJT-Dex1pVXSajrkrUi6X3w5gQc",
+        "label": "Woozle Goozle - Sehen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_k0FC1tqzbUMF0Lh2ia8di5ocbCK1SStbI",
+        "label": "Woozle Goozle - Schlaf",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mP62jcOCIhzRKePsZBBxLALt7K7sHF6zw",
+        "label": "Woozle Goozle - Mond",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mk0nnDSsTDf4U4gNUUqqzISNhoJ6O76LE",
+        "label": "Woozle Goozle - Höhlen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mfbbqV4YMLsu3bxzyLcAP-aAPZr0ZDEHE",
+        "label": "Woozle Goozle - Gruseln",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nlAUFhCAIR-l1PyTTpETlDpU8k-kcbi4k",
+        "label": "Woozle Goozle - Glas",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_k6CFmTjSs_dOfvFNp2RPZLZIZziTEN0xo",
+        "label": "Woozle Goozle - Elektrizität",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mpnbjEDw3z31tO0i0qWH1mG5VfBu6pT-w",
+        "label": "Woozle Goozle - Fahrrad",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nq01DAF8UIqd0DwFcoxsaDpg4h8PtPTrE",
+        "label": "Vom kleinen Waschbären, der nicht aufgab und den großen Sprung wagte",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mjxCxdV6s25c7zdhmQVBuYQKSTquPNXXg",
+        "label": "Vom kleinen Waschbären, der nicht wusste, dass er was ganz Besonderes ist",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kpvpzW_UgVGOGWo_mXaVT5mANQjn3ImoE",
+        "label": "Vom kleinen Waschbären, der sich traute, mutig zu sein",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nCWBT4bA-q87liqUOENx23lPwvPgcbsGQ",
+        "label": "Toy Story 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kAKPndRKv5i5ye3OQj6v4FbAP2QCVSIdg",
+        "label": "Sofia die Erste - Eine Prinzessin unter Prinzen / Die königliche Übernachtungsparty",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lsprJDxiy7VybynYIzHqFXCve4R9EAPfo",
+        "label": "Sofia die Erste - Königliche Zauberschule (Teil 1)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lug6b7z2iyGn_54YVJ6zwr12VQTMcdG9I",
+        "label": "Sofia die Erste - Die Zauberschülerin / Ein königliches Chaos",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_l8iQUtEpebR5iYCaBFfKpkUqf78mNgZwY",
+        "label": "Sofia die Erste - Königliche Zauberschule (Teil 2)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nBltjiSPG-kakIW3xXrvINU13Bc16CbGk",
+        "label": "Sofia die Erste - Die Musik der Trolle / Die schüchterne Prinzessin",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mv4gAAP6Odi6_uTTazXSNDl-3liITyWC4",
+        "label": "Sofia die Erste - Meerjungfrauen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mQqVhss7QvBmRIhWUw10F3OUADYC0ihks",
+        "label": "Sofia die Erste - Abenteuer in der Wüste / Der Haustier-Wettbewerb",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nljg55LpPMXqCJBzVdehVg_uJdQ1zJoPk",
+        "label": "Sofia die Erste - Frohes Fest mit König Roland / Der Prinzessinnen-Test",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nrt0UCAnDjETpOUk3m09vXx6oXFB2EJww",
+        "label": "Sofia die Erste - Die neue Lehrerin / Prinzessin Schmetterling",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lTvsmqnsMt_A3LVadVOtBCYdYwBft2laM",
+        "label": "Sofia die Erste - Der Fluch der Prinzessin Ivy",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kJtpRjSCQYRBHzGcuFWeZXvYVcSdwExU0",
+        "label": "Sofia die Erste - Das verhexte Fest / Das Pegasus-Rennen",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nPXV9opit7OoyvSLOZky30FrLpcxBf87s",
+        "label": "Sofia die Erste - Der Wunschbrunnen / Die Höhle des Jaguars",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_n6xgrygYLw9Tcy_Vqp1JZe1YjoMoYcoXk",
+        "label": "Sofia die Erste - Ein Geschenk von Herzen / Wo ist Minimus?",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_m0hPKy1P9QE2y4thZYMeKW1iadAuFqLqQ",
+        "label": "Sofia die Erste - Der Lampengeist / Trolle in Not",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nsBJzhXHfYJRL5b7ePWT8USaWr8pyBsA0",
+        "label": "Sofia die Erste - Die geheime Bibliothek / Olaf und die Geschichte von Miss Nettle",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lbf91eQEV3A3nORpohOSLq7Azpkw6TpQE",
+        "label": "Sofia die Erste - Die Hexenweihe / Das Drachenfest",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mfop4nUZTa3yXn_jSyktOg_ICrAp6T4fM",
+        "label": "Sofia die Erste - Die Kaninchen-Verwechslung / Stürmische Lani",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lxdgvEfuiIPgRmECUgmmb9kTEmux6AQwY",
+        "label": "Sofia die Erste - Die Macht des Amuletts / Die Konferenz der Zauberer",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lpiIii1iLyhhFL7Wy6C8vHbTTC8whLSJM",
+        "label": "Sofia die Erste - Die geheime Bibliothek - Die Geschichte des noblen Ritters / Die geheime Bibliothek - Die Geschichte der Ewigen Flamme",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nVUTWZvOA-dqFFi1d3hV92bVEabd_2ynE",
+        "label": "Sofia die Erste - Camp Wildnis-Wald / Königlicher Urlaub",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_llnq4P2pxrf1zc_vdTBvLz-ez_WnVfuww",
+        "label": "Sofia die Erste - Die Mystischen Inseln (Teil 1 & 2)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_k4XygqSrQHNwhprBGCpc56lm9elFk-mnw",
+        "label": "Sofia die Erste - Die Mystischen Inseln (Teil 3 & 4)",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mlk7hz4fh71O1wdELogfNrOF4GDTTXHHU",
+        "label": "Sofia die Erste - Auf einmal Prinzessin",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_my-pnR6u4KmFr-2cAIyyTnfMk3o9QHBzM",
+        "label": "Anna und die wilden Tiere - Die Zähne des Alligators + Wie pupst der Delfin?",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mT2UX0HWg_1S5tn-0MG3dAWyDGGpOey2Q",
+        "label": "Anna und die wilden Tiere - Der Falkner und seine Greifvögel + Wie wild ist das Wildpferd",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mKGgQ71T2VGF0rcXlUGcGsvSEPR0JYhjw",
+        "label": "Fluch der Karibik - Fremde Gezeiten",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mHtO9kOClycCW1UkRokDP_sZ6yuc2_YSM",
+        "label": "Fluch der Karibik - Am Ende der Welt",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lAHSAzFZyP9SPNLxVEhJJO01k8TMPNv-E",
+        "label": "Fluch der Karibik 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mIHPHb9OHta6RPjd3vZR2gKpkLgQkRNzE",
+        "label": "Fluch der Karibik",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mRKqn604hzD9BAuYk2pSlsPZkuk1S1Jac",
+        "label": "Fluch der Karibik - Salazars Rache",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_nXC4mIAq9Sj5bpJzmXSECKqR7YazNv1pQ",
+        "label": "Minions 2 - Auf der Suche nach dem Mini-Boss",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lbROi7OjKXwQxch1kN21HaP3eQHOeMjAM",
+        "label": "Minions",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_lybh9C2bHKFrnj6fEAq9kU_kJPIgCZKXc",
+        "label": "Jim Knopf und Lukas der Lokomotivführer",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mL8XIakMMGbRpzYl0N-AP-MIUMNITYX1U",
+        "label": "Momo",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kSXJbi_AM-BZOZGnNwgSRlAdIoXryVSN8",
+        "label": "Der satanarchäolügenialkohöllische Wunschpunsch",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kXXiCH2EvFSH5mkuKU5178pgs6qPtVcDk",
+        "label": "Momo",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mq9EeCSkGMZo4Yd57MTMfeRbTbo-Vz5Ig",
+        "label": "Wendy 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kkjjRgEkLkOx0fcpHfYdtvXwIMZhsJOAA",
+        "label": "Wendy",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_kp_48MvIdf0CIOQxb2AdhGM5eDR0lqSW0",
+        "label": "Paddington 2",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
+        "youtube_id": "OLAK5uy_mZyuypM6NnuR7S94P0ILBiILhZb1zpfmw",
+        "label": "Paddington",
+        "language": "de",
+        "active": True,
+    },
+
+    {
+        "type": "album",
         "youtube_id": "OLAK5uy_mxe83gXRcV-vpR7KXHM_SbLW6hgzAw5eg",
         "label": "Michel muss mehr Männchen machen",
         "language": "de",

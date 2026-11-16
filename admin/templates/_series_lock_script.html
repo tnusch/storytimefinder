@@ -1,0 +1,74 @@
+<script>
+  // series_type/genre/franchise/min_age for every SERIES_OVERRIDES
+  // entry, keyed by series name - used below to disable and prefill an
+  // item's genre/franchise/min_age fields whenever its Series picker
+  // resolves to a series with an entry here, whatever its series_type
+  // (those three fields come from here instead - see overrides.py's
+  // docstring).
+  window.SERIES_OVERRIDES = {{ series_overrides | tojson }};
+
+  (function () {
+    function snapshotOriginal(grid) {
+      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
+        if (field.dataset.originalValue === undefined) {
+          // A <select multiple> (genre)'s own .value only ever returns the
+          // first selected option, losing every other selection - snapshot
+          // the full set as JSON instead so it can be fully restored later.
+          field.dataset.originalValue = field.multiple
+            ? JSON.stringify(Array.prototype.map.call(field.selectedOptions, function (o) { return o.value; }))
+            : field.value;
+        }
+      });
+    }
+
+    function applySeriesLock(select) {
+      var grid = select.closest(".field-grid");
+      if (!grid) return;
+      snapshotOriginal(grid);
+
+      var newInput = grid.querySelector(".series-new-input");
+      if (newInput) newInput.hidden = select.value !== "__new__";
+
+      var seriesName = select.value === "__new__" ? (newInput ? newInput.value.trim() : "") : select.value;
+      var meta = seriesName ? window.SERIES_OVERRIDES[seriesName] : null;
+      var isResolved = !!meta;
+
+      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
+        field.disabled = isResolved;
+        var key = field.dataset.field;
+        if (field.multiple) {
+          // genre is the one multi-select field here - setting .value
+          // doesn't work for it, so resolve the full set of values that
+          // should be selected (either the series' own list, or this
+          // field's snapshotted original) and toggle each <option> in turn.
+          var resolvedValues = isResolved
+            ? (meta && Array.isArray(meta[key]) ? meta[key] : [])
+            : JSON.parse(field.dataset.originalValue);
+          Array.prototype.forEach.call(field.options, function (opt) {
+            opt.selected = resolvedValues.indexOf(opt.value) !== -1;
+          });
+        } else if (isResolved) {
+          field.value = meta && meta[key] != null ? meta[key] : "";
+        } else {
+          field.value = field.dataset.originalValue;
+        }
+        if (isResolved) {
+          field.title = 'Resolved from "' + seriesName + '"\'s series metadata below - edit it there instead.';
+        } else {
+          field.removeAttribute("title");
+        }
+      });
+    }
+
+    document.querySelectorAll(".series-picker").forEach(function (select) {
+      applySeriesLock(select);
+      select.addEventListener("change", function () { applySeriesLock(select); });
+
+      var grid = select.closest(".field-grid");
+      var newInput = grid && grid.querySelector(".series-new-input");
+      if (newInput) {
+        newInput.addEventListener("input", function () { applySeriesLock(select); });
+      }
+    });
+  })();
+</script>

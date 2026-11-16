@@ -56,6 +56,83 @@
   </form>
 </section>
 
+<section class="consistency-warnings" id="bulk-add">
+  <h2>Add sources from a list</h2>
+  <p class="hint">
+    1. Paste a list of YouTube Music links with their titles - e.g. copied straight from a
+    YouTube Music search or artist page (a link line followed by its title line; repeated links
+    and "Show• 2023"-style lines are ignored). 2. Copy the generated prompt into a Claude.ai
+    chat - it cleans up the titles, guesses each series, and asks you back when it isn't sure.
+    3. Paste Claude's JSON reply below and preview it. 4. Check/edit each row, then confirm.
+    Only confirmed rows are written to <code>sources.py</code>; an album's series goes into
+    <code>overrides.py</code>. Album links (<code>/browse/MPREb_...</code>) are resolved to
+    their playlist id when you preview - the only step in this tool that goes online.
+  </p>
+  <form method="post" action="{{ url_for('admin.sources_prompt') }}#bulk-add">
+    <textarea name="source_list" class="prompt-textarea" rows="6" placeholder="https://music.youtube.com/browse/MPREb_...&#10;Sofia die Erste - Auf einmal Prinzessin (Hörspiel zum TV-Special)">{{ source_list or "" }}</textarea>
+    <div class="actions">
+      <button type="submit" class="btn btn-secondary">Build prompt</button>
+    </div>
+  </form>
+
+  {% if source_prompt %}
+    <h3>Prompt ({{ source_items|length }} item{{ "s" if source_items|length != 1 }})</h3>
+    <textarea id="source-prompt" class="prompt-textarea" rows="8" readonly>{{ source_prompt }}</textarea>
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" data-copy-target="#source-prompt">Copy to clipboard</button>
+    </div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('admin.sources_import_preview') }}#bulk-add">
+    <label for="source-import-json">Paste Claude's JSON reply</label>
+    <textarea id="source-import-json" name="json" class="prompt-textarea" rows="6" placeholder='{"MPREb_...": {"label": "...", "series": "...", "language": "de"}}'>{{ import_json or "" }}</textarea>
+    <div class="actions">
+      <button type="submit" class="btn btn-secondary">Preview import</button>
+    </div>
+  </form>
+
+  {% if import_rows %}
+    <h3>Import preview</h3>
+    <form method="post" action="{{ url_for('admin.sources_import_confirm') }}">
+      <input type="hidden" name="row_count" value="{{ import_rows|length }}">
+      <datalist id="series-name-options">
+        {% for name in series_names %}<option value="{{ name }}">{% endfor %}
+      </datalist>
+      <table class="source-table">
+        <thead>
+          <tr><th>Add</th><th>Type</th><th>Label</th><th>Series</th><th>Language</th><th>YouTube ID</th></tr>
+        </thead>
+        <tbody>
+          {% for row in import_rows %}
+          {% set i = loop.index0 %}
+          <tr class="{{ 'is-inactive' if row.error }}">
+            <td><input type="checkbox" name="include_{{ i }}" {{ "checked" if not row.error }}></td>
+            <td>
+              <select name="type_{{ i }}">
+                {% for t in source_types %}
+                  <option value="{{ t }}" {{ "selected" if t == row.type }}>{{ t }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td><input type="text" name="label_{{ i }}" value="{{ row.label }}"></td>
+            <td><input type="text" name="series_{{ i }}" value="{{ row.series }}" list="series-name-options"></td>
+            <td><input type="text" name="language_{{ i }}" value="{{ row.language }}" size="3"></td>
+            <td>
+              <input type="hidden" name="youtube_id_{{ i }}" value="{{ row.youtube_id }}">
+              <code>{{ row.youtube_id or row.input_id }}</code>
+              {% if row.error %}<div class="hint">{{ row.error }}</div>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Add checked rows to sources.py</button>
+      </div>
+    </form>
+  {% endif %}
+</section>
+
 <section>
   <h2>Current sources ({{ sources|length }})</h2>
   <p class="hint">

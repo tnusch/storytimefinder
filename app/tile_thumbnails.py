@@ -26,6 +26,7 @@ TILE_THUMBNAILS: dict[str, dict[str, str]] = {
     "age": {
         "3_5": "https://i.ytimg.com/vi/g1t5A6Udygc/maxresdefault.jpg",
         "6_8": "https://i.ytimg.com/vi/mkINOECXZco/maxresdefault.jpg",
+        "9_11": "https://i.ytimg.com/vi/eS0EP9_wQ_k/maxresdefault.jpg",
     },
     "genre": {
         "adventure": "https://i.ytimg.com/vi/cw14Cu7SVCw/maxresdefault.jpg",

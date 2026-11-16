@@ -11,6 +11,10 @@ itself stays fully filterable via the (advanced-panel) chips, and still
 shows normally on every item card that has it. This is a discovery-UI
 declutter tool, not a content moderation or data-correction mechanism.
 
+Series tiles are hidden by default (HIDDEN_BY_DEFAULT): a new series only
+gets a tile once it's added to SHOWN_TILES (the same "Hidden" checkbox on
+the Values screen, unchecked).
+
 Categories match the four guided-filter sidebar entries: "age", "genre",
 "series", "franchise". ("duration" was removed as a guided-filter category
 - Dauer is still filterable, just only via its advanced-panel chip.)
@@ -18,49 +22,27 @@ Categories match the four guided-filter sidebar entries: "age", "genre",
 
 from __future__ import annotations
 
+# Categories whose tiles are hidden unless explicitly listed in SHOWN_TILES
+# (opt-in) - "series" grows with every new Reihe, most of which are small
+# film series that would clutter the tile grid. HIDDEN_TILES is ignored for
+# these categories; every other category stays opt-out via HIDDEN_TILES.
+HIDDEN_BY_DEFAULT: tuple[str, ...] = ("series",)
+
+SHOWN_TILES: dict[str, list[str]] = {
+    "series": [
+        "Bibi Blocksberg",
+        "Marvels Spidey und seine Super-Freunde",
+        "Pettersson und Findus",
+        "Pippi Langstrumpf",
+        "Sofia die Erste",
+        "Woozle Goozle",
+    ],
+}
+
 HIDDEN_TILES: dict[str, list[str]] = {
     "age": [],
     "genre": [],
-    "series": [
-        "Alice im Wunderland",
-        "Alles steht Kopf",
-        "Arielle",
-        "Bambi",
-        "Bärenbrüder",
-        "Cars",
-        "Cinderella",
-        "Das Dschungelbuch",
-        "Das kleine WIR",
-        "Der König der Löwen",
-        "Die Eiskönigin",
-        "Die Monster AG",
-        "Die Schöne und das Biest",
-        "Die Unglaublichen",
-        "Dr. Brumm",
-        "Drachenzähmen leicht gemacht",
-        "Kung Fu Panda",
-        "Lieselotte",
-        "Lilo & Stitch",
-        "Madagascar",
-        "Marvels Iron Man und seine fantastischen Freunde",
-        "Merida",
-        "Michel aus Lönneberga",
-        "Micky Maus",
-        "Mulan",
-        "National Geographic Kids",
-        "Peter Pan",
-        "Planes",
-        "Pocahontas",
-        "Ralph Reichts",
-        "Shrek",
-        "Susi und Strolch",
-        "Tarzan",
-        "Toy Story",
-        "Vaiana",
-        "Wieso? Weshalb? Warum? ERSTLESER",
-        "Winnie Puuh",
-        "Zoomania",
-    ],
+    "series": [],
     "franchise": [
         "bibi_blocksberg",
     ],

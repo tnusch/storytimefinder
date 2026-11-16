@@ -168,8 +168,8 @@ CREATE TABLE IF NOT EXISTS items (
     -- genre/franchise/min_age are per-item, curated entirely through
     -- overrides.py - there's no API source for any of them, so they're
     -- always None unless ITEM_OVERRIDES sets them explicitly, UNLESS this
-    -- item's `series` has an entry in the series table below with
-    -- series_type='episodic', in which case sync_source() resolves these
+    -- item's `series` has an entry in the series table below (any
+    -- series_type), in which case sync_source() resolves these
     -- three (plus age_tag) from that series row instead - see
     -- overrides.py's docstring and sync_source()'s resolution logic.
     -- genre/franchise are each checked against a fixed value list (see
@@ -212,20 +212,27 @@ CREATE TABLE IF NOT EXISTS items (
     -- '[]' or '[{"name": "...", "category": "...", "year": 2026}]' - see
     -- AWARD_VALUES below.
     awards TEXT NOT NULL DEFAULT '[]',
+    -- NULL for an item on its series' main line; otherwise one of
+    -- VARIANT_VALUES ("remake" - a new version of the part with the same
+    -- position_in_series, "spin_off" - a prequel/side story outside the
+    -- numbering). Curated per item in overrides.py; app/data.py's
+    -- get_sequel_context() numbers and links only the main line.
+    variant TEXT,
     last_refreshed TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_items_source ON items(source_id);
 
--- Series-level metadata for an EPISODIC series (see overrides.py's
--- SERIES_OVERRIDES docstring) - keyed by series name (matching items.series
--- text, not a foreign key - a series here can exist before any item
--- references it, or briefly after the last one referencing it is removed).
+-- Series-level metadata for any series with a SERIES_OVERRIDES entry -
+-- episodic, sequel, or untyped (see overrides.py's SERIES_OVERRIDES
+-- docstring) - keyed by series name (matching items.series text, not a
+-- foreign key - a series here can exist before any item references it, or
+-- briefly after the last one referencing it is removed).
 -- genre/franchise/min_age/age_tag here are what sync_source() resolves
--- onto every member item's own row (see there); series_type also decides
--- app/data.py's episodic-vs-sequel-vs-neither branching once exported into
--- catalog.json's own "series" section. A sequel series (or any series with
--- no row here at all) simply isn't represented in this table.
+-- onto every member item's own row (see there); series_type (nullable)
+-- also decides app/data.py's episodic-vs-sequel-vs-neither branching once
+-- exported into catalog.json's own "series" section. A series with no
+-- SERIES_OVERRIDES entry simply isn't represented in this table.
 CREATE TABLE IF NOT EXISTS series (
     name TEXT PRIMARY KEY,
     series_type TEXT,
@@ -287,6 +294,13 @@ AWARD_VALUES = {
 # "Values" screen's open-vocabulary add-flow (VALUE_LIST_CONFIG in
 # admin/file_ops.py) the way genre/franchise are.
 SERIES_TYPE_VALUES = {"sequel", "episodic"}
+# Fields a SERIES_OVERRIDES entry centralizes for every member item (any
+# series_type) - sync_source() reads them from the series entry instead of
+# the item's own ITEM_OVERRIDES entry.
+SERIES_RESOLVED_FIELDS = ("genre", "franchise", "min_age")
+# Per-item `variant`: how an item relates to its series' main line. Unset =
+# main line. Closed vocabulary like SERIES_TYPE_VALUES - see overrides.py.
+VARIANT_VALUES = {"remake", "spin_off"}
 
 # (slug, inclusive lower bound, exclusive upper bound - None means no upper
 # bound) - see derive_age_tag(). Order matters: it's iterated in order and
@@ -352,6 +366,9 @@ def _migrate_schema(conn: sqlite3.Connection) -> None:
     existing = {row[1] for row in conn.execute("PRAGMA table_info(items)").fetchall()}
     if "series_type" not in existing:
         conn.execute("ALTER TABLE items ADD COLUMN series_type TEXT")
+        conn.commit()
+    if "variant" not in existing:
+        conn.execute("ALTER TABLE items ADD COLUMN variant TEXT")
         conn.commit()
 
 
@@ -438,8 +455,8 @@ def sync_series(conn: sqlite3.Connection) -> None:
 
 def get_series_metadata(conn: sqlite3.Connection) -> dict[str, sqlite3.Row]:
     """All series rows, keyed by name - what sync_source() looks up per
-    item to resolve genre/franchise/min_age/age_tag for an episodic
-    series member (see its own docstring)."""
+    item to resolve genre/franchise/min_age/age_tag for a member of any
+    series with a SERIES_OVERRIDES entry (see its own docstring)."""
     conn.row_factory = sqlite3.Row
     return {row["name"]: row for row in conn.execute("SELECT * FROM series").fetchall()}
 
@@ -1166,24 +1183,23 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                 entry_id,
             )
         series_meta = SERIES_OVERRIDES.get(series) if series else None
-        is_episodic = bool(series_meta and series_meta.get("series_type") == "episodic")
 
-        if is_episodic:
+        if series_meta is not None:
             # genre/franchise/min_age come from the series-level entry
-            # instead of this item's own override - see overrides.py's
-            # SERIES_OVERRIDES docstring. sync_series() already validated
-            # these against the fixed vocab lists, so no need to repeat
-            # that here. genre is a list[str] here too, same as the
-            # non-episodic branch below - sync_series() already validated
-            # each value.
+            # instead of this item's own override - for ANY series with a
+            # SERIES_OVERRIDES entry, whatever its series_type (episodic,
+            # sequel, or unset) - see overrides.py's SERIES_OVERRIDES
+            # docstring. sync_series() already validated these against the
+            # fixed vocab lists, so no need to repeat that here. genre is a
+            # list[str] here too, same as the per-item branch below.
             genre = series_meta.get("genre") or []
             franchise = series_meta.get("franchise")
             min_age = series_meta.get("min_age")
-            for field in ("genre", "franchise", "min_age"):
+            for field in SERIES_RESOLVED_FIELDS:
                 if field in override:
                     log.warning(
-                        "Item %s: %r override is ignored - series %r is episodic, set it once in "
-                        "SERIES_OVERRIDES instead",
+                        "Item %s: %r override is ignored - series %r has a SERIES_OVERRIDES entry, "
+                        "set it once there instead",
                         entry_id, field, series,
                     )
         else:
@@ -1223,6 +1239,11 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                 log.warning("Item %s: award %r is not in AWARD_VALUES %s", entry_id, name, sorted(AWARD_VALUES))
         awards_json = json.dumps(awards, ensure_ascii=False)
         genre_json = json.dumps(genre, ensure_ascii=False)
+        variant = override.get("variant")
+        if variant and variant not in VARIANT_VALUES:
+            log.warning("Item %s: variant %r is not in VARIANT_VALUES %s", entry_id, variant, sorted(VARIANT_VALUES))
+        if variant and not series:
+            log.warning("Item %s: variant %r has no effect without a series", entry_id, variant)
 
         if entry_id in existing_ids:
             conn.execute(
@@ -1232,7 +1253,7 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     youtube_music_url = ?, description = ?,
                     series = ?, position_in_series = ?,
                     genre = ?, franchise = ?, min_age = ?, age_tag = ?, source_release_year = ?,
-                    seasonal = ?, awards = ?,
+                    seasonal = ?, awards = ?, variant = ?,
                     last_refreshed = ?
                 WHERE id = ?
                 """,
@@ -1251,6 +1272,7 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     source_release_year,
                     seasonal,
                     awards_json,
+                    variant,
                     now,
                     existing_ids[entry_id],
                 ),
@@ -1263,8 +1285,8 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     (source_id, video_id, title, thumbnail_url, duration_seconds,
                      youtube_music_url, description,
                      series, position_in_series, genre, franchise, min_age, age_tag,
-                     source_release_year, seasonal, awards, last_refreshed)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     source_release_year, seasonal, awards, variant, last_refreshed)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     source["id"],
@@ -1283,6 +1305,7 @@ def sync_source(conn: sqlite3.Connection, source: sqlite3.Row, fetched_items: di
                     source_release_year,
                     seasonal,
                     awards_json,
+                    variant,
                     now,
                 ),
             )
@@ -1365,7 +1388,7 @@ def export_catalog(conn: sqlite3.Connection) -> int:
                items.youtube_music_url, items.description,
                items.series, items.position_in_series,
                items.genre, items.franchise, items.min_age, items.age_tag, items.source_release_year,
-               items.seasonal, items.awards,
+               items.seasonal, items.awards, items.variant,
                sources.language
         FROM items
         JOIN sources ON sources.id = items.source_id
@@ -1620,8 +1643,10 @@ def _series_consistency_warnings(by_series: dict[str, list[tuple[str, str, dict]
       - items sharing a series disagreeing on genre/franchise/seasonal -
         a real series is usually consistent on all three, so a mismatch is
         more often a typo/forgotten field than a deliberate choice.
-      - two items in the same series claiming the same position_in_series -
-        almost always a copy-paste mistake.
+      - two main-line items in the same series claiming the same
+        position_in_series - almost always a copy-paste mistake. Items with
+        a `variant` (a remake deliberately shares its original's position;
+        a spin-off sits outside the numbering) are left out of this check.
     `entry_ids` lists every item involved in that particular warning, in
     the same order as `by_series[series]` - callers that just want the text
     (e.g. CLI logging) can ignore the second element; the admin UI uses it
@@ -1646,7 +1671,7 @@ def _series_consistency_warnings(by_series: dict[str, list[tuple[str, str, dict]
         positions: dict[int, list[tuple[str, str]]] = {}
         for entry_id, label, fields in entries:
             position = fields.get("position_in_series")
-            if position is None:
+            if position is None or fields.get("variant"):
                 continue
             positions.setdefault(position, []).append((entry_id, label))
         for position, items in positions.items():
@@ -1667,7 +1692,7 @@ def _check_series_consistency(conn: sqlite3.Connection) -> None:
     """
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
-        "SELECT video_id, title, series, position_in_series, genre, franchise, seasonal "
+        "SELECT video_id, title, series, position_in_series, genre, franchise, seasonal, variant "
         "FROM items WHERE series IS NOT NULL"
     ).fetchall()
 
@@ -1761,7 +1786,7 @@ def check_missing_fields(
     curating.
 
     `series_overrides` is overrides.py's SERIES_OVERRIDES dict - for an
-    item whose `series` has a `series_type == "episodic"` entry there,
+    item whose `series` has an entry there (any series_type),
     `genre`/`min_age` are satisfied by that series-level entry
     instead of requiring a per-item value (see overrides.py's docstring);
     this function doesn't separately check the series-level entry itself
@@ -1776,12 +1801,11 @@ def check_missing_fields(
     for entry_id, title in sorted(titles.items(), key=lambda kv: kv[1] or kv[0]):
         override = overrides.get(entry_id, {})
         series = override.get("series")
-        series_meta = series_overrides.get(series) if series else None
-        is_episodic = bool(series_meta and series_meta.get("series_type") == "episodic")
+        has_series_meta = bool(series) and series in series_overrides
         missing = [
             field
             for field in CORE_OVERRIDE_FIELDS
-            if not (is_episodic and field in ("genre", "min_age")) and not override.get(field)
+            if not (has_series_meta and field in SERIES_RESOLVED_FIELDS) and not override.get(field)
         ]
         if missing:
             text = f"{title!r} ({entry_id}) is missing: {', '.join(missing)}"

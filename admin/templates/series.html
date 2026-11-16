@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Series - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1>Series</h1>
+<p class="hint">
+  Every series used by an item or defined in <code>SERIES_OVERRIDES</code>. A series' entry sets
+  genre/franchise/min age for <em>all</em> its items (whatever its type); <strong>Type</strong>
+  only controls the public display: <code>episodic</code> collapses the series into one card,
+  <code>sequel</code> adds "Teil N von M" badges and prev/next links, <code>(none)</code> shows
+  plain cards. Saving an entry is authoritative - an unchecked genre or "(none)" removes that
+  value. A series without an entry gets one prefilled with its items' most-used values; creating it
+  can also remove the items' own (then ignored) copies of those values. Positions decide the
+  episode/sequel order - fix duplicates and gaps in each series' member list.
+</p>
+
+{% set n_no_entry = series_rows | rejectattr("has_entry") | list | length %}
+{% set ns = namespace(problems=0) %}
+{% for r in series_rows %}{% if r.duplicate_positions or (r.unpositioned and r.members|length > 1) %}{% set ns.problems = ns.problems + 1 %}{% endif %}{% endfor %}
+<div class="catalog-filters">
+  <input type="search" id="series-q" placeholder="Search series..." aria-label="Search series">
+  <select id="series-type" aria-label="Type">
+    <option value="">All types</option>
+    <option value="episodic">episodic</option>
+    <option value="sequel">sequel</option>
+    <option value="none">(no type)</option>
+    <option value="no-entry">No series entry ({{ n_no_entry }})</option>
+  </select>
+  <label class="checkbox-label"><input type="checkbox" id="series-problems"> Only with position problems ({{ ns.problems }}: duplicate or missing positions)</label>
+</div>
+<p class="count" id="series-count">{{ series_rows|length }} series</p>
+
+{% for row in series_rows %}
+{% set member_count = row.members|length %}
+{% set values = row if row.has_entry else row.suggested %}
+<section class="series-card"
+         id="series-{{ row.anchor }}"
+         data-name="{{ row.name | lower }}"
+         data-type="{{ row.series_type if row.has_entry and row.series_type else ('none' if row.has_entry else 'no-entry') }}"
+         data-problems="{{ '1' if row.duplicate_positions or (row.unpositioned and member_count > 1) }}">
+  <header class="series-card-head">
+    <h2>{{ row.name }}</h2>
+    {% if row.has_entry %}
+      <span class="badge">{{ row.series_type or "no type" }}</span>
+    {% else %}
+      <span class="badge badge-warn">no series entry</span>
+    {% endif %}
+    <span class="badge">{{ member_count }} item{{ "s" if member_count != 1 }}</span>
+    {% if not member_count %}<span class="badge badge-warn">no items use it</span>{% endif %}
+    {% if row.duplicate_positions %}<span class="badge badge-error">duplicate #{{ row.duplicate_positions | join(", #") }}</span>{% endif %}
+    {% if row.gaps %}<span class="badge" title="Usually just a part that isn't in the catalog">no #{{ row.gaps | join(", #") }}</span>{% endif %}
+    {% if row.unpositioned and member_count > 1 %}<span class="badge badge-warn">{{ row.unpositioned }} without position</span>{% endif %}
+    {% if member_count %}<a class="series-catalog-link" href="{{ url_for('admin.catalog', series=row.name) }}">Show in Catalog →</a>{% endif %}
+  </header>
+
+  <form method="post" action="{{ url_for('admin.series_save', series_name=row.name) }}" class="series-meta-form">
+    <label>
+      Type
+      <select name="series_type">
+        <option value="">(none)</option>
+        {% for t in ["episodic", "sequel"] %}
+          <option value="{{ t }}" {% if row.series_type == t %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <fieldset class="genre-chips">
+      <legend>Genre</legend>
+      {% for g in genre_values %}
+        <label class="chip-check"><input type="checkbox" name="genre" value="{{ g }}" {% if g in (values.genre or []) %}checked{% endif %}><span>{{ g }}</span></label>
+      {% endfor %}
+    </fieldset>
+    <label>
+      Franchise
+      <select name="franchise">
+        <option value="">(none)</option>
+        {% for f in franchise_values %}
+          <option value="{{ f }}" {% if values.franchise == f %}selected{% endif %}>{{ f }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Min age
+      <input type="number" name="min_age" min="0" value="{{ values.min_age if values.min_age is not none else '' }}">
+    </label>
+    <div class="actions">
+      {% if row.has_entry %}
+        <button type="submit" class="btn btn-primary">Save</button>
+      {% else %}
+        <label class="checkbox-label"><input type="checkbox" name="strip_members" checked> Remove the items' own genre/franchise/min age</label>
+        <button type="submit" class="btn btn-primary">Create entry</button>
+        <span class="hint">Prefilled with the items' most-used values.</span>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if member_count %}
+  <details class="series-members" {% if row.duplicate_positions %}open{% endif %}>
+    <summary>Items &amp; positions ({{ member_count }})</summary>
+    <form method="post" action="{{ url_for('admin.series_positions', series_name=row.name) }}" class="positions-form">
+      <table class="positions-table">
+        <thead><tr><th>#</th><th>Title</th><th>Year</th><th>Variant</th></tr></thead>
+        <tbody>
+          {% for m in row.members %}
+          <tr data-title="{{ m.title | lower }}" data-variant="{{ m.variant or '' }}" class="{{ 'is-variant' if m.variant }}">
+            <td><input type="number" name="pos_{{ m.entry_id }}" min="0" value="{{ m.position if m.position is not none else '' }}"
+                  class="{{ 'is-duplicate' if m.position in row.duplicate_positions and not m.variant }}" aria-label="Position of {{ m.title }}"></td>
+            <td><a href="{{ url_for('admin.catalog') }}#entry-{{ m.entry_id }}">{{ m.title }}</a></td>
+            <td>{{ m.year or "" }}</td>
+            <td>{% if m.variant %}<span class="badge">{{ m.variant | replace("_", "-") }}</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary renumber" data-order="current"
+          title="1, 2, 3... in the order shown (by position, then title) - closes gaps and resolves duplicates. Remakes and spin-offs are skipped.">Number main line in this order</button>
+        <button type="button" class="btn btn-secondary renumber" data-order="title" title="Remakes and spin-offs are skipped.">Number main line by title</button>
+        <button type="submit" class="btn btn-primary">Save positions</button>
+      </div>
+      <p class="hint">Renumbering only fills in the fields - nothing changes until you Save positions. A blank field clears that item's position. Remakes keep the position of the part they remake; spin-offs need none. Set an item's variant in its Catalog editor or with the Catalog's bulk "Set variant".</p>
+    </form>
+  </details>
+  {% endif %}
+
+  <details class="series-manage">
+    <summary>Rename{% if row.has_entry %} / remove entry{% endif %}</summary>
+    <form method="post" action="{{ url_for('admin.series_rename', series_name=row.name) }}" class="inline-form">
+      <input type="text" name="new_name" value="{{ row.name }}" required aria-label="New series name">
+      <button type="submit" class="btn btn-secondary">Rename everywhere</button>
+      <span class="hint">Updates the series entry and every item (and pending suggestion) using this name. Renaming onto another series without its own entry merges the two.</span>
+    </form>
+    {% if row.has_entry %}
+    <form method="post" action="{{ url_for('admin.series_remove', series_name=row.name) }}" class="inline-form">
+      <button type="submit" class="btn btn-danger"
+        data-confirm="Remove the series entry for &quot;{{ row.name }}&quot;? Its genre/franchise/min age are copied onto each of its {{ member_count }} item(s) first, and the items keep their series name.">Remove series entry</button>
+    </form>
+    {% endif %}
+  </details>
+</section>
+{% endfor %}
+
+<section class="consistency-warnings">
+  <h2>Add a series entry by name</h2>
+  <p class="hint">
+    For a series no item uses yet. To put existing items into a series, select them on the
+    <a href="{{ url_for('admin.catalog') }}">Catalog</a> screen and use <strong>Assign series</strong>.
+  </p>
+  <form method="post" action="{{ url_for('admin.series_overrides_add') }}" class="inline-form">
+    <input type="text" name="series" required placeholder="Series name">
+    <select name="series_type">
+      <option value="">(no type)</option>
+      <option value="episodic">episodic</option>
+      <option value="sequel">sequel</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</section>
+
+<script>
+  (function () {
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".series-card"));
+    var q = document.getElementById("series-q");
+    var type = document.getElementById("series-type");
+    var problems = document.getElementById("series-problems");
+    var countEl = document.getElementById("series-count");
+
+    function apply() {
+      var words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      var shown = 0;
+      cards.forEach(function (card) {
+        var d = card.dataset;
+        var ok = words.every(function (w) { return d.name.indexOf(w) !== -1; })
+          && (!type.value || d.type === type.value)
+          && (!problems.checked || d.problems === "1");
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      countEl.textContent = shown === cards.length ? cards.length + " series" : "Showing " + shown + " of " + cards.length + " series";
+    }
+    [q, type, problems].forEach(function (el) { el.addEventListener(el === q ? "input" : "change", apply); });
+
+    // Highlight duplicate positions live while editing.
+    function markDuplicates(form) {
+      var inputs = Array.prototype.slice.call(form.querySelectorAll('tr[data-variant=""] input[name^="pos_"]'));
+      var counts = {};
+      inputs.forEach(function (i) { if (i.value !== "") counts[i.value] = (counts[i.value] || 0) + 1; });
+      inputs.forEach(function (i) { i.classList.toggle("is-duplicate", i.value !== "" && counts[i.value] > 1); });
+    }
+
+    document.querySelectorAll(".positions-form").forEach(function (form) {
+      form.addEventListener("input", function () { markDuplicates(form); });
+      form.querySelectorAll(".renumber").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          // Only the main line gets numbered - remakes/spin-offs keep theirs.
+          var rows = Array.prototype.slice.call(form.querySelectorAll('tbody tr[data-variant=""]'));
+          if (btn.dataset.order === "title") {
+            rows.sort(function (a, b) { return a.dataset.title.localeCompare(b.dataset.title, "de"); });
+          }
+          rows.forEach(function (row, i) { row.querySelector('input[name^="pos_"]').value = i + 1; });
+          markDuplicates(form);
+        });
+      });
+    });
+
+    // Opening #series-<anchor> (e.g. from a Catalog row) clears filters that would hide it.
+    function fromHash() {
+      var target = location.hash && document.getElementById(location.hash.slice(1));
+      if (target && target.classList.contains("series-card") && target.hidden) {
+        q.value = ""; type.value = ""; problems.checked = false; apply();
+        target.scrollIntoView({ block: "start" });
+      }
+    }
+    apply();
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+  })();
+</script>
+{% endblock %}

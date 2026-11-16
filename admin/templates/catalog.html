@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+{% from "_curation_macros.html" import field_grid %}
+{% block title %}Catalog - StorytimeFinder Admin{% endblock %}
+
+{% block content %}
+<h1 id="applied-overrides">Catalog</h1>
+
+<div class="summary-bar">
+  <a href="#" data-status="">{{ summary.total }} items</a>
+  <a href="#" data-status="complete" class="summary-ok">{{ summary.complete }} complete</a>
+  {% for field, label in [("description", "description"), ("min_age", "min age"), ("genre", "genre"), ("source_release_year", "release year")] %}
+    {% if summary.missing[field] %}<a href="#" data-status="missing:{{ field }}" class="summary-error">{{ summary.missing[field] }} missing {{ label }}</a>{% endif %}
+  {% endfor %}
+  {% if summary.warning %}<a href="#" data-status="warning" class="summary-warn">{{ summary.warning }} with warnings</a>{% endif %}
+  {% if summary.diff %}<a href="#" data-status="diff" class="summary-warn">{{ summary.diff }} with suggested changes</a>{% endif %}
+  {% if pending_count %}<a href="{{ url_for('admin.suggestions') }}" class="summary-warn">{{ pending_count }} pending review →</a>{% endif %}
+</div>
+
+{% if warning_groups %}
+<section class="consistency-warnings" id="catalog-warnings">
+  <h2>Consistency warnings</h2>
+  <p class="hint">
+    Informational, never hard errors. <strong>Jump to</strong> opens the item; <strong>Ignore</strong>
+    hides a warning until its text changes.
+  </p>
+  {% for label, pairs in warning_groups %}
+  <details class="warning-group">
+    <summary>{{ label }} <span class="badge badge-warn">{{ pairs|length }}</span></summary>
+    <ul class="warning-list">
+      {% for text, entry_ids in pairs %}
+        <li>
+          <div class="warning-body">
+            <span>{{ text }}</span>
+            {% if entry_ids %}
+            <span class="warning-links">
+              Jump to:
+              {% for eid in entry_ids %}
+                <a href="{{ warning_links.get(eid, '#entry-' ~ eid) }}" class="warning-link">{{ item_info.get(eid, {}).get("title", eid) }}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </span>
+            {% endif %}
+          </div>
+          <form method="post" action="{{ url_for('admin.warnings_dismiss') }}" class="warning-dismiss-form">
+            <input type="hidden" name="warning" value="{{ text }}">
+            <input type="hidden" name="screen" value="catalog">
+            <button type="submit" class="warning-dismiss-btn">Ignore</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endfor %}
+</section>
+{% endif %}
+
+<p class="hint">
+  Every item in <code>overrides.py</code>. Filter and sort the table, then click a row to open
+  its editor. <strong>Save changes</strong> writes only the fields you leave filled in - blank
+  fields are never written. <strong>Save &amp; Next</strong> opens the next row <em>in the
+  current filter and sort order</em>. Filters are kept across saves. Greyed-out genre/age values
+  come from the item's series entry (edit them on the <a href="{{ url_for('admin.series') }}">Series</a>
+  screen). Tick rows to apply a <strong>bulk action</strong> to all of them at once.
+</p>
+
+{% if not overrides %}
+  <p class="empty">No overrides yet. Apply a suggestion on the <a href="{{ url_for('admin.suggestions') }}">Review</a> screen, or add one to overrides.py by hand.</p>
+{% else %}
+  {% set catalog_series = catalog_rows | map(attribute="series") | select | unique | sort(case_sensitive=false) | list %}
+  <div class="catalog-filters">
+    <input type="search" id="catalog-q" placeholder="Search title, description, series, id..." aria-label="Search">
+    <select id="catalog-series" aria-label="Series">
+      <option value="">All series</option>
+      <option value="__none__">(no series)</option>
+      {% for name in catalog_series %}<option value="{{ name }}">{{ name }}</option>{% endfor %}
+    </select>
+    <select id="catalog-status" aria-label="Status">
+      <option value="">Any status</option>
+      <option value="attention">Needs attention</option>
+      <option value="missing:description">Missing: description</option>
+      <option value="missing:min_age">Missing: min age</option>
+      <option value="missing:genre">Missing: genre</option>
+      <option value="missing:source_release_year">Missing: release year</option>
+      <option value="warning">Has warning</option>
+      <option value="diff">Has suggested change</option>
+      <option value="complete">Complete</option>
+      <option value="variant:remake">Remakes</option>
+      <option value="variant:spin_off">Spin-offs</option>
+    </select>
+    <select id="catalog-genre" aria-label="Genre">
+      <option value="">Any genre</option>
+      {% for g in genre_values %}<option value="{{ g }}">{{ g }}</option>{% endfor %}
+    </select>
+    <select id="catalog-sort" aria-label="Sort">
+      <option value="series">Sort: series, position</option>
+      <option value="title">Sort: title</option>
+      <option value="attention">Sort: needs attention first</option>
+    </select>
+    <button type="button" id="catalog-reset" class="btn btn-secondary">Reset</button>
+  </div>
+  <p class="count" id="catalog-count">{{ summary.total }} applied</p>
+
+  <table class="catalog-table" id="catalog-table">
+    <thead>
+      <tr>
+        <th class="col-select"><input type="checkbox" id="catalog-select-all" title="Select all visible rows" aria-label="Select all visible rows"></th>
+        <th class="col-thumb"></th><th>Title</th><th class="col-num">#</th><th class="col-genre">Genre</th>
+        <th class="col-num">Age</th><th class="col-num">Year</th><th class="col-status">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in catalog_rows %}
+      {% set entry_id = row.entry_id %}
+      {% set attention = row.missing|length + row.warnings|length + row.diff_count %}
+      <tr class="catalog-row"
+          data-entry-id="{{ entry_id }}"
+          data-search="{{ (row.title ~ ' ' ~ (row.series or '') ~ ' ' ~ (row.description or '') ~ ' ' ~ entry_id) | lower }}"
+          data-series="{{ row.series or '' }}"
+          data-position="{{ row.position_in_series if row.position_in_series is not none else '' }}"
+          data-title="{{ row.title | lower }}"
+          data-genre="{{ row.genre | join(',') }}"
+          data-missing="{{ row.missing | join(',') }}"
+          data-warning="{{ '1' if row.warnings }}"
+          data-diff="{{ '1' if row.diff_count }}"
+          data-variant="{{ row.variant or '' }}"
+          data-attention="{{ attention }}"
+          tabindex="0">
+        <td class="catalog-select"><input type="checkbox" class="row-select" aria-label="Select {{ row.title }}"></td>
+        <td class="catalog-thumb">{% if row.thumbnail_url %}<img src="{{ row.thumbnail_url }}" alt="" loading="lazy">{% endif %}</td>
+        <td class="catalog-title">
+          <div class="catalog-title-line">{{ row.title }}</div>
+          <div class="catalog-sub">
+            {% if row.series %}<a class="catalog-series" href="{{ url_for('admin.series') }}#series-{{ series_anchor(row.series) }}" title="Open on the Series screen">{{ row.series }}{% if row.series_type %} · {{ row.series_type }}{% endif %}</a>{% endif %}
+            {% if row.description %}<span class="catalog-desc">{{ row.description }}</span>{% endif %}
+          </div>
+        </td>
+        <td class="catalog-num">{{ row.position_in_series if row.position_in_series is not none else "" }}{% if row.variant %}<div class="variant-mark" title="{{ row.variant }}">{{ "R" if row.variant == "remake" else "S" }}</div>{% endif %}</td>
+        <td class="catalog-genre {{ 'from-series' if row.from_series }}">{{ row.genre | join(", ") }}</td>
+        <td class="catalog-num {{ 'from-series' if row.from_series }}">{{ row.min_age if row.min_age is not none else "" }}</td>
+        <td class="catalog-num">{{ row.source_release_year or "" }}</td>
+        <td class="catalog-status">
+          {% for field in row.missing %}<span class="badge badge-error">no {{ field | replace("source_release_year", "year") | replace("min_age", "age") }}</span>{% endfor %}
+          {% if row.warnings %}<span class="badge badge-warn" title="{{ row.warnings | join(' | ') }}">{{ row.warnings|length }} warning{{ "s" if row.warnings|length != 1 }}</span>{% endif %}
+          {% if row.diff_count %}<span class="badge badge-warn">{{ row.diff_count }} suggested</span>{% endif %}
+          {% if row.variant %}<span class="badge">{{ row.variant | replace("_", "-") }}</span>{% endif %}
+          {% if row.has_awards %}<span class="badge badge-ok" title="Has awards">🏆</span>{% endif %}
+        </td>
+      </tr>
+      <tr class="catalog-editor" id="entry-{{ entry_id }}" hidden>
+        <td colspan="8">
+          {% set entry_diff = diffs.get(entry_id, {}) %}
+          <p class="entry-id">
+            <code>{{ entry_id }}</code>
+            {% if row.youtube_music_url %} &middot; <a href="{{ row.youtube_music_url }}" target="_blank" rel="noopener noreferrer">Open in YouTube Music</a>{% endif %}
+          </p>
+          {% if row.warnings %}
+            <ul class="warning-list catalog-row-warnings">
+              {% for text in row.warnings %}<li><span>{{ text }}</span></li>{% endfor %}
+            </ul>
+          {% endif %}
+          <form method="post" action="{{ url_for('admin.suggestions_regenerate', entry_id=entry_id) }}" class="regenerate-form">
+            <button type="submit" class="btn btn-secondary" data-loading-label="Regenerating...">Regenerate suggestion</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}" class="catalog-edit-form">
+            <input type="hidden" name="section" value="override">
+            <input type="hidden" name="next_entry_id" value="">
+            {{ field_grid(overrides[entry_id], genre_values, franchise_values, seasonal_values, series_names, entry_diff, variant_values) }}
+            <div class="actions">
+              <button type="submit" name="action" value="apply" class="btn btn-primary">Save changes</button>
+              <button type="submit" name="action" value="apply_next" class="btn btn-primary">Save &amp; Next</button>
+              <button type="button" class="btn btn-secondary catalog-close">Close</button>
+            </div>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post" action="{{ url_for('admin.catalog_bulk') }}" class="bulk-bar" id="bulk-bar" hidden>
+    <input type="hidden" name="entry_ids" value="[]">
+    <strong id="bulk-count"></strong>
+    <span class="bulk-group">
+      <input type="text" name="series" list="bulk-series-options" placeholder="Series name" aria-label="Series name">
+      <datalist id="bulk-series-options">{% for name in series_names %}<option value="{{ name }}">{% endfor %}</datalist>
+      <button type="submit" name="action" value="set_series" class="btn btn-secondary">Assign series</button>
+      <button type="submit" name="action" value="clear_series" class="btn btn-secondary"
+        data-confirm="Remove series AND position from every selected item?">Clear series</button>
+    </span>
+    <span class="bulk-group">
+      <label>from <input type="number" name="start" value="1" min="0" class="bulk-start"></label>
+      <button type="submit" name="action" value="number_positions" class="btn btn-secondary"
+        title="Sets position 1, 2, 3... on the selected rows in the order they're shown in the table">Number positions in table order</button>
+    </span>
+    <span class="bulk-group">
+      <select name="seasonal" aria-label="Seasonal">
+        <option value="">(clear seasonal)</option>
+        {% for sv in seasonal_values %}<option value="{{ sv }}">{{ sv }}</option>{% endfor %}
+      </select>
+      <button type="submit" name="action" value="set_seasonal" class="btn btn-secondary">Set seasonal</button>
+    </span>
+    <span class="bulk-group">
+      <select name="variant" aria-label="Variant">
+        <option value="">main line</option>
+        {% for v in variant_values %}<option value="{{ v }}">{{ v | replace("_", "-") }}</option>{% endfor %}
+      </select>
+      <button type="submit" name="action" value="set_variant" class="btn btn-secondary">Set variant</button>
+    </span>
+    <button type="button" id="bulk-deselect" class="btn btn-secondary">Deselect</button>
+  </form>
+{% endif %}
+
+{% include "_series_lock_script.html" %}
+
+<script>
+  // Catalog table: client-side filter/sort over server-rendered rows (same
+  // "render once, JS toggles visibility" approach as the public site), each
+  // row with its own hidden editor row right below it, plus row selection
+  // for the bulk-action bar.
+  (function () {
+    var table = document.getElementById("catalog-table");
+    if (!table) return;
+    var tbody = table.tBodies[0];
+    var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr.catalog-row"));
+    var editorOf = {};
+    rows.forEach(function (row) { editorOf[row.dataset.entryId] = row.nextElementSibling; });
+
+    var controls = {
+      q: document.getElementById("catalog-q"),
+      series: document.getElementById("catalog-series"),
+      status: document.getElementById("catalog-status"),
+      genre: document.getElementById("catalog-genre"),
+      sort: document.getElementById("catalog-sort"),
+    };
+    var countEl = document.getElementById("catalog-count");
+    var STORAGE_KEY = "stf-admin-catalog-filters";
+
+    // Filters survive the full page reload every Save does. A ?series=
+    // link (from the Series screen) wins over the remembered filters.
+    try {
+      var saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "{}");
+      Object.keys(controls).forEach(function (k) { if (saved[k] !== undefined) controls[k].value = saved[k]; });
+    } catch (e) { /* ignore a corrupt entry */ }
+    var params = new URLSearchParams(location.search);
+    if (params.has("series")) {
+      controls.q.value = controls.status.value = controls.genre.value = "";
+      controls.series.value = params.get("series");
+      controls.sort.value = "series";
+      history.replaceState(null, "", location.pathname + location.hash);
+    }
+
+    function list(value) { return value ? value.split(",") : []; }
+    function clearFilters() { controls.q.value = controls.series.value = controls.status.value = controls.genre.value = ""; }
+
+    function matches(row) {
+      var d = row.dataset;
+      var q = controls.q.value.trim().toLowerCase();
+      if (q && q.split(/\s+/).some(function (w) { return d.search.indexOf(w) === -1; })) return false;
+      var series = controls.series.value;
+      if (series === "__none__" ? d.series : (series && d.series !== series)) return false;
+      if (controls.genre.value && list(d.genre).indexOf(controls.genre.value) === -1) return false;
+      var status = controls.status.value;
+      if (status === "attention" && d.attention === "0") return false;
+      if (status === "complete" && d.attention !== "0") return false;
+      if (status === "warning" && !d.warning) return false;
+      if (status === "diff" && !d.diff) return false;
+      if (status.indexOf("missing:") === 0 && list(d.missing).indexOf(status.slice(8)) === -1) return false;
+      if (status.indexOf("variant:") === 0 && d.variant !== status.slice(8)) return false;
+      return true;
+    }
+
+    function position(row) { return row.dataset.position === "" ? Infinity : Number(row.dataset.position); }
+    function byTitle(a, b) { return a.dataset.title.localeCompare(b.dataset.title, "de"); }
+    var SORTERS = {
+      title: byTitle,
+      series: function (a, b) {
+        // Items without a series sort after every series, by title.
+        var sa = a.dataset.series, sb = b.dataset.series;
+        if (sa !== sb) {
+          if (!sa) return 1;
+          if (!sb) return -1;
+          return sa.localeCompare(sb, "de");
+        }
+        return (position(a) - position(b)) || byTitle(a, b);
+      },
+      attention: function (a, b) {
+        return (Number(b.dataset.attention) - Number(a.dataset.attention)) || SORTERS.series(a, b);
+      },
+    };
+
+    // In current on-screen (sorted) order - `rows` itself keeps page order.
+    function visibleRows() {
+      return Array.prototype.slice.call(tbody.querySelectorAll("tr.catalog-row:not([hidden])"));
+    }
+
+    function apply() {
+      var sorted = rows.slice().sort(SORTERS[controls.sort.value] || SORTERS.series);
+      var shown = 0;
+      sorted.forEach(function (row) {
+        var ok = matches(row);
+        row.hidden = !ok;
+        if (!ok) {
+          editorOf[row.dataset.entryId].hidden = true;
+          row.querySelector(".row-select").checked = false;  // never act on rows you can't see
+        } else {
+          shown++;
+        }
+        tbody.appendChild(row);
+        tbody.appendChild(editorOf[row.dataset.entryId]);
+      });
+      countEl.textContent = shown === rows.length
+        ? rows.length + " applied"
+        : "Showing " + shown + " of " + rows.length + " applied";
+      var state = {};
+      Object.keys(controls).forEach(function (k) { state[k] = controls[k].value; });
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateBulk();
+    }
+
+    function rowFor(entryId) {
+      return tbody.querySelector('tr.catalog-row[data-entry-id="' + CSS.escape(entryId) + '"]');
+    }
+
+    function setOpen(entryId, open) {
+      var row = rowFor(entryId);
+      if (!row) return null;
+      editorOf[entryId].hidden = !open;
+      row.classList.toggle("is-open", open);
+      return row;
+    }
+
+    function openEntry(entryId) {
+      var row = rowFor(entryId);
+      if (!row) return false;
+      if (row.hidden) {
+        // A jump link (or Save & Next) to an item the current filter hides -
+        // clear the filters rather than open an editor nobody can see.
+        clearFilters();
+        apply();
+      }
+      setOpen(entryId, true);
+      row.scrollIntoView({ block: "start" });
+      return true;
+    }
+
+    rows.forEach(function (row) {
+      function toggle(event) {
+        if (event.target.closest("a, button, input, select, textarea, .catalog-select")) return;
+        setOpen(row.dataset.entryId, editorOf[row.dataset.entryId].hidden);
+      }
+      row.addEventListener("click", toggle);
+      row.addEventListener("keydown", function (event) {
+        if (event.target !== row) return;
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(event); }
+      });
+    });
+
+    tbody.querySelectorAll(".catalog-close").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var editor = btn.closest("tr.catalog-editor");
+        setOpen(editor.previousElementSibling.dataset.entryId, false);
+      });
+    });
+
+    // Save & Next goes to the next row in the CURRENT filter/sort order.
+    tbody.querySelectorAll("form.catalog-edit-form").forEach(function (form) {
+      form.addEventListener("submit", function () {
+        var entryId = form.closest("tr.catalog-editor").previousElementSibling.dataset.entryId;
+        var visible = visibleRows();
+        var i = visible.findIndex(function (row) { return row.dataset.entryId === entryId; });
+        var next = i !== -1 && i + 1 < visible.length ? visible[i + 1].dataset.entryId : "";
+        form.querySelector('input[name="next_entry_id"]').value = next;
+      });
+    });
+
+    // --- Bulk selection -------------------------------------------------
+    var bulkBar = document.getElementById("bulk-bar");
+    var bulkCount = document.getElementById("bulk-count");
+    var selectAll = document.getElementById("catalog-select-all");
+
+    function selectedRows() {
+      // In the table's current (visible) order - what "Number positions" uses.
+      return visibleRows().filter(function (row) { return row.querySelector(".row-select").checked; });
+    }
+
+    function updateBulk() {
+      var selected = selectedRows();
+      var visible = visibleRows();
+      bulkBar.hidden = selected.length === 0;
+      bulkCount.textContent = selected.length + " selected";
+      rows.forEach(function (row) { row.classList.toggle("is-selected", row.querySelector(".row-select").checked); });
+      selectAll.checked = visible.length > 0 && selected.length === visible.length;
+      selectAll.indeterminate = selected.length > 0 && selected.length < visible.length;
+      bulkBar.querySelector('input[name="entry_ids"]').value =
+        JSON.stringify(selected.map(function (row) { return row.dataset.entryId; }));
+    }
+
+    tbody.addEventListener("change", function (event) {
+      if (event.target.classList.contains("row-select")) updateBulk();
+    });
+    selectAll.addEventListener("change", function () {
+      visibleRows().forEach(function (row) { row.querySelector(".row-select").checked = selectAll.checked; });
+      updateBulk();
+    });
+    document.getElementById("bulk-deselect").addEventListener("click", function () {
+      rows.forEach(function (row) { row.querySelector(".row-select").checked = false; });
+      updateBulk();
+    });
+    bulkBar.addEventListener("submit", updateBulk);
+
+    // --- Filters, summary links, hash ----------------------------------
+    Object.keys(controls).forEach(function (k) {
+      controls[k].addEventListener(k === "q" ? "input" : "change", apply);
+    });
+    document.getElementById("catalog-reset").addEventListener("click", function () {
+      clearFilters();
+      controls.sort.value = "series";
+      apply();
+    });
+    document.querySelectorAll(".summary-bar a[data-status]").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        clearFilters();
+        controls.status.value = link.dataset.status;
+        apply();
+        table.scrollIntoView({ block: "start" });
+      });
+    });
+
+    function openFromHash() {
+      var m = location.hash.match(/^#entry-(.+)$/);
+      if (m) openEntry(decodeURIComponent(m[1]));
+    }
+
+    apply();
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+  })();
+</script>
+{% endblock %}

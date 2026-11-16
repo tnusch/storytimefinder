@@ -27,6 +27,10 @@ import json
 import re
 import sqlite3
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -68,7 +72,7 @@ def list_overrides() -> dict:
 
 def list_series_overrides() -> dict:
     """overrides.py's SERIES_OVERRIDES - series-level series_type/genre/
-    franchise/min_age for an episodic series, keyed by series name
+    franchise/min_age for a series (any series_type), keyed by series name
     (not an entry id). Editable via apply_series_override() below (the
     Suggestions screen's "Episodic series metadata" section). Also used by
     get_consistency_warnings() to make check_missing_fields() aware of
@@ -117,6 +121,13 @@ def get_franchise_values() -> list[str]:
     return get_value_list("franchise")
 
 
+def get_variant_values() -> list[str]:
+    """refresh.py's VARIANT_VALUES - a closed 2-value enum (remake,
+    spin_off), deliberately not part of the Values screen's editable lists,
+    same as SERIES_TYPE_VALUES."""
+    return sorted(_reload("refresh").VARIANT_VALUES)
+
+
 def get_seasonal_values() -> list[str]:
     return get_value_list("seasonal")
 
@@ -139,7 +150,7 @@ def _load_fetched_items() -> dict:
 
 def get_item_info() -> dict[str, dict]:
     """entry_id (video/album id) -> {"title": ..., "thumbnail_url": ...,
-    "youtube_music_url": ...}, best-effort - used only to illustrate
+    "youtube_music_url": ..., "language": ...}, best-effort - used only to illustrate
     overrides.py entries and pending suggestions in the admin UI (e.g. a
     direct "open on YouTube Music" link per item), never to decide what
     gets written anywhere.
@@ -158,24 +169,30 @@ def get_item_info() -> dict[str, dict]:
     straight off the DB column) - nothing here needs to guess whether an
     id is a video or an album/playlist id to construct it.
     """
+    source_languages = {s["youtube_id"]: s.get("language") for s in list_sources()}
     info: dict[str, dict] = {}
     for entry_id, item in _load_fetched_items()["items"].items():
         info[entry_id] = {
             "title": item.get("title"),
             "thumbnail_url": item.get("thumbnail_url"),
             "youtube_music_url": item.get("youtube_music_url"),
+            "language": source_languages.get(item.get("source_youtube_id")),
         }
 
     db_path = _reload("refresh").DB_PATH
     if Path(db_path).exists():
         conn = sqlite3.connect(db_path)
         try:
-            rows = conn.execute("SELECT video_id, title, thumbnail_url, youtube_music_url FROM items").fetchall()
-            for video_id, title, thumbnail_url, youtube_music_url in rows:
+            rows = conn.execute(
+                "SELECT i.video_id, i.title, i.thumbnail_url, i.youtube_music_url, s.language "
+                "FROM items i LEFT JOIN sources s ON s.id = i.source_id"
+            ).fetchall()
+            for video_id, title, thumbnail_url, youtube_music_url, language in rows:
                 info[video_id] = {
                     "title": title,
                     "thumbnail_url": thumbnail_url,
                     "youtube_music_url": youtube_music_url,
+                    "language": language,
                 }
         except sqlite3.OperationalError:
             pass
@@ -235,6 +252,171 @@ def build_description_prompt(suggestions: dict, overrides: dict, item_info: dict
         for title, series in entries.values()
     )
     return DESCRIPTION_PROMPT_INSTRUCTIONS + "\n\n" + ", ".join(labels)
+
+
+# How many items go into one metadata prompt - small enough that Claude.ai's
+# reply (one JSON entry per item) doesn't get cut off mid-object, and that
+# web-searching each item stays within one turn.
+METADATA_PROMPT_CHUNK_SIZE = 25
+
+
+def _metadata_prompt_instructions() -> str:
+    refresh = _reload("refresh")
+    genre_list = ", ".join(sorted(refresh.GENRE_VALUES))
+    franchise_list = ", ".join(sorted(refresh.FRANCHISE_VALUES))
+    seasonal_list = ", ".join(sorted(refresh.SEASONAL_VALUES))
+    return (
+        "I curate a catalog of children's audio dramas (Hörspiele / audiobooks) on YouTube "
+        "Music. For each item listed at the end, look it up (use web search - publisher, "
+        "retailer, and Wikipedia pages are good sources) and return its metadata.\n\n"
+        "Return ONLY one JSON object in a single ```json code block, keyed by each item's ID "
+        "exactly as given, with one entry per listed item:\n"
+        '{"<ID>": {"description": ..., "series": ..., "position_in_series": ..., "genre": [...], '
+        '"franchise": ..., "min_age": ..., "source_release_year": ..., "seasonal": ...}, ...}\n\n'
+        "Fields:\n"
+        "- description: one sentence, max 130 characters, spoiler-light, describing the "
+        "story's plot/theme, written in the item's language (de = German, en = English). "
+        "Never use the title, franchise name, or any character names from it.\n"
+        '- series: the audiobook series it belongs to (e.g. "Die drei ???"), else null. '
+        "If a series hint is given, reuse that exact spelling.\n"
+        "- position_in_series: its episode/volume number in that series as an integer, else null.\n"
+        f"- genre: array of 1-3 values from [{genre_list}], or [] if none clearly fit.\n"
+        f"- franchise: exactly one of [{franchise_list}] if it belongs to one, else null.\n"
+        "- min_age: the publisher's/retailer's recommended minimum age as an integer. If "
+        "sources disagree, use the LOWER value.\n"
+        "- source_release_year: the year the SOURCE film or book was originally released "
+        "(not this audio production's release), as an integer.\n"
+        f"- seasonal: exactly one of [{seasonal_list}] only if the story is clearly tied to "
+        "that season/holiday, else null. Most titles are not seasonal.\n\n"
+        "Use null (or [] for genre) whenever you can't verify a value - don't guess. Use "
+        "only the listed vocabulary values, spelled exactly as given.\n\n"
+        "Items (ID | title | series hint | language):"
+    )
+
+
+def get_metadata_prompt_candidates(
+    suggestions: dict, overrides: dict, item_info: dict, series_overrides: dict
+) -> list[tuple[str, str, str | None, str]]:
+    """(entry_id, title, series, language) for every known item that is
+    still missing one of refresh.py's CORE_OVERRIDE_FIELDS once its applied
+    override and its pending suggestion are taken together - i.e. items
+    a batch Claude.ai pass would actually help with. Same series-level
+    exemption for genre/min_age as check_missing_fields(). Items without a
+    known title (neither a pending suggestion nor staged/synced data) are
+    skipped - there's nothing meaningful to ask Claude about. Sorted by
+    series then title, so a series' episodes stay together in the prompt."""
+    refresh = _reload("refresh")
+    core_fields, series_fields = refresh.CORE_OVERRIDE_FIELDS, refresh.SERIES_RESOLVED_FIELDS
+    candidates = []
+    for entry_id in set(suggestions) | set(overrides) | set(item_info):
+        override = overrides.get(entry_id, {})
+        suggestion = suggestions.get(entry_id, {})
+        info = item_info.get(entry_id, {})
+        title = suggestion.get("title") or info.get("title")
+        if not title:
+            continue
+        series = override.get("series") or suggestion.get("series")
+        has_series_meta = bool(series) and series in series_overrides
+        missing = [
+            field
+            for field in core_fields
+            if not (has_series_meta and field in series_fields)
+            and not (override.get(field) or suggestion.get(field))
+        ]
+        if missing:
+            candidates.append((entry_id, title, series, info.get("language") or "de"))
+    candidates.sort(key=lambda c: ((c[2] or "").lower(), c[1].lower()))
+    return candidates
+
+
+def build_metadata_prompts(
+    suggestions: dict,
+    overrides: dict,
+    item_info: dict,
+    series_overrides: dict,
+    chunk_size: int = METADATA_PROMPT_CHUNK_SIZE,
+) -> list[str]:
+    """Copy/paste-able prompts for batch-generating full metadata (all eight
+    fields Claude is asked for during --fetch, not just a description) in a
+    Claude.ai chat - e.g. on a Pro subscription instead of API spend. Unlike
+    build_description_prompt(), each item carries its entry_id and Claude is
+    asked to answer with one JSON object keyed by those ids, so the reply
+    can be pasted straight back into import_metadata_suggestions() instead
+    of copied field by field. Split into chunks of `chunk_size` items (one
+    prompt each); returns [] if nothing needs filling in."""
+    candidates = get_metadata_prompt_candidates(suggestions, overrides, item_info, series_overrides)
+    if not candidates:
+        return []
+    instructions = _metadata_prompt_instructions()
+    prompts = []
+    for start in range(0, len(candidates), chunk_size):
+        lines = [
+            f"{entry_id} | {title} | {series or '-'} | {language}"
+            for entry_id, title, series, language in candidates[start : start + chunk_size]
+        ]
+        prompts.append(instructions + "\n" + "\n".join(lines))
+    return prompts
+
+
+def import_metadata_suggestions(raw_text: str) -> dict[str, list[str]]:
+    """Parse a pasted Claude.ai reply to build_metadata_prompts() and merge
+    it into data/claude_suggestions.json - NEVER into overrides.py, so every
+    imported value still goes through the same per-card review/Apply step
+    as a --fetch suggestion does. Each entry is run through refresh.py's own
+    _validate_suggested_fields() (out-of-vocabulary values dropped, implausible
+    ints dropped). Its description gets the same title-word check as
+    refresh.py's _description_leaks_title(), but unlike --fetch (which
+    retries, then drops) a match here only WARNS and the description is kept:
+    there's no retry on this path and every card is reviewed by hand anyway,
+    and the check is word-level, so ordinary story words that happen to be
+    in the title (e.g. "Abenteuer") trip it too.
+    Non-empty imported values replace that item's pending suggestion field
+    by field; an empty/invalid imported value never wipes an existing one.
+
+    Raises ValueError if no JSON object can be found at all. Otherwise
+    returns lists: "imported", "unknown" (no such item known to the admin
+    UI - usually a mangled id), "invalid" (entry wasn't a JSON object) -
+    all entry ids - and "description_title_words" ("<entry_id> (<matched
+    words>)" per kept description that reuses title words)."""
+    refresh = _reload("refresh")
+    parsed = refresh._parse_suggestion_json(raw_text)
+    if not isinstance(parsed, dict):
+        raise ValueError("Couldn't find a JSON object in the pasted text.")
+
+    suggestions = load_suggestions()
+    item_info = get_item_info()
+    report: dict[str, list[str]] = {"imported": [], "unknown": [], "invalid": [], "description_title_words": []}
+    for entry_id, raw in parsed.items():
+        entry_id = str(entry_id).strip()
+        if not isinstance(raw, dict):
+            report["invalid"].append(entry_id)
+            continue
+        existing = suggestions.get(entry_id, {})
+        title = existing.get("title") or item_info.get(entry_id, {}).get("title")
+        if not title:
+            report["unknown"].append(entry_id)
+            continue
+
+        fields = refresh._validate_suggested_fields(raw)
+        description = refresh._clean_str(raw.get("description"))
+        if description:
+            leaked = [
+                word
+                for word in refresh._title_keywords(title)
+                if re.search(rf"\b{re.escape(word.lower())}\b", description.lower())
+            ]
+            if leaked:
+                report["description_title_words"].append(f"{entry_id} ({', '.join(leaked)})")
+        fields["description"] = description
+
+        merged = {key: existing.get(key) for key in refresh.EMPTY_SUGGESTIONS}
+        merged.update({key: value for key, value in fields.items() if value not in (None, [])})
+        refresh.record_suggestion(suggestions, entry_id, title, merged, force=True)
+        report["imported"].append(entry_id)
+
+    if report["imported"]:
+        save_suggestions(suggestions)
+    return report
 
 
 def load_dismissed_warnings() -> dict:
@@ -305,25 +487,35 @@ def get_consistency_warnings() -> list[tuple[str, list[str]]]:
       - missing core fields - a known item whose override is missing
         description/min_age/genre/source_release_year, including an
         item with no override entry at all - except genre/min_age on
-        an item belonging to an episodic series, which are satisfied by
-        that series' SERIES_OVERRIDES entry instead (check_missing_fields()).
+        an item whose series has a SERIES_OVERRIDES entry (any
+        series_type), which are satisfied by that entry instead
+        (check_missing_fields()).
     Each returned entry is a (warning text, entry_ids) pair rather than a
     bare string - `suggestions.html` uses entry_ids to link the warning
     straight to the item card(s) it's about (see "entry-<id>" anchors on
     each card). Individually-ignored warnings (see dismiss_warning(), which
     still matches by the text half only) are filtered out before returning.
     """
+    return [pair for _, pairs in get_grouped_consistency_warnings() for pair in pairs]
+
+
+def get_grouped_consistency_warnings() -> list[tuple[str, list[tuple[str, list[str]]]]]:
+    """Same three checks as get_consistency_warnings() (which flattens
+    this), kept apart as (group label, pairs) so the Catalog screen can show
+    each kind of warning in its own collapsible group. Groups with no
+    (undismissed) warnings are left out."""
     overrides = list_overrides()
     series_overrides = list_series_overrides()
     titles = {entry_id: info["title"] for entry_id, info in get_item_info().items() if info.get("title")}
     release_years = {entry_id: o.get("source_release_year") for entry_id, o in overrides.items()}
     refresh = _reload("refresh")
-    warnings = (
-        refresh.check_overrides_series_consistency(overrides, titles)
-        + refresh.check_duplicate_titles(titles, release_years)
-        + refresh.check_missing_fields(overrides, titles, series_overrides)
-    )
-    return _filter_dismissed_pairs(warnings)
+    groups = [
+        ("Series consistency", refresh.check_overrides_series_consistency(overrides, titles)),
+        ("Duplicate titles", refresh.check_duplicate_titles(titles, release_years)),
+        ("Missing core fields", refresh.check_missing_fields(overrides, titles, series_overrides)),
+    ]
+    filtered = [(label, _filter_dismissed_pairs(pairs)) for label, pairs in groups]
+    return [(label, pairs) for label, pairs in filtered if pairs]
 
 
 def order_by_consistency_warnings(entries: dict, warnings: list[tuple[str, list[str]]]) -> dict:
@@ -344,6 +536,70 @@ def order_by_consistency_warnings(entries: dict, warnings: list[tuple[str, list[
     flagged = {eid: v for eid, v in entries.items() if eid in flagged_ids}
     rest = {eid: v for eid, v in entries.items() if eid not in flagged_ids}
     return {**flagged, **rest}
+
+
+def build_catalog_rows(
+    overrides: dict,
+    item_info: dict,
+    series_overrides: dict,
+    warnings: list[tuple[str, list[str]]],
+    diffs: dict,
+) -> list[dict]:
+    """One summary row per ITEM_OVERRIDES entry for the Suggestions screen's
+    filterable "Applied overrides" table - the compact, scannable view of
+    each item, with its full edit form opened on demand underneath. Pure
+    (no I/O), so the view stays testable.
+
+    genre/franchise/min_age show the value that actually reaches the
+    catalog: the series entry's whenever the item's series has a
+    SERIES_OVERRIDES entry (`from_series` is True then - see refresh.py's
+    sync_source()), else the item's own. `missing` lists which
+    CORE_OVERRIDE_FIELDS are still unset after that resolution - the same
+    rule check_missing_fields() uses. `warnings` is every
+    get_consistency_warnings() text naming this entry (already filtered for
+    dismissed ones); `diff_count` is how many fields a pending suggestion
+    would change (see admin/routes.py's _compute_override_diffs())."""
+    refresh = _reload("refresh")
+    core_fields, series_fields = refresh.CORE_OVERRIDE_FIELDS, refresh.SERIES_RESOLVED_FIELDS
+    warnings_by_id: dict[str, list[str]] = {}
+    for text, entry_ids in warnings:
+        for entry_id in entry_ids:
+            warnings_by_id.setdefault(entry_id, []).append(text)
+
+    rows = []
+    for entry_id, override in overrides.items():
+        info = item_info.get(entry_id, {})
+        series = override.get("series")
+        series_meta = series_overrides.get(series) if series else None
+        source = series_meta if series_meta is not None else override
+        resolved = {field: source.get(field) for field in series_fields}
+        values = {**override, **resolved}
+        missing = [field for field in core_fields if not values.get(field)]
+        rows.append(
+            {
+                "entry_id": entry_id,
+                "title": info.get("title") or entry_id,
+                "thumbnail_url": info.get("thumbnail_url"),
+                "youtube_music_url": info.get("youtube_music_url"),
+                "language": info.get("language"),
+                "series": series,
+                "series_type": (series_meta or {}).get("series_type"),
+                "position_in_series": override.get("position_in_series"),
+                "genre": resolved["genre"] or [],
+                "franchise": resolved["franchise"],
+                "min_age": resolved["min_age"],
+                "from_series": series_meta is not None,
+                "source_release_year": override.get("source_release_year"),
+                "seasonal": override.get("seasonal"),
+                "description": override.get("description"),
+                "has_awards": bool(override.get("awards")),
+                "variant": override.get("variant"),
+                "missing": missing,
+                "warnings": warnings_by_id.get(entry_id, []),
+                "diff_count": len(diffs.get(entry_id, {})),
+            }
+        )
+    return rows
 
 
 def get_source_warnings() -> list[str]:
@@ -481,22 +737,33 @@ def set_tile_thumbnail(category: str, value: str, url: str) -> None:
 
 
 HIDDEN_TILES_ANCHOR_RE = re.compile(r"HIDDEN_TILES:\s*dict\[str,\s*list\[str\]\]\s*=\s*\{")
+SHOWN_TILES_ANCHOR_RE = re.compile(r"SHOWN_TILES:\s*dict\[str,\s*list\[str\]\]\s*=\s*\{")
 
 
 def get_hidden_tiles() -> dict[str, list[str]]:
-    """app/hidden_tiles.py's current HIDDEN_TILES, read fresh (same
-    _reload() pattern as get_tile_thumbnails()) - which guided-filter
-    tiles are currently hidden from the home page, per category."""
-    return {k: list(v) for k, v in _reload("app.hidden_tiles").HIDDEN_TILES.items()}
+    """Which guided-filter tiles are currently hidden from the home page,
+    per category, read fresh from app/hidden_tiles.py (same _reload()
+    pattern as get_tile_thumbnails()). For a HIDDEN_BY_DEFAULT category
+    (series) that's every offered value not opted in via SHOWN_TILES, so
+    the Values screen's "Hidden" checkbox means the same thing everywhere."""
+    module = _reload("app.hidden_tiles")
+    hidden = {k: list(v) for k, v in module.HIDDEN_TILES.items()}
+    options = None
+    for category in module.HIDDEN_BY_DEFAULT:
+        options = options or get_tile_value_options()
+        shown = set(module.SHOWN_TILES.get(category, []))
+        hidden[category] = [v for v in options.get(category, []) if v not in shown]
+    return hidden
 
 
-def _format_hidden_tiles(data: dict[str, list[str]]) -> str:
-    """Pretty-prints the whole HIDDEN_TILES assignment - same "regenerate
-    the entire dict literal" approach _format_tile_thumbnails() uses and
-    for the same reason (no per-entry comments to preserve, series-name
-    keys can contain characters a field-line regex can't match reliably)."""
-    lines = ["HIDDEN_TILES: dict[str, list[str]] = {"]
-    for category in get_tile_categories():
+def _format_tile_lists(name: str, data: dict[str, list[str]], categories) -> str:
+    """Pretty-prints a whole `name: dict[str, list[str]] = {...}` assignment
+    (HIDDEN_TILES/SHOWN_TILES) - same "regenerate the entire dict literal"
+    approach _format_tile_thumbnails() uses and for the same reason (no
+    per-entry comments to preserve, series-name keys can contain characters
+    a field-line regex can't match reliably)."""
+    lines = [f"{name}: dict[str, list[str]] = {{"]
+    for category in categories:
         values = sorted(set(data.get(category, [])))
         if not values:
             lines.append(f'    "{category}": [],')
@@ -510,36 +777,45 @@ def _format_hidden_tiles(data: dict[str, list[str]]) -> str:
 
 
 def set_tile_hidden(category: str, value: str, hidden: bool) -> None:
-    """Adds or removes one value from app/hidden_tiles.py's HIDDEN_TILES -
-    the Values screen's per-row "Hidden" checkbox uses this to toggle
-    whether a tile shows on the home page's guided filter UI (the value
+    """Hides or shows one guided-filter tile by rewriting app/hidden_tiles.py -
+    the Values screen's per-row "Hidden" checkbox. For most categories that
+    adds/removes the value in HIDDEN_TILES; for a HIDDEN_BY_DEFAULT category
+    (series) it's the inverse on SHOWN_TILES (showing = opting in). The value
     stays fully filterable via its chip either way - see hidden_tiles.py's
-    docstring). Blank `value` is a no-op. Idempotent either direction:
-    hiding an already-hidden value, or unhiding an already-visible one,
-    both just rewrite the same (deduplicated, sorted) content. Raises
-    ValueError for an unrecognized category, same as set_tile_thumbnail()."""
+    docstring. Blank `value` is a no-op; idempotent in both directions.
+    Raises ValueError for an unrecognized category, same as
+    set_tile_thumbnail()."""
     value = value.strip()
     if not value:
         return
     if category not in get_tile_categories():
         raise ValueError(f"Unknown tile category {category!r}")
 
+    module = _reload("app.hidden_tiles")
+    if category in module.HIDDEN_BY_DEFAULT:
+        name, anchor_re, add = "SHOWN_TILES", SHOWN_TILES_ANCHOR_RE, not hidden
+        current = {k: list(v) for k, v in module.SHOWN_TILES.items()}
+        categories = list(module.HIDDEN_BY_DEFAULT)
+    else:
+        name, anchor_re, add = "HIDDEN_TILES", HIDDEN_TILES_ANCHOR_RE, hidden
+        current = {k: list(v) for k, v in module.HIDDEN_TILES.items()}
+        categories = get_tile_categories()
+
     content = HIDDEN_TILES_PATH.read_text(encoding="utf-8")
-    anchor = HIDDEN_TILES_ANCHOR_RE.search(content)
+    anchor = anchor_re.search(content)
     if not anchor:
-        raise RuntimeError("Could not find 'HIDDEN_TILES: dict[str, list[str]] = {' in hidden_tiles.py")
+        raise RuntimeError(f"Could not find '{name}: dict[str, list[str]] = {{' in hidden_tiles.py")
     open_brace = anchor.end() - 1
     close_brace = _find_matching_brace(content, open_brace)
 
-    current = get_hidden_tiles()
     values = set(current.setdefault(category, []))
-    if hidden:
+    if add:
         values.add(value)
     else:
         values.discard(value)
     current[category] = sorted(values)
 
-    new_block = _format_hidden_tiles(current).rstrip("\n")
+    new_block = _format_tile_lists(name, current, categories).rstrip("\n")
     new_content = content[: anchor.start()] + new_block + content[close_brace + 1 :]
     HIDDEN_TILES_PATH.write_text(new_content, encoding="utf-8")
 
@@ -645,6 +921,263 @@ def add_source(entry: dict) -> None:
 
     new_content = content[: anchor.end()] + "\n" + block + content[anchor.end() :]
     SOURCES_PATH.write_text(new_content, encoding="utf-8")
+
+
+_YOUTUBE_ID_URL_HOSTS = {"www.youtube.com", "youtube.com", "music.youtube.com", "m.youtube.com"}
+
+
+def extract_youtube_id(value: str) -> str:
+    """Accepts either a bare YouTube id (returned as-is) or a full YouTube/
+    YouTube Music URL, from which the actual id is pulled out - lets the
+    Sources screen take a pasted URL directly instead of requiring the id to
+    already be extracted by hand. Handles a `list=` query param (playlist/
+    album - e.g. music.youtube.com/playlist?list=... or
+    youtube.com/watch?v=...&list=...), a `/channel/<id>` path segment, and a
+    YouTube Music `/browse/<id>` album page (returns its `MPREb_...` browse
+    id, which still has to go through resolve_album_browse_id() before it's
+    usable as a sources.py `youtube_id`). Anything else - a bare id, or a
+    URL shape that doesn't carry the id directly (e.g. an `@handle` channel
+    URL, which needs a live API lookup to resolve to its real `UC...` id) -
+    is returned unchanged, so the existing required-field validation still
+    catches a genuinely bad value instead of this silently swallowing it.
+    """
+    value = value.strip()
+    if "://" not in value:
+        return value
+
+    parsed = urllib.parse.urlparse(value)
+    if parsed.netloc not in _YOUTUBE_ID_URL_HOSTS:
+        return value
+
+    query = urllib.parse.parse_qs(parsed.query)
+    list_id = query.get("list", [""])[0]
+    if list_id:
+        return list_id
+
+    path_parts = [p for p in parsed.path.split("/") if p]
+    if len(path_parts) >= 2 and path_parts[0] in ("channel", "browse"):
+        return path_parts[1]
+
+    return value
+
+
+def infer_source_type(youtube_id: str) -> str | None:
+    """sources.py `type` implied by an id's prefix - "album" for a YouTube
+    Music album (`OLAK5uy_...` playlist id, or its `MPREb_...` browse id),
+    "playlist" for `PL...`, "channel" for `UC...`. None if unrecognized."""
+    if youtube_id.startswith(("OLAK5uy_", "MPREb_")):
+        return "album"
+    if youtube_id.startswith("PL"):
+        return "playlist"
+    if youtube_id.startswith("UC"):
+        return "channel"
+    return None
+
+
+YTM_BROWSE_URL = "https://music.youtube.com/browse/{}"
+_OLAK_ID_RE = re.compile(r"OLAK5uy_[A-Za-z0-9_-]{20,}")
+
+
+def resolve_album_browse_id(browse_id: str, timeout: float = 15) -> str | None:
+    """Resolve a YouTube Music album browse id (`MPREb_...`, what a
+    music.youtube.com/browse/... URL carries) to the album's `OLAK5uy_...`
+    playlist id - the only form the YouTube Data API (and therefore
+    refresh.py) accepts. The album page's server-rendered HTML embeds that
+    playlist id (verified by hand: exactly one distinct OLAK5uy_ id per
+    album page), so a plain GET is enough - no API key, no quota.
+
+    This is the ONE network call anywhere in admin/ - a deliberate, narrow
+    exception to its otherwise network-free text-file editing, made only on
+    an explicit "Preview import" click. Returns None on any network error,
+    or if the page doesn't contain exactly one candidate id, so a failure
+    surfaces as a row error in the import preview rather than a guess."""
+    request = urllib.request.Request(
+        YTM_BROWSE_URL.format(urllib.parse.quote(browse_id)),
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36",
+            "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            html = response.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return None
+    ids = set(_OLAK_ID_RE.findall(html))
+    return ids.pop() if len(ids) == 1 else None
+
+
+_URL_RE = re.compile(r"https?://[^\s<>()\"']+")
+# Lines in a copied YouTube Music list that are metadata, not a title - e.g.
+# "Show• 2023", "Album • 2019", a bare year, or a list marker like "a)".
+_SOURCE_LIST_NOISE_RE = re.compile(
+    r"^(?:(?:show|album|ep|single|hörbuch|audiobook|playlist|podcast)\b.*•.*|•.*|\d{4}|[a-z0-9]{1,3}[).])$",
+    re.IGNORECASE,
+)
+
+
+def parse_source_list(raw_text: str) -> list[dict]:
+    """Pull (youtube_id, url, raw_title) out of a free-form pasted list of
+    YouTube Music links - e.g. copied straight from a YouTube Music search/
+    artist page, where each entry looks like a URL line, the title line, the
+    same URL again, then a "Show• 2023"-style metadata line. The title is the
+    first non-noise line after an id's first URL (or any text on the URL's
+    own line). De-duplicated by id, in first-seen order. URLs whose id isn't
+    recognized (see infer_source_type()) are skipped. Done locally, not by
+    Claude, so ids never pass through an LLM that could mangle them."""
+    items: dict[str, dict] = {}
+    current = None
+    for line in raw_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        urls = _URL_RE.findall(line)
+        if urls:
+            youtube_id = extract_youtube_id(urls[0])
+            if infer_source_type(youtube_id) is None:
+                current = None
+                continue
+            current = youtube_id
+            items.setdefault(youtube_id, {"youtube_id": youtube_id, "url": urls[0], "raw_title": ""})
+            line = _URL_RE.sub("", line).strip(" <>\t|-")
+            if not line:
+                continue
+        if current and not items[current]["raw_title"] and not _SOURCE_LIST_NOISE_RE.match(line):
+            items[current]["raw_title"] = line
+    return list(items.values())
+
+
+def build_source_prompt(items: list[dict], series_names: list[str]) -> str:
+    """Copy/paste-able Claude.ai prompt that turns parse_source_list()'s raw
+    YouTube Music titles into clean sources.py labels plus a series guess,
+    answered as one JSON object keyed by id - the paste-back half is
+    prepare_source_import(). Claude is told to ask back rather than guess
+    when a series is unclear (a Claude.ai chat is interactive, unlike the
+    API path), and is given the existing series names so it reuses their
+    exact spelling. Deliberately one prompt for the whole list (no
+    chunking): neighboring items are the main context for guessing a
+    series from a title that doesn't name it."""
+    lines = [f"{item['youtube_id']} | {item['raw_title'] or '(no title found)'}" for item in items]
+    return (
+        "I'm adding children's audio dramas (Hörspiele) from YouTube Music to a catalog. "
+        "Below is a list of albums (ID | raw title as shown on YouTube Music). For each one, "
+        "produce a clean display label and the series it belongs to.\n\n"
+        "Label rules:\n"
+        '- Format: "<Series> - <Title>" if it belongs to a series, otherwise just "<Title>".\n'
+        '- Remove episode numbers and prefixes (e.g. "20: ", "Folge 12 - "), "Album - ", and '
+        'marketing suffixes such as "[Hörspiel zum TV-Special]", "(Hörspiel zum Kinofilm)", '
+        '"Das Original-Hörspiel zum Film".\n'
+        '- Keep parts that tell items apart, e.g. "(Teil 3 & 4)".\n'
+        "- Keep the original language and spelling - don't translate.\n"
+        "Examples:\n"
+        '- "Sofia die Erste - Auf einmal Prinzessin (Hörspiel zum TV-Special)" -> '
+        '"Sofia die Erste - Auf einmal Prinzessin"\n'
+        '- "20: Die Mystischen Inseln (Teil 3 & 4) [Hörspiel zum TV-Special]", listed among '
+        'other Sofia die Erste items -> "Sofia die Erste - Die Mystischen Inseln (Teil 3 & 4)"\n\n'
+        "Series:\n"
+        "- Infer it from the title, or from context: neighboring items, numbering, a matching "
+        "production style. Reuse the exact spelling from the existing series list below when "
+        "one matches.\n"
+        "- If you're not confident which series an item belongs to (or whether it belongs to "
+        "one at all), DON'T guess. First ask me - list those items with your best guesses - "
+        "and only produce the JSON after I've answered.\n\n"
+        'Language: "de" or "en" - the language of the audio drama.\n\n'
+        "Once everything is clear, return ONLY one JSON object in a single ```json code block, "
+        "keyed by each item's ID exactly as given, with one entry per listed item:\n"
+        '{"<ID>": {"label": "...", "series": "..." or null, "language": "de"}, ...}\n\n'
+        f"Existing series names: {', '.join(series_names) if series_names else '(none yet)'}\n\n"
+        "Items (ID | raw title):\n" + "\n".join(lines)
+    )
+
+
+def prepare_source_import(raw_text: str, resolver=resolve_album_browse_id) -> list[dict]:
+    """Parse a pasted Claude.ai reply to build_source_prompt() into preview
+    rows for the Sources screen - nothing is written here; the curator
+    reviews/edits the rows and confirms via add_imported_sources(). Each row:
+    {"input_id", "youtube_id", "type", "label", "series", "language",
+    "error"}. `MPREb_` browse ids are resolved to their `OLAK5uy_` playlist
+    id via `resolver` (concurrently - one page fetch each). A row gets an
+    `error` (and is unchecked by default in the preview) if its id isn't
+    recognized or can't be resolved, it's already in sources.py or repeated
+    within this import, or its label is missing. Raises ValueError if no
+    JSON object can be found at all."""
+    parsed = _reload("refresh")._parse_suggestion_json(raw_text)
+    if not isinstance(parsed, dict):
+        raise ValueError("Couldn't find a JSON object in the pasted text.")
+
+    keys = [str(k).strip() for k in parsed]
+    ids = {key: extract_youtube_id(key) for key in keys}
+    browse_ids = sorted({i for i in ids.values() if i.startswith("MPREb_")})
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        resolved = dict(zip(browse_ids, pool.map(resolver, browse_ids)))
+
+    existing_ids = {s["youtube_id"] for s in list_sources()}
+    seen: set[str] = set()
+    rows = []
+    for key, raw in zip(keys, parsed.values()):
+        raw = raw if isinstance(raw, dict) else {}
+        youtube_id = ids[key]
+        language = raw.get("language") if isinstance(raw.get("language"), str) else ""
+        row = {
+            "input_id": key,
+            "youtube_id": youtube_id,
+            "type": infer_source_type(youtube_id),
+            "label": raw.get("label").strip() if isinstance(raw.get("label"), str) else "",
+            "series": raw.get("series").strip() if isinstance(raw.get("series"), str) else "",
+            "language": language.strip().lower() or "de",
+            "error": None,
+        }
+        if youtube_id.startswith("MPREb_"):
+            row["youtube_id"] = resolved.get(youtube_id) or ""
+        if row["type"] is None:
+            row["error"] = "Unrecognized id."
+        elif not row["youtube_id"]:
+            row["error"] = "Couldn't resolve this album to a playlist id - add it by hand via its Share link."
+        elif row["youtube_id"] in existing_ids:
+            row["error"] = "Already in sources.py."
+        elif row["youtube_id"] in seen:
+            row["error"] = "Listed twice in this import."
+        elif not row["label"]:
+            row["error"] = "No label in Claude's reply."
+        if row["youtube_id"]:
+            seen.add(row["youtube_id"])
+        rows.append(row)
+    return rows
+
+
+def add_imported_sources(rows: list[dict]) -> dict[str, list[str]]:
+    """Write the curator-confirmed rows from the import preview: one new
+    active sources.py entry per row, plus - for an album, whose
+    ITEM_OVERRIDES key is its own playlist id - its `series` into
+    overrides.py via apply_override() (the preview form is the human review
+    step for that value). Channel/playlist sources get no series override,
+    since their items are keyed by video ids not known until --fetch. Rows
+    whose id is already in sources.py by now are skipped, not duplicated.
+    Written in reverse so they end up in list order (add_source() inserts
+    at the top of SOURCES). Returns {"added": [...labels], "skipped": [...ids]}."""
+    existing_ids = {s["youtube_id"] for s in list_sources()}
+    report: dict[str, list[str]] = {"added": [], "skipped": []}
+    to_add = []
+    for row in rows:
+        if row["youtube_id"] in existing_ids:
+            report["skipped"].append(row["youtube_id"])
+            continue
+        existing_ids.add(row["youtube_id"])
+        to_add.append(row)
+    for row in reversed(to_add):
+        add_source(
+            {
+                "type": row["type"],
+                "youtube_id": row["youtube_id"],
+                "label": row["label"],
+                "language": row["language"] or "de",
+                "active": True,
+            }
+        )
+        if row.get("series") and row["type"] == "album":
+            apply_override(row["youtube_id"], {"series": row["series"]})
+    report["added"] = [row["label"] for row in to_add]
+    return report
 
 
 # Matches one SOURCES entry block ("    {\n...\n    },\n" plus its trailing
@@ -841,6 +1374,230 @@ def apply_series_override(series_name: str, fields: dict) -> None:
         new_content = head + "\n" + block + body_region
 
     OVERRIDES_PATH.write_text(new_content, encoding="utf-8")
+
+
+def _remove_fields(anchor_re: re.Pattern, key: str, fields) -> bool:
+    """Delete the `"<field>": ...,` lines for `fields` from the `key` block
+    of the overrides.py dict found by `anchor_re` (ITEM_OVERRIDES or
+    SERIES_OVERRIDES). Only single-line values are matched - every field
+    this is used for (series, position_in_series, seasonal, genre,
+    franchise, min_age) is written on one line. Returns whether anything
+    changed; a missing block or field is a no-op, not an error."""
+    fields = list(fields)
+    if not fields:
+        return False
+    content = OVERRIDES_PATH.read_text(encoding="utf-8")
+    anchor = anchor_re.search(content)
+    if not anchor:
+        raise RuntimeError("Could not find the dict anchor in overrides.py")
+    head, body_region = content[: anchor.end()], content[anchor.end() :]
+    match = _entry_block_re(key).search(body_region)
+    if not match:
+        return False
+    names = "|".join(re.escape(f) for f in fields)
+    new_body, count = re.subn(rf'^\s*#?\s*"(?:{names})":.*,[ \t]*\n', "", match.group(2), flags=re.M)
+    if not count:
+        return False
+    new_block = match.group(1) + new_body + match.group(3)
+    OVERRIDES_PATH.write_text(
+        head + body_region[: match.start()] + new_block + body_region[match.end() :], encoding="utf-8"
+    )
+    return True
+
+
+def remove_override_fields(entry_id: str, fields) -> bool:
+    """Clear fields from one ITEM_OVERRIDES entry - the counterpart to
+    apply_override(), whose "blank is never written" rule means it can't
+    unset anything. Used by the Catalog screen's bulk actions."""
+    return _remove_fields(OVERRIDES_ANCHOR_RE, entry_id, fields)
+
+
+def save_series_override(series_name: str, fields: dict) -> None:
+    """Authoritative save for the Series screen: unlike
+    apply_series_override(), a blank value here (unchecked genres, "(none)"
+    franchise/type, empty min age) REMOVES that field from the series entry
+    instead of leaving the old value - the series form always shows every
+    field, so blank means "unset it"."""
+    apply_series_override(series_name, fields)
+    blank = [k for k, v in fields.items() if v in (None, "", [])]
+    _remove_fields(SERIES_OVERRIDES_ANCHOR_RE, series_name.strip(), blank)
+
+
+def _series_members(series_name: str) -> list[str]:
+    return [eid for eid, o in list_overrides().items() if o.get("series") == series_name]
+
+
+def rename_series(old: str, new: str) -> int:
+    """Rename a series everywhere it's referenced: its SERIES_OVERRIDES key
+    (if it has an entry), every ITEM_OVERRIDES member's `series` value, and
+    any pending suggestion in data/claude_suggestions.json that names it.
+    Raises ValueError for a blank/unchanged name, or if `new` already has a
+    SERIES_OVERRIDES entry while `old` has one too (merge those by hand).
+    Renaming onto an existing series WITHOUT an entry of its own is allowed
+    - that's how two spellings of one series get merged. Returns how many
+    items were updated."""
+    old, new = old.strip(), new.strip()
+    if not new or new == old:
+        raise ValueError("Enter a different, non-empty series name.")
+    series_overrides = list_series_overrides()
+    if old in series_overrides and new in series_overrides:
+        raise ValueError(f"{new!r} already has its own series entry - merge the two by hand.")
+
+    if old in series_overrides:
+        content = OVERRIDES_PATH.read_text(encoding="utf-8")
+        anchor = SERIES_OVERRIDES_ANCHOR_RE.search(content)
+        head, body_region = content[: anchor.end()], content[anchor.end() :]
+        match = _entry_block_re(old).search(body_region)
+        new_header = f"    {_py_literal(new)}: {{\n"
+        body_region = body_region[: match.start()] + new_header + body_region[match.start() + len(match.group(1)) :]
+        OVERRIDES_PATH.write_text(head + body_region, encoding="utf-8")
+
+    members = _series_members(old)
+    for entry_id in members:
+        apply_override(entry_id, {"series": new})
+
+    suggestions = load_suggestions()
+    touched = False
+    for entry in suggestions.values():
+        if entry.get("series") == old:
+            entry["series"] = new
+            touched = True
+    if touched:
+        save_suggestions(suggestions)
+    return len(members)
+
+
+def remove_series_override(series_name: str) -> int:
+    """Delete a series' SERIES_OVERRIDES entry (plus any comment lines
+    directly above it). Its genre/franchise/min_age are first copied onto
+    every member's own ITEM_OVERRIDES entry, so removing the entry never
+    silently strips curated values from the catalog - the members just go
+    back to per-item values. The members keep their `series` name. Returns
+    the number of members updated."""
+    meta = list_series_overrides().get(series_name)
+    if meta is None:
+        raise ValueError(f"{series_name!r} has no series entry.")
+    values = {f: meta.get(f) for f in _reload("refresh").SERIES_RESOLVED_FIELDS}
+    members = _series_members(series_name)
+    for entry_id in members:
+        apply_override(entry_id, values)
+
+    content = OVERRIDES_PATH.read_text(encoding="utf-8")
+    anchor = SERIES_OVERRIDES_ANCHOR_RE.search(content)
+    head, body_region = content[: anchor.end()], content[anchor.end() :]
+    match = _entry_block_re(series_name).search(body_region)
+    start, end = match.start(), match.end()
+    # Swallow comment lines directly above the block and one blank line after it.
+    while True:
+        prev_line_start = body_region.rfind("\n", 0, start - 1) + 1
+        if start > 0 and body_region[prev_line_start:start].lstrip().startswith("#"):
+            start = prev_line_start
+        else:
+            break
+    if body_region[end : end + 1] == "\n":
+        end += 1
+    OVERRIDES_PATH.write_text(head + body_region[:start] + body_region[end:], encoding="utf-8")
+    return len(members)
+
+
+def strip_series_resolved_fields(series_name: str) -> int:
+    """Remove the now-ignored per-item genre/franchise/min_age from every
+    member of a series that has a SERIES_OVERRIDES entry (sync_source()
+    resolves those three from the series entry, and warns about stray
+    per-item copies). Returns how many members changed."""
+    fields = _reload("refresh").SERIES_RESOLVED_FIELDS
+    return sum(1 for entry_id in _series_members(series_name) if remove_override_fields(entry_id, fields))
+
+
+def suggest_series_metadata(member_overrides: list[dict]) -> dict:
+    """Most-used genre/franchise/min_age across a series' members - the
+    starting values offered when creating a series entry (same rule the
+    initial SERIES_OVERRIDES migration used). A min_age tie picks the lower
+    value, per overrides.py's lower-of-the-two rule; other ties keep the
+    first-seen value. Unset values don't count."""
+    from collections import Counter
+
+    result = {}
+    for field in _reload("refresh").SERIES_RESOLVED_FIELDS:
+        values = [o.get(field) for o in member_overrides if o.get(field) not in (None, "", [])]
+        if field == "genre":
+            values = [tuple(sorted(v)) for v in values]
+        if not values:
+            result[field] = [] if field == "genre" else None
+            continue
+        counts = Counter(values)
+        best = max(counts.values())
+        tied = [v for v in counts if counts[v] == best]
+        chosen = min(tied) if field == "min_age" else tied[0]
+        result[field] = list(chosen) if field == "genre" else chosen
+    return result
+
+
+def series_anchor(name: str) -> str:
+    """Stable, HTML-id-safe anchor for a series on the Series screen
+    (`#series-<anchor>`) - lowercased, umlauts transliterated, every other
+    run of non-[a-z0-9] collapsed to "-"."""
+    name = name.lower()
+    for src, dst in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
+        name = name.replace(src, dst)
+    return re.sub(r"[^a-z0-9]+", "-", name).strip("-") or "series"
+
+
+def build_series_rows(overrides: dict, series_overrides: dict, item_info: dict) -> list[dict]:
+    """One row per series name for the Series screen - every
+    SERIES_OVERRIDES key plus every `series` value any item uses. Pure (no
+    I/O). Each row: name, has_entry, series_type, genre/franchise/min_age
+    (the entry's, or the most-used member values as `suggested` when there's
+    no entry), members (sorted by position, unset last, then title - same
+    order as the public site), and problems: duplicate positions, members
+    without a position, gaps in the 1..n numbering, and an entry with no
+    members."""
+    by_series: dict[str, list[str]] = {}
+    for entry_id, o in overrides.items():
+        if o.get("series"):
+            by_series.setdefault(o["series"], []).append(entry_id)
+
+    rows = []
+    for name in sorted(set(by_series) | set(series_overrides), key=str.lower):
+        meta = series_overrides.get(name)
+        members = []
+        for entry_id in by_series.get(name, []):
+            o = overrides[entry_id]
+            members.append(
+                {
+                    "entry_id": entry_id,
+                    "title": item_info.get(entry_id, {}).get("title") or entry_id,
+                    "position": o.get("position_in_series"),
+                    "year": o.get("source_release_year"),
+                    "variant": o.get("variant"),
+                }
+            )
+        members.sort(key=lambda m: (m["position"] is None, m["position"] or 0, m["title"].lower()))
+        # Only the main line is numbered: a remake shares its original's
+        # position on purpose, and a spin-off sits outside the numbering.
+        main = [m for m in members if not m["variant"]]
+        positions = [m["position"] for m in main if m["position"] is not None]
+        duplicates = sorted({p for p in positions if positions.count(p) > 1})
+        gaps = sorted(set(range(1, max(positions) + 1)) - set(positions)) if positions else []
+        rows.append(
+            {
+                "name": name,
+                "anchor": series_anchor(name),
+                "has_entry": meta is not None,
+                "series_type": (meta or {}).get("series_type") or "",
+                "genre": (meta or {}).get("genre") or [],
+                "franchise": (meta or {}).get("franchise") or "",
+                "min_age": (meta or {}).get("min_age"),
+                "suggested": None if meta is not None else suggest_series_metadata(
+                    [overrides[m["entry_id"]] for m in members]
+                ),
+                "members": members,
+                "duplicate_positions": duplicates,
+                "unpositioned": sum(1 for m in members if m["position"] is None and m["variant"] != "spin_off"),
+                "gaps": gaps,
+            }
+        )
+    return rows
 
 
 VALUE_LIST_ANCHOR_RES = {

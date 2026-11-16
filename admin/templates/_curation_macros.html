@@ -1,0 +1,100 @@
+{# Shared by the Review (suggestions.html) and Catalog (catalog.html) screens. #}
+{% macro diff_hint(field_name, diff) %}
+  {% if field_name in diff %}
+    {% set dv = diff[field_name] %}
+    {% if dv is sequence and dv is not string %}
+      <span class="diff-hint">Suggested: <code>{{ dv | tojson }}</code>
+        <button type="button" class="diff-use-btn" data-value="{{ dv | tojson | forceescape }}">Use</button></span>
+    {% else %}
+      <span class="diff-hint">Suggested: {{ dv }}
+        <button type="button" class="diff-use-btn" data-value="{{ dv }}">Use</button></span>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% macro field_grid(values, genre_values, franchise_values, seasonal_values, series_names, diff={}, variant_values=["remake", "spin_off"]) %}
+<div class="field-grid">
+  <label>
+    Description
+    <textarea name="description" rows="2">{{ values.description or "" }}</textarea>
+    {{ diff_hint("description", diff) }}
+  </label>
+  <label>
+    Series
+    <select name="series" class="series-picker">
+      <option value="">(none)</option>
+      {% for s in series_names %}
+        <option value="{{ s }}" {% if values.series == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+      <option value="__new__" {% if values.series and values.series not in series_names %}selected{% endif %}>+ Add new series...</option>
+    </select>
+    <input
+      type="text" name="series_new" class="series-new-input"
+      placeholder="New series name"
+      value="{{ values.series if (values.series and values.series not in series_names) else '' }}"
+      {% if not (values.series and values.series not in series_names) %}hidden{% endif %}
+    >
+    {{ diff_hint("series", diff) }}
+  </label>
+  <label>
+    Position in series
+    <input type="number" name="position_in_series" value="{{ values.position_in_series if values.position_in_series is not none else "" }}">
+    {{ diff_hint("position_in_series", diff) }}
+  </label>
+  <label>
+    Variant
+    <select name="variant">
+      <option value="">main line</option>
+      {% for v in variant_values %}
+        <option value="{{ v }}" {% if values.variant == v %}selected{% endif %}>{{ v | replace("_", "-") }}</option>
+      {% endfor %}
+    </select>
+    <span class="hint">A remake keeps the position of the part it remakes. To move an item back to the main line, use the Catalog's bulk "Set variant".</span>
+  </label>
+  <label>
+    Genre
+    <select name="genre" class="series-resolved-field" data-field="genre" multiple size="6">
+      {% for g in genre_values %}
+        <option value="{{ g }}" {% if values.genre and g in values.genre %}selected{% endif %}>{{ g }}</option>
+      {% endfor %}
+    </select>
+    <span class="hint">Ctrl/Cmd-click to select more than one.</span>
+    {{ diff_hint("genre", diff) }}
+  </label>
+  <label>
+    Franchise
+    <select name="franchise" class="series-resolved-field" data-field="franchise">
+      <option value="">(none)</option>
+      {% for f in franchise_values %}
+        <option value="{{ f }}" {% if values.franchise == f %}selected{% endif %}>{{ f }}</option>
+      {% endfor %}
+    </select>
+    {{ diff_hint("franchise", diff) }}
+  </label>
+  <label>
+    Min age
+    <input type="number" name="min_age" min="0" class="series-resolved-field" data-field="min_age" value="{{ values.min_age if values.min_age is not none else "" }}">
+    {{ diff_hint("min_age", diff) }}
+  </label>
+  <label>
+    Source release year
+    <input type="number" name="source_release_year" value="{{ values.source_release_year if values.source_release_year is not none else "" }}">
+    {{ diff_hint("source_release_year", diff) }}
+  </label>
+  <label>
+    Seasonal
+    <select name="seasonal">
+      <option value="">(none)</option>
+      {% for sv in seasonal_values %}
+        <option value="{{ sv }}" {% if values.seasonal == sv %}selected{% endif %}>{{ sv }}</option>
+      {% endfor %}
+    </select>
+    {{ diff_hint("seasonal", diff) }}
+  </label>
+  <label>
+    Awards (JSON array)
+    <textarea name="awards" rows="3" placeholder='[{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2026}]'>{{ values.awards | tojson(indent=2) if values.awards else "" }}</textarea>
+    {{ diff_hint("awards", diff) }}
+  </label>
+</div>
+{% endmacro %}

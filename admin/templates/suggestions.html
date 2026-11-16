@@ -1,276 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Suggestions - StorytimeFinder Admin{% endblock %}
-
-{% macro diff_hint(field_name, diff) %}
-  {% if field_name in diff %}
-    {% set dv = diff[field_name] %}
-    {% if dv is sequence and dv is not string %}
-      <span class="diff-hint">Suggested: <code>{{ dv | tojson }}</code>
-        <button type="button" class="diff-use-btn" data-value="{{ dv | tojson | forceescape }}">Use</button></span>
-    {% else %}
-      <span class="diff-hint">Suggested: {{ dv }}
-        <button type="button" class="diff-use-btn" data-value="{{ dv }}">Use</button></span>
-    {% endif %}
-  {% endif %}
-{% endmacro %}
-
-{% macro field_grid(values, genre_values, franchise_values, seasonal_values, series_names, diff={}) %}
-<div class="field-grid">
-  <label>
-    Description
-    <textarea name="description" rows="2">{{ values.description or "" }}</textarea>
-    {{ diff_hint("description", diff) }}
-  </label>
-  <label>
-    Series
-    <select name="series" class="series-picker">
-      <option value="">(none)</option>
-      {% for s in series_names %}
-        <option value="{{ s }}" {% if values.series == s %}selected{% endif %}>{{ s }}</option>
-      {% endfor %}
-      <option value="__new__" {% if values.series and values.series not in series_names %}selected{% endif %}>+ Add new series...</option>
-    </select>
-    <input
-      type="text" name="series_new" class="series-new-input"
-      placeholder="New series name"
-      value="{{ values.series if (values.series and values.series not in series_names) else '' }}"
-      {% if not (values.series and values.series not in series_names) %}hidden{% endif %}
-    >
-    {{ diff_hint("series", diff) }}
-  </label>
-  <label>
-    Position in series
-    <input type="number" name="position_in_series" value="{{ values.position_in_series if values.position_in_series is not none else "" }}">
-    {{ diff_hint("position_in_series", diff) }}
-  </label>
-  <label>
-    Genre
-    <select name="genre" class="series-resolved-field" data-field="genre" multiple size="6">
-      {% for g in genre_values %}
-        <option value="{{ g }}" {% if values.genre and g in values.genre %}selected{% endif %}>{{ g }}</option>
-      {% endfor %}
-    </select>
-    <span class="hint">Ctrl/Cmd-click to select more than one.</span>
-    {{ diff_hint("genre", diff) }}
-  </label>
-  <label>
-    Franchise
-    <select name="franchise" class="series-resolved-field" data-field="franchise">
-      <option value="">(none)</option>
-      {% for f in franchise_values %}
-        <option value="{{ f }}" {% if values.franchise == f %}selected{% endif %}>{{ f }}</option>
-      {% endfor %}
-    </select>
-    {{ diff_hint("franchise", diff) }}
-  </label>
-  <label>
-    Min age
-    <input type="number" name="min_age" min="0" class="series-resolved-field" data-field="min_age" value="{{ values.min_age if values.min_age is not none else "" }}">
-    {{ diff_hint("min_age", diff) }}
-  </label>
-  <label>
-    Source release year
-    <input type="number" name="source_release_year" value="{{ values.source_release_year if values.source_release_year is not none else "" }}">
-    {{ diff_hint("source_release_year", diff) }}
-  </label>
-  <label>
-    Seasonal
-    <select name="seasonal">
-      <option value="">(none)</option>
-      {% for sv in seasonal_values %}
-        <option value="{{ sv }}" {% if values.seasonal == sv %}selected{% endif %}>{{ sv }}</option>
-      {% endfor %}
-    </select>
-    {{ diff_hint("seasonal", diff) }}
-  </label>
-  <label>
-    Awards (JSON array)
-    <textarea name="awards" rows="3" placeholder='[{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2026}]'>{{ values.awards | tojson(indent=2) if values.awards else "" }}</textarea>
-    {{ diff_hint("awards", diff) }}
-  </label>
-</div>
-{% endmacro %}
+{% from "_curation_macros.html" import field_grid %}
+{% block title %}Review - StorytimeFinder Admin{% endblock %}
 
 {% block content %}
-{% if consistency_warnings %}
-<section class="consistency-warnings">
-  <h2>
-    Consistency warnings
-    <span class="badge badge-warn">{{ consistency_warnings|length }}</span>
-  </h2>
-  <p class="hint">
-    Three checks against the current <code>overrides.py</code>, all purely
-    informational - not hard errors: items sharing a <code>series</code>
-    that disagree on genre/franchise/seasonal, or that claim the same
-    <code>position_in_series</code>; two different items with the exact
-    same title AND the same <code>source_release_year</code> (a known,
-    differing year - e.g. two separate film adaptations sharing a title -
-    is not flagged); and known items missing a core curated field
-    (description/min_age/genre/source_release_year, except
-    genre/min_age on an item covered by an episodic series' entry
-    below), including ones with no override entry at all yet. Surfaced
-    here as you curate so you don't have to sync first to see them.
-  </p>
-  <ul class="warning-list">
-    {% for text, entry_ids in consistency_warnings %}
-      <li>
-        <div class="warning-body">
-          <span>{{ text }}</span>
-          {% if entry_ids %}
-          <span class="warning-links">
-            Jump to:
-            {% for eid in entry_ids %}
-              <a href="#entry-{{ eid }}" class="warning-link">{{ item_info.get(eid, {}).get("title", eid) }}</a>{% if not loop.last %}, {% endif %}
-            {% endfor %}
-          </span>
-          {% endif %}
-        </div>
-        <form method="post" action="{{ url_for('admin.warnings_dismiss') }}" class="warning-dismiss-form">
-          <input type="hidden" name="warning" value="{{ text }}">
-          <input type="hidden" name="screen" value="suggestions">
-          <button type="submit" class="warning-dismiss-btn">Ignore</button>
-        </form>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
-{% endif %}
-
-<section class="consistency-warnings">
-  <h2>Episodic series metadata</h2>
-  <p class="hint">
-    <code>SERIES_OVERRIDES</code> in <code>refresh/overrides.py</code> - series_type/genre/
-    franchise/min_age for an episodic series, set once here instead of repeated on every
-    episode's own entry above. Picking one of these series in an item's <strong>Series</strong>
-    field above automatically disables and prefills that item's genre/franchise/min_age
-    fields with the values below, once it's marked <code>episodic</code>.
-  </p>
-  {% if series_overrides %}
-  <table class="source-table">
-    <thead>
-      <tr><th>Series</th><th>Type</th><th>Genre</th><th>Franchise</th><th>Min age</th><th></th></tr>
-    </thead>
-    <tbody>
-      {% for name, meta in series_overrides.items() | sort %}
-      <tr>
-        <td>{{ name }}</td>
-        <td>
-          <select name="series_type" form="series-override-{{ loop.index }}">
-            <option value="">(none)</option>
-            <option value="episodic" {% if meta.series_type == "episodic" %}selected{% endif %}>episodic</option>
-            <option value="sequel" {% if meta.series_type == "sequel" %}selected{% endif %}>sequel</option>
-          </select>
-        </td>
-        <td>
-          <select name="genre" form="series-override-{{ loop.index }}" multiple size="4">
-            {% for g in genre_values %}
-              <option value="{{ g }}" {% if meta.genre and g in meta.genre %}selected{% endif %}>{{ g }}</option>
-            {% endfor %}
-          </select>
-        </td>
-        <td>
-          <select name="franchise" form="series-override-{{ loop.index }}">
-            <option value="">(none)</option>
-            {% for f in franchise_values %}
-              <option value="{{ f }}" {% if meta.franchise == f %}selected{% endif %}>{{ f }}</option>
-            {% endfor %}
-          </select>
-        </td>
-        <td>
-          <input type="number" name="min_age" min="0" form="series-override-{{ loop.index }}"
-            value="{{ meta.min_age if meta.min_age is not none else '' }}">
-        </td>
-        <td><button type="submit" form="series-override-{{ loop.index }}" class="btn btn-secondary">Save</button></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% for name, meta in series_overrides.items() | sort %}
-    <form id="series-override-{{ loop.index }}" method="post" action="{{ url_for('admin.series_overrides_action', series_name=name) }}"></form>
-  {% endfor %}
-  {% endif %}
-
-  <h3>Add new series metadata</h3>
-  <form method="post" action="{{ url_for('admin.series_overrides_add') }}" class="field-grid">
-    <label>
-      Series name
-      <input type="text" name="series" required placeholder="Bibi Blocksberg">
-    </label>
-    <label>
-      Type
-      <select name="series_type">
-        <option value="">(none)</option>
-        <option value="episodic">episodic</option>
-        <option value="sequel">sequel</option>
-      </select>
-    </label>
-    <label>
-      Genre
-      <select name="genre" multiple size="4">
-        {% for g in genre_values %}<option value="{{ g }}">{{ g }}</option>{% endfor %}
-      </select>
-      <span class="hint">Ctrl/Cmd-click to select more than one.</span>
-    </label>
-    <label>
-      Franchise
-      <select name="franchise">
-        <option value="">(none)</option>
-        {% for f in franchise_values %}<option value="{{ f }}">{{ f }}</option>{% endfor %}
-      </select>
-    </label>
-    <label>
-      Min age
-      <input type="number" name="min_age" min="0">
-    </label>
-    <div class="actions">
-      <button type="submit" class="btn btn-primary">Add series metadata</button>
-    </div>
-  </form>
-</section>
-
-<section class="consistency-warnings">
-  <h2>Description prompt builder</h2>
-  <p class="hint">
-    Copy this into a separate Claude.ai chat to batch-generate descriptions
-    by hand instead of paying for the API call during Fetch (see
-    <code>refresh/refresh.py --fetch --skip-claude</code>, also available as
-    a checkbox on the <a href="{{ url_for('admin.fetch') }}">Fetch</a>
-    screen). Lists every item below (Claude suggestions and Applied
-    overrides) that has no description yet - either applied or suggested -
-    with its series in parentheses where it has one so episodes of the same
-    series stay distinguishable in Claude's reply. Paste the result back
-    into each item's own Description field below, then Apply/Save as usual
-    - nothing here is ever sent anywhere automatically.
-  </p>
-  <textarea id="description-prompt" class="prompt-textarea" rows="6" readonly>{{ description_prompt }}</textarea>
-  <div class="actions">
-    <button type="button" class="btn btn-secondary" data-copy-target="#description-prompt">Copy to clipboard</button>
-  </div>
-</section>
-
-<h1>Claude suggestions</h1>
+<h1>Review suggestions</h1>
 <p class="hint">
-  Nothing here is applied automatically. Edit any field before applying if
-  Claude got it wrong, or clear a field to leave it unset. Blank fields are
-  never written - they don't overwrite anything already in overrides.py.
-  Not happy with a suggestion? <strong>Regenerate suggestion</strong> asks
-  Claude again (runs <code>refresh/refresh.py --regenerate-suggestion</code>
-  for just that item) and replaces the fields below with the new result -
-  do this before applying, since applying writes whatever's currently shown.
-  Awards is a JSON array, e.g.
-  <code>[{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2026}]</code>
-  - leave it empty for none. Working through several items in a row?
-  <strong>Apply &amp; Next</strong>/Dismiss both take you straight to the
-  next card instead of back to the top of the page; plain
-  <strong>Apply to overrides.py</strong> instead keeps you on this same
-  card, for a quick review-and-fix loop on one item.
+  Pending Claude suggestions, one card at a time. Nothing is applied automatically - edit any
+  field first if Claude got it wrong; blank fields are never written. <strong>Apply &amp;
+  Next</strong> (or <kbd>Ctrl</kbd>+<kbd>Enter</kbd>) applies and moves on; <kbd>←</kbd>/<kbd>→</kbd>
+  (or <kbd>K</kbd>/<kbd>J</kbd>) step between cards without saving. <strong>Regenerate
+  suggestion</strong> asks Claude again for just that item. Awards is a JSON array, e.g.
+  <code>[{"name": "Deutscher Hörbuchpreis", "category": "Bestes Kinderhörbuch", "year": 2026}]</code>.
+  Already-applied items live on the <a href="{{ url_for('admin.catalog') }}">Catalog</a> screen,
+  series-level metadata on <a href="{{ url_for('admin.series') }}">Series</a>.
+  {% if warning_count %}
+    <br><a href="{{ url_for('admin.catalog') }}#catalog-warnings">{{ warning_count }} consistency warning{{ "s" if warning_count != 1 }} on the Catalog screen</a>.
+  {% endif %}
 </p>
 
 {% if not suggestions %}
-  <p class="empty">No pending suggestions. New ones appear here after running the refresh job on new items.</p>
+  <p class="empty">No pending suggestions. New ones appear here after running Fetch on new items, or after importing a Claude.ai reply below.</p>
 {% else %}
-  <p class="count">{{ suggestions|length }} pending</p>
-  <div class="suggestion-list">
+  <div class="review-toolbar" id="review-toolbar" hidden>
+    <button type="button" class="btn btn-secondary" id="review-prev" title="Previous (← or K)">← Prev</button>
+    <span id="review-position" class="count"></span>
+    <button type="button" class="btn btn-secondary" id="review-next" title="Next (→ or J)">Next →</button>
+    <label class="checkbox-label review-show-all"><input type="checkbox" id="review-show-all"> Show all {{ suggestions|length }}</label>
+  </div>
+  <p class="count" id="review-count">{{ suggestions|length }} pending</p>
+  <div class="suggestion-list" id="review-list">
     {% for entry_id, s in suggestions.items() %}
     <article class="suggestion-card" id="entry-{{ entry_id }}">
       {% set thumb = item_info.get(entry_id, {}).get("thumbnail_url") %}
@@ -287,12 +45,12 @@
       </p>
 
       <form method="post" action="{{ url_for('admin.suggestions_regenerate', entry_id=entry_id) }}" class="regenerate-form">
-        <button type="submit" class="btn btn-secondary">Regenerate suggestion</button>
+        <button type="submit" class="btn btn-secondary" data-loading-label="Regenerating...">Regenerate suggestion</button>
       </form>
 
-      <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}">
+      <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}" class="review-form">
         <input type="hidden" name="section" value="suggestion">
-        {{ field_grid(s, genre_values, franchise_values, seasonal_values, series_names) }}
+        {{ field_grid(s, genre_values, franchise_values, seasonal_values, series_names, {}, variant_values) }}
         <div class="actions">
           <button type="submit" name="action" value="apply" class="btn btn-primary">Apply to overrides.py</button>
           <button type="submit" name="action" value="apply_next" class="btn btn-primary">Apply &amp; Next</button>
@@ -304,139 +62,120 @@
   </div>
 {% endif %}
 
-<h1>Applied overrides</h1>
-<p class="hint">
-  Every item currently in <code>overrides.py</code>, editable in place.
-  <strong>Save changes</strong> writes only the fields you leave filled in -
-  same rule as above, blank fields are never written. This never removes an
-  item from <code>overrides.py</code>; there's no delete here, edit the file
-  by hand for that. <strong>Regenerate suggestion</strong> here asks Claude
-  for a fresh suggestion for this already-curated item - it lands in
-  <strong>Claude suggestions</strong> above rather than changing anything
-  here directly. If that suggestion disagrees with what's already applied,
-  the differing field(s) below show a <strong>Suggested: ...</strong> hint
-  with its own <strong>Use</strong> button - click it to pull just that
-  field's value into the form, review/edit it, then <strong>Save
-  changes</strong> - the rest of the item is never touched.
-  Maintaining several items in a row? <strong>Save &amp; Next</strong>
-  takes you straight to the next card instead of back to the top of the
-  page; plain <strong>Save changes</strong> keeps you on this same card.
-</p>
+<h1>Claude.ai prompt builders</h1>
 
-{% if not overrides %}
-  <p class="empty">No overrides yet. Apply a suggestion above, or add one to overrides.py by hand.</p>
-{% else %}
-  <p class="count">{{ overrides|length }} applied</p>
-  <div class="suggestion-list">
-    {% for entry_id, o in overrides.items() %}
-    {% set entry_diff = diffs.get(entry_id, {}) %}
-    <article class="suggestion-card" id="entry-{{ entry_id }}">
-      {% set thumb = item_info.get(entry_id, {}).get("thumbnail_url") %}
-      {% set yt_url = item_info.get(entry_id, {}).get("youtube_music_url") %}
-      {% if thumb %}
-        {% if yt_url %}<a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">{% endif %}
-        <img class="suggestion-thumb" src="{{ thumb }}" alt="">
-        {% if yt_url %}</a>{% endif %}
-      {% endif %}
-      <h2>
-        {{ item_info.get(entry_id, {}).get("title", entry_id) }}
-        {% if entry_diff %}
-          <span class="badge badge-warn">{{ entry_diff|length }} suggested change{{ "s" if entry_diff|length != 1 else "" }}</span>
-        {% endif %}
-      </h2>
-      <p class="entry-id">
-        <code>{{ entry_id }}</code>
-        {% if yt_url %} &middot; <a href="{{ yt_url }}" target="_blank" rel="noopener noreferrer">Open in YouTube Music</a>{% endif %}
-      </p>
-
-      <form method="post" action="{{ url_for('admin.suggestions_regenerate', entry_id=entry_id) }}" class="regenerate-form">
-        <button type="submit" class="btn btn-secondary">Regenerate suggestion</button>
-      </form>
-
-      <form method="post" action="{{ url_for('admin.suggestions_action', entry_id=entry_id) }}">
-        <input type="hidden" name="section" value="override">
-        {{ field_grid(o, genre_values, franchise_values, seasonal_values, series_names, entry_diff) }}
-        <div class="actions">
-          <button type="submit" name="action" value="apply" class="btn btn-primary">Save changes</button>
-          <button type="submit" name="action" value="apply_next" class="btn btn-primary">Save &amp; Next</button>
-        </div>
-      </form>
-    </article>
+<details class="consistency-warnings tool-panel" {% if metadata_prompts and not suggestions %}open{% endif %}>
+  <summary><h2>Metadata prompt builder{% if metadata_prompts %} <span class="badge badge-warn">{{ metadata_prompts|length }} chunk{{ "s" if metadata_prompts|length != 1 }}</span>{% endif %}</h2></summary>
+  <p class="hint">
+    Batch-generate <em>all</em> suggestion fields (description, series, position, genre,
+    franchise, min age, release year, seasonal) in a Claude.ai chat - with web search on -
+    instead of via the API during Fetch. Lists every item that is still missing a description,
+    min age, genre, or release year once its applied override and pending suggestion are taken
+    together, split into chunks of 25 so each reply stays complete. Paste each chunk into
+    Claude.ai, then paste its JSON reply into the import box below. Imported values land in the
+    review queue above - nothing is written to overrides.py until you apply each card.
+  </p>
+  {% if not metadata_prompts %}
+    <p class="empty">Every known item already has all core fields filled in (applied or suggested).</p>
+  {% else %}
+    {% for prompt in metadata_prompts %}
+      <h3>Chunk {{ loop.index }} of {{ metadata_prompts|length }}</h3>
+      <textarea id="metadata-prompt-{{ loop.index }}" class="prompt-textarea" rows="6" readonly>{{ prompt }}</textarea>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" data-copy-target="#metadata-prompt-{{ loop.index }}">Copy to clipboard</button>
+      </div>
     {% endfor %}
+  {% endif %}
+
+  <form method="post" action="{{ url_for('admin.suggestions_import') }}">
+    <label for="metadata-import">Paste Claude's JSON reply</label>
+    <textarea id="metadata-import" name="json" class="prompt-textarea" rows="6" placeholder='{"VIDEO_ID": {"description": "...", "min_age": 4, ...}}'></textarea>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Import as suggestions</button>
+    </div>
+  </form>
+</details>
+
+<details class="consistency-warnings tool-panel">
+  <summary><h2>Description prompt builder</h2></summary>
+  <p class="hint">
+    Descriptions only, as plain text: copy this into a Claude.ai chat, then paste each returned
+    description into that item's Description field by hand. Lists every item with no
+    description yet (applied or suggested), with its series in parentheses. The Metadata prompt
+    builder above does the same for every field and imports the reply in one go.
+  </p>
+  <textarea id="description-prompt" class="prompt-textarea" rows="6" readonly>{{ description_prompt }}</textarea>
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" data-copy-target="#description-prompt">Copy to clipboard</button>
   </div>
-{% endif %}
+</details>
+
+{% include "_series_lock_script.html" %}
 
 <script>
-  // series_type/genre/franchise/min_age for every SERIES_OVERRIDES
-  // entry, keyed by series name - used below to disable and prefill an
-  // item's genre/franchise/min_age fields whenever its Series picker
-  // resolves to an episodic series (those three fields come from here
-  // instead once that's true - see overrides.py's docstring).
-  window.SERIES_OVERRIDES = {{ series_overrides | tojson }};
-
+  // Focus mode: show one pending card at a time with prev/next and
+  // keyboard shortcuts. "Show all" (remembered per browser tab) falls back
+  // to the plain list.
   (function () {
-    function snapshotOriginal(grid) {
-      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
-        if (field.dataset.originalValue === undefined) {
-          // A <select multiple> (genre)'s own .value only ever returns the
-          // first selected option, losing every other selection - snapshot
-          // the full set as JSON instead so it can be fully restored later.
-          field.dataset.originalValue = field.multiple
-            ? JSON.stringify(Array.prototype.map.call(field.selectedOptions, function (o) { return o.value; }))
-            : field.value;
-        }
-      });
+    var list = document.getElementById("review-list");
+    if (!list) return;
+    var cards = Array.prototype.slice.call(list.querySelectorAll(".suggestion-card"));
+    var toolbar = document.getElementById("review-toolbar");
+    var showAll = document.getElementById("review-show-all");
+    var positionEl = document.getElementById("review-position");
+    var STORAGE_KEY = "stf-admin-review-show-all";
+    var current = 0;
+
+    if (cards.length < 2) return;  // nothing to step through
+    toolbar.hidden = false;
+    document.getElementById("review-count").hidden = true;
+    showAll.checked = sessionStorage.getItem(STORAGE_KEY) === "1";
+
+    function render() {
+      cards.forEach(function (card, i) { card.hidden = !showAll.checked && i !== current; });
+      positionEl.textContent = showAll.checked
+        ? cards.length + " pending"
+        : "Card " + (current + 1) + " of " + cards.length;
     }
 
-    function applySeriesLock(select) {
-      var grid = select.closest(".field-grid");
-      if (!grid) return;
-      snapshotOriginal(grid);
-
-      var newInput = grid.querySelector(".series-new-input");
-      if (newInput) newInput.hidden = select.value !== "__new__";
-
-      var seriesName = select.value === "__new__" ? (newInput ? newInput.value.trim() : "") : select.value;
-      var meta = seriesName ? window.SERIES_OVERRIDES[seriesName] : null;
-      var isEpisodic = !!(meta && meta.series_type === "episodic");
-
-      grid.querySelectorAll(".series-resolved-field").forEach(function (field) {
-        field.disabled = isEpisodic;
-        var key = field.dataset.field;
-        if (field.multiple) {
-          // genre is the one multi-select field here - setting .value
-          // doesn't work for it, so resolve the full set of values that
-          // should be selected (either the series' own list, or this
-          // field's snapshotted original) and toggle each <option> in turn.
-          var resolvedValues = isEpisodic
-            ? (meta && Array.isArray(meta[key]) ? meta[key] : [])
-            : JSON.parse(field.dataset.originalValue);
-          Array.prototype.forEach.call(field.options, function (opt) {
-            opt.selected = resolvedValues.indexOf(opt.value) !== -1;
-          });
-        } else if (isEpisodic) {
-          field.value = meta && meta[key] != null ? meta[key] : "";
-        } else {
-          field.value = field.dataset.originalValue;
-        }
-        if (isEpisodic) {
-          field.title = 'Resolved from "' + seriesName + '"\'s episodic series metadata below - edit it there instead.';
-        } else {
-          field.removeAttribute("title");
-        }
-      });
+    function go(index, scroll) {
+      current = Math.max(0, Math.min(cards.length - 1, index));
+      render();
+      if (scroll !== false) toolbar.scrollIntoView({ block: "start" });
     }
 
-    document.querySelectorAll(".series-picker").forEach(function (select) {
-      applySeriesLock(select);
-      select.addEventListener("change", function () { applySeriesLock(select); });
-
-      var grid = select.closest(".field-grid");
-      var newInput = grid && grid.querySelector(".series-new-input");
-      if (newInput) {
-        newInput.addEventListener("input", function () { applySeriesLock(select); });
-      }
+    document.getElementById("review-prev").addEventListener("click", function () { go(current - 1); });
+    document.getElementById("review-next").addEventListener("click", function () { go(current + 1); });
+    showAll.addEventListener("change", function () {
+      sessionStorage.setItem(STORAGE_KEY, showAll.checked ? "1" : "0");
+      render();
     });
+
+    document.addEventListener("keydown", function (event) {
+      var typing = event.target.closest && event.target.closest("input, textarea, select");
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        var card = showAll.checked ? event.target.closest && event.target.closest(".suggestion-card") : cards[current];
+        var btn = card && card.querySelector('button[value="apply_next"]');
+        if (btn) { event.preventDefault(); btn.click(); }
+        return;
+      }
+      if (typing || showAll.checked || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.key === "ArrowRight" || event.key === "j") { event.preventDefault(); go(current + 1); }
+      if (event.key === "ArrowLeft" || event.key === "k") { event.preventDefault(); go(current - 1); }
+    });
+
+    // Apply & Next / Dismiss redirect to the next card's #entry-<id> anchor.
+    function fromHash() {
+      var m = location.hash.match(/^#entry-(.+)$/);
+      if (!m) return false;
+      var id = "entry-" + decodeURIComponent(m[1]);
+      var i = cards.findIndex(function (card) { return card.id === id; });
+      if (i === -1) return false;
+      go(i);
+      return true;
+    }
+    if (!fromHash()) render();
+    window.addEventListener("hashchange", fromHash);
   })();
 </script>
 {% endblock %}

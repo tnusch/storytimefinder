@@ -12,7 +12,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .hidden_tiles import HIDDEN_TILES
+from . import hidden_tiles as _hidden_tiles
 from .i18n import translate
 from .tile_thumbnails import TILE_THUMBNAILS
 
@@ -213,8 +213,11 @@ TILE_CATEGORIES = ("age", "genre", "series", "franchise")
 def is_tile_hidden(category: str, value: str) -> bool:
     """Whether a guided-filter tile is hidden (see hidden_tiles.py) - the
     value stays fully filterable via the advanced-panel chips either way,
-    this only controls whether it gets its own tile on the home page."""
-    return value in HIDDEN_TILES.get(category, [])
+    this only controls whether it gets its own tile on the home page. A
+    HIDDEN_BY_DEFAULT category (series) is opt-in via SHOWN_TILES instead."""
+    if category in _hidden_tiles.HIDDEN_BY_DEFAULT:
+        return value not in _hidden_tiles.SHOWN_TILES.get(category, [])
+    return value in _hidden_tiles.HIDDEN_TILES.get(category, [])
 
 
 def _item_matches_tile(item: dict, category: str, value: str) -> bool:
@@ -296,6 +299,16 @@ def get_sequel_context() -> dict:
     absent. "position" is the item's own position_in_series (None if
     unset - the badge is then omitted, but prev/next links still work
     using _episode_sort_key()'s same sorts-last-if-unset ordering).
+
+    Only the series' MAIN LINE (items without a `variant`) is numbered and
+    prev/next-linked, and only it counts toward "total" - a remake or
+    spin-off would otherwise inflate "Teil 1 von M" and splice itself into
+    the davor:/danach: chain. A variant item instead gets {"position":
+    None, "total": None, "prev": None, "next": None, "original": ...}, where
+    "original" is the main-line item a remake shares its position with
+    (None for a spin-off, or a remake whose original isn't in the catalog).
+    The variant badge itself comes straight from item["variant"] in the
+    template, so it also shows in non-sequel series.
     """
     series_meta = get_series_metadata()
     sequel_names = {name for name, meta in series_meta.items() if meta.get("series_type") == "sequel"}
@@ -307,7 +320,7 @@ def get_sequel_context() -> dict:
 
     context: dict = {}
     for members in by_series.values():
-        ordered = sorted(members, key=_episode_sort_key)
+        ordered = sorted((m for m in members if not m.get("variant")), key=_episode_sort_key)
         total = len(ordered)
         for i, item in enumerate(ordered):
             context[item["id"]] = {
@@ -315,7 +328,16 @@ def get_sequel_context() -> dict:
                 "total": total,
                 "prev": ordered[i - 1] if i > 0 else None,
                 "next": ordered[i + 1] if i < total - 1 else None,
+                "original": None,
             }
+        by_position = {m.get("position_in_series"): m for m in ordered if m.get("position_in_series") is not None}
+        for item in members:
+            if item.get("variant"):
+                position = item.get("position_in_series")
+                original = by_position.get(position) if item["variant"] == "remake" and position is not None else None
+                context[item["id"]] = {
+                    "position": None, "total": None, "prev": None, "next": None, "original": original,
+                }
     return context
 
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T22:05:38Z",
+  "generated_at": "2026-11-16T22:00:44Z",
   "items": [
     {
       "id": 43,
@@ -19,6 +19,7 @@
       "source_release_year": 1961,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -29,7 +30,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k3wcD9oqepKNt2J1ZBbPuAzSwVDRx_3Gg",
       "description": "Spielzeugen erleben Abenteuer und müssen lernen, zusammenzuarbeiten und Befehle zu befolgen.",
       "series": "Toy Story",
-      "position_in_series": null,
+      "position_in_series": 4,
       "genre": [
         "adventure"
       ],
@@ -39,6 +40,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -48,7 +50,7 @@
       "duration_seconds": 3613,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kwrZs3W4PNH-aJRUvkOoafbOS_J9zJ7Oo",
       "description": "Ein junger Straßendieb findet eine magische Lampe und erhält die Chance, sein Leben völlig zu verändern.",
-      "series": null,
+      "series": "Aladdin",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -59,6 +61,7 @@
       "source_release_year": 1992,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -68,7 +71,7 @@
       "duration_seconds": 4576,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nzOzTv6DtDwjF-fnRt5K_xSR1u4d1KWcI",
       "description": "Ein junger Mann mit bescheidenen Anfängen entdeckt eine magische Lampe und versucht, sein Leben zu verändern und die Liebe einer Prinzessin zu gewinnen.",
-      "series": null,
+      "series": "Aladdin",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -79,6 +82,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -88,17 +92,18 @@
       "duration_seconds": 3618,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_ms8Lnv1d7nIyy2coHVKSSddjP5sdTp9Pg",
       "description": "Ein Mädchen folgt einem weißen Kaninchen in eine fantastische Welt voller surrealer Abenteuer und merkwürdiger Begegnungen.",
-      "series": null,
+      "series": "Alice im Wunderland",
       "position_in_series": null,
       "genre": [
         "fantasy"
       ],
       "franchise": "disney",
-      "min_age": 4,
+      "min_age": 5,
       "age_tag": "3_5",
       "source_release_year": 2010,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -119,6 +124,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -139,6 +145,7 @@
       "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -154,11 +161,12 @@
         "family"
       ],
       "franchise": "pixar",
-      "min_age": 6,
-      "age_tag": "6_8",
+      "min_age": 5,
+      "age_tag": "3_5",
       "source_release_year": 2024,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -168,7 +176,7 @@
       "duration_seconds": 3254,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lV7PzLThlgVveps5dBBB5qerDijjowsf8",
       "description": "Ein gutgemeinter Aufräum-Eifer sorgt dafür, dass auf dem heimischen Hof am Ende mehr Chaos herrscht als vorher.",
-      "series": null,
+      "series": "Michel aus Lönneberga",
       "position_in_series": null,
       "genre": [
         "family"
@@ -179,6 +187,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -199,6 +208,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -219,6 +229,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -239,6 +250,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -248,7 +260,7 @@
       "duration_seconds": 4060,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lCSZHmbFIwd-aqQxqpg_5ka6NxrDQze44",
       "description": "Ein Junge erreicht nach zahllosen kleinen Streichen einen besonderen Meilenstein beim Schnitzen hölzerner Figuren.",
-      "series": null,
+      "series": "Michel aus Lönneberga",
       "position_in_series": null,
       "genre": [
         "family"
@@ -259,6 +271,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -279,6 +292,51 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 257,
+      "title": "Anna und die wilden Tiere - Der Falkner und seine Greifvögel + Wie wild ist das Wildpferd",
+      "thumbnail_url": "https://i.ytimg.com/vi/-yMRV1KEzPI/maxresdefault.jpg",
+      "duration_seconds": 2168,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mT2UX0HWg_1S5tn-0MG3dAWyDGGpOey2Q",
+      "description": "Zwei kurze Wissensgeschichten zeigen, wie ein ausgebildeter Greifvogel jagt und wie ein Wildpferd in freier Natur lebt.",
+      "series": "Anna und die wilden Tiere",
+      "position_in_series": 1,
+      "genre": [
+        "educational",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 256,
+      "title": "Anna und die wilden Tiere - Die Zähne des Alligators + Wie pupst der Delfin?",
+      "thumbnail_url": "https://i.ytimg.com/vi/puGeTvdVouM/maxresdefault.jpg",
+      "duration_seconds": 2856,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_my-pnR6u4KmFr-2cAIyyTnfMk3o9QHBzM",
+      "description": "Zwei kurze Wissensgeschichten erklären, wie ein Alligator mit seinen Zähnen Beute packt und wie Delfine unter Wasser atmen.",
+      "series": "Anna und die wilden Tiere",
+      "position_in_series": 2,
+      "genre": [
+        "educational",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -289,7 +347,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nUcVxlUReyhD771ST9B_53UHaPgNNGRpk",
       "description": "Eine wissbegierige Prinzessin der Meere verliebt sich in die Welt über der Wasseroberfläche und wagt einen folgenschweren Tausch.",
       "series": "Arielle",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "fairy_tale"
       ],
@@ -299,6 +357,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -319,6 +378,7 @@
       "source_release_year": 1989,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -339,6 +399,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -359,6 +420,7 @@
       "source_release_year": 2000,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -379,6 +441,7 @@
       "source_release_year": 1970,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -399,6 +462,7 @@
       "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -419,6 +483,7 @@
       "source_release_year": 2001,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -439,6 +504,7 @@
       "source_release_year": 1942,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -459,6 +525,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -479,6 +546,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -499,6 +567,7 @@
       "source_release_year": 1977,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -519,6 +588,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -539,6 +609,7 @@
       "source_release_year": 2003,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -559,6 +630,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -579,6 +651,7 @@
       "source_release_year": 1981,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -599,6 +672,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -619,6 +693,7 @@
       "source_release_year": 2011,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -639,6 +714,7 @@
       "source_release_year": 2017,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -659,6 +735,7 @@
       "source_release_year": 2018,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -668,17 +745,18 @@
       "duration_seconds": 3558,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mIc-VWkQW1EornvdVdv8CIFfq5OOnloAE",
       "description": "Ein Mädchen überwindet Widrigkeiten und findet durch Mut und Güte sein Glück.",
-      "series": null,
-      "position_in_series": null,
+      "series": "Cinderella",
+      "position_in_series": 1,
       "genre": [
         "fairy_tale"
       ],
-      "franchise": null,
+      "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1950,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -688,7 +766,7 @@
       "duration_seconds": 4555,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lEAY5We7uhhjeCuw89LgsAc9i0qTk8NLc",
       "description": "Ein Mädchen überwindet Widrigkeiten und findet sein Glück durch Mut und Güte.",
-      "series": null,
+      "series": "Cinderella",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -699,6 +777,7 @@
       "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -719,6 +798,7 @@
       "source_release_year": 2002,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -739,6 +819,7 @@
       "source_release_year": 2017,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -759,6 +840,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -779,6 +861,7 @@
       "source_release_year": 1967,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -799,6 +882,7 @@
       "source_release_year": 1998,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -819,6 +903,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -839,6 +924,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -859,6 +945,7 @@
       "source_release_year": 2026,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -879,6 +966,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -899,6 +987,7 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -919,6 +1008,7 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -939,6 +1029,7 @@
       "source_release_year": 1996,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -959,6 +1050,7 @@
       "source_release_year": 2009,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -969,16 +1061,17 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kCqtsmYi_20kuxHQf8WBmy9L7jhSnhe78",
       "description": "Ein junger Löwe muss sein Schicksal akzeptieren und seine Heimat vor dunklen Kräften bewahren.",
       "series": "Der König der Löwen",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
       "franchise": "disney",
-      "min_age": 5,
+      "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -999,6 +1092,7 @@
       "source_release_year": 1994,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1019,6 +1113,7 @@
       "source_release_year": 1998,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1039,6 +1134,7 @@
       "source_release_year": 2004,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1059,6 +1155,7 @@
       "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1079,6 +1176,29 @@
       "source_release_year": 2018,
       "seasonal": "christmas",
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 267,
+      "title": "Der satanarchäolügenialkohöllische Wunschpunsch",
+      "thumbnail_url": "https://i.ytimg.com/vi/tyRSf7GvXAg/maxresdefault.jpg",
+      "duration_seconds": 8222,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kSXJbi_AM-BZOZGnNwgSRlAdIoXryVSN8",
+      "description": "In einer Silvesternacht wetteifern zwei boshafte Verwandte und zwei tierische Verbündete per Zaubertrank um das Weltschicksal.",
+      "series": null,
+      "position_in_series": null,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 10,
+      "age_tag": "9_11",
+      "source_release_year": 1989,
+      "seasonal": "winter",
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1099,6 +1219,7 @@
       "source_release_year": 2002,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1119,6 +1240,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1139,6 +1261,7 @@
       "source_release_year": 2013,
       "seasonal": "winter",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1159,6 +1282,7 @@
       "source_release_year": 2019,
       "seasonal": "winter",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1179,6 +1303,7 @@
       "source_release_year": 2017,
       "seasonal": "winter",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1200,6 +1325,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -1220,6 +1346,7 @@
       "source_release_year": 2004,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1240,6 +1367,7 @@
       "source_release_year": 2001,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1260,6 +1388,7 @@
       "source_release_year": 2013,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1280,6 +1409,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -1300,6 +1430,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1314,12 +1445,13 @@
       "genre": [
         "fairy_tale"
       ],
-      "franchise": null,
+      "franchise": "disney",
       "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 1991,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1330,7 +1462,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kg0qHwby8-YPdDmP6iH5zfEOj8wsfZOb4",
       "description": "Ein junges Mädchen entdeckt die innere Schönheit eines verzauberten Wesens und bricht damit einen bösen Fluch.",
       "series": "Die Schöne und das Biest",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "fairy_tale"
       ],
@@ -1340,6 +1472,7 @@
       "source_release_year": 2017,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -1360,6 +1493,7 @@
       "source_release_year": 1997,
       "seasonal": "christmas",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1380,6 +1514,7 @@
       "source_release_year": 1984,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1400,6 +1535,7 @@
       "source_release_year": 2004,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1420,6 +1556,7 @@
       "source_release_year": 2018,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1429,7 +1566,7 @@
       "duration_seconds": 9911,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lfvKt1ir8O7DL8jyN5QAHtlwLdC1bcl4w",
       "description": "Eine Mädchenclique gründet ihre eigene Geheimbande und legt sich dabei mit einer rivalisierenden Jungsbande an.",
-      "series": null,
+      "series": "Die Wilden Hühner",
       "position_in_series": null,
       "genre": [
         "family"
@@ -1440,6 +1577,7 @@
       "source_release_year": 1998,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1449,7 +1587,7 @@
       "duration_seconds": 5953,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lVVg83AXD4QkbSCAhKDZA5q2EvVHIm9SU",
       "description": "Eine eingeschworene Mädchenclique meistert gemeinsam neue Herausforderungen und hält trotz mancher Streitereien zusammen.",
-      "series": null,
+      "series": "Die Wilden Hühner",
       "position_in_series": null,
       "genre": [
         "family"
@@ -1460,6 +1598,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1480,6 +1619,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1500,6 +1640,7 @@
       "source_release_year": 1959,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1520,6 +1661,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1540,6 +1682,7 @@
       "source_release_year": 2018,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1561,6 +1704,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -1582,6 +1726,7 @@
       "source_release_year": 2010,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1603,6 +1748,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1624,6 +1770,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1633,7 +1780,7 @@
       "duration_seconds": 3052,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_loAK3fXOH3uOo3T00so5cPnGsYsspZpEQ",
       "description": "Ein junger Elefant mit großen Ohren entdeckt seine außergewöhnliche Fähigkeit und findet seinen Platz in der Welt.",
-      "series": null,
+      "series": "Dumbo",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -1644,6 +1791,7 @@
       "source_release_year": 1941,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1653,17 +1801,18 @@
       "duration_seconds": 4036,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k0su_4jE-pvnaRx3DR_uzgqvnzVHqHO_k",
       "description": "Ein junger Elefant mit großen Ohren entdeckt seine besonderen Fähigkeiten und findet seinen Platz in der Welt.",
-      "series": null,
+      "series": "Dumbo",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
       ],
       "franchise": "disney",
-      "min_age": 4,
+      "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -1684,6 +1833,7 @@
       "source_release_year": 2000,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1704,6 +1854,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1724,6 +1875,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1744,6 +1896,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1764,6 +1917,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1784,6 +1938,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1804,6 +1959,7 @@
       "source_release_year": 1940,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1819,11 +1975,12 @@
         "adventure"
       ],
       "franchise": "disney",
-      "min_age": 4,
+      "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 2003,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1833,8 +1990,8 @@
       "duration_seconds": 4567,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kWp4zrOmfr7_cHq_gimr2USOc7LHme7PQ",
       "description": "Eine blaue Fisch sucht nach ihrer Familie und erlebt dabei ein großes Abenteuer im Meer.",
-      "series": null,
-      "position_in_series": null,
+      "series": "Findet Nemo",
+      "position_in_series": 2,
       "genre": [
         "adventure"
       ],
@@ -1844,6 +2001,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1853,8 +2011,8 @@
       "duration_seconds": 3611,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mSqQ0DFEOq4ehi5QCmGcMbse1XPGrH9Jg",
       "description": "Ein Fisch macht sich auf eine gefährliche Reise durchs Meer, um seinen vermissten Sohn zu finden.",
-      "series": null,
-      "position_in_series": null,
+      "series": "Findet Nemo",
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
@@ -1864,6 +2022,7 @@
       "source_release_year": 2003,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1884,6 +2043,117 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 261,
+      "title": "Fluch der Karibik",
+      "thumbnail_url": "https://i.ytimg.com/vi/9ycex0Z97Vo/maxresdefault.jpg",
+      "duration_seconds": 2957,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mIHPHb9OHta6RPjd3vZR2gKpkLgQkRNzE",
+      "description": "Ein ehrenhafter Pirat verbündet sich mit ungewöhnlichen Gefährten, um ein verfluchtes Schiff und seine untote Crew zu stoppen.",
+      "series": "Fluch der Karibik",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2003,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 259,
+      "title": "Fluch der Karibik - Am Ende der Welt",
+      "thumbnail_url": "https://i.ytimg.com/vi/3etl3g0RE9g/maxresdefault.jpg",
+      "duration_seconds": 3055,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mHtO9kOClycCW1UkRokDP_sZ6yuc2_YSM",
+      "description": "Mehrere Verbündete und Rivalen reisen an den Rand der Welt, um einen gefangenen Freund aus einer anderen Dimension zu retten.",
+      "series": "Fluch der Karibik",
+      "position_in_series": 3,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2007,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 258,
+      "title": "Fluch der Karibik - Fremde Gezeiten",
+      "thumbnail_url": "https://i.ytimg.com/vi/-ev8ndrtH4M/maxresdefault.jpg",
+      "duration_seconds": 3621,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mKGgQ71T2VGF0rcXlUGcGsvSEPR0JYhjw",
+      "description": "Ein listiger Pirat gerät auf der Suche nach einer sagenhaften Quelle der Jugend in die Fänge eines gefürchteten Freibeuters.",
+      "series": "Fluch der Karibik",
+      "position_in_series": 4,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2011,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 262,
+      "title": "Fluch der Karibik - Salazars Rache",
+      "thumbnail_url": "https://i.ytimg.com/vi/M4BkQWd-RAQ/maxresdefault.jpg",
+      "duration_seconds": 4353,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mRKqn604hzD9BAuYk2pSlsPZkuk1S1Jac",
+      "description": "Ein junger Mann sucht nach einem legendären Dreizack, während ein untoter Rachegeist aus der Geisterwelt zurückkehrt.",
+      "series": "Fluch der Karibik",
+      "position_in_series": 5,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 260,
+      "title": "Fluch der Karibik 2",
+      "thumbnail_url": "https://i.ytimg.com/vi/n3DLc0TlC4o/maxresdefault.jpg",
+      "duration_seconds": 3498,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lAHSAzFZyP9SPNLxVEhJJO01k8TMPNv-E",
+      "description": "Ein Pirat muss eine alte Schuld bei einem furchteinflößenden Herrscher der Meere begleichen, bevor seine Seele verloren ist.",
+      "series": "Fluch der Karibik",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2006,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1904,6 +2174,7 @@
       "source_release_year": 2012,
       "seasonal": "halloween",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1924,6 +2195,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1944,6 +2216,7 @@
       "source_release_year": 2012,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1964,6 +2237,7 @@
       "source_release_year": 2010,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -1984,6 +2258,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2004,6 +2279,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2024,6 +2300,7 @@
       "source_release_year": 2005,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2044,6 +2321,7 @@
       "source_release_year": 1997,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2064,6 +2342,7 @@
       "source_release_year": 1980,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2084,6 +2363,7 @@
       "source_release_year": 1980,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2104,6 +2384,7 @@
       "source_release_year": 2005,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2124,6 +2405,7 @@
       "source_release_year": 2026,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2144,6 +2426,7 @@
       "source_release_year": 2012,
       "seasonal": "halloween",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2164,6 +2447,7 @@
       "source_release_year": 2026,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2184,6 +2468,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2204,6 +2489,29 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 265,
+      "title": "Jim Knopf und Lukas der Lokomotivführer",
+      "thumbnail_url": "https://i.ytimg.com/vi/N39Dv3T18bw/maxresdefault.jpg",
+      "duration_seconds": 13704,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lybh9C2bHKFrnj6fEAq9kU_kJPIgCZKXc",
+      "description": "Ein Findelkind und sein Freund verlassen mit einer sprechenden Lokomotive ihre Heimatinsel und geraten in ein fantastisches Reich.",
+      "series": "Jim Knopf",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 1960,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2224,6 +2532,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2244,6 +2553,7 @@
       "source_release_year": 2011,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2264,6 +2574,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2284,6 +2595,7 @@
       "source_release_year": 2009,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2304,6 +2616,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2324,6 +2637,7 @@
       "source_release_year": 2017,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2344,6 +2658,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -2354,7 +2669,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kAi57TwgXP3WVsHzZA1jz8A_NWGWPP3vM",
       "description": "Ein außerirdisches Wesen strandet auf der Erde und freundet sich mit einem einsamen Kind an.",
       "series": "Lilo & Stitch",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
@@ -2364,6 +2679,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -2384,6 +2700,7 @@
       "source_release_year": 2002,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2404,6 +2721,7 @@
       "source_release_year": 2021,
       "seasonal": "summer",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2424,6 +2742,7 @@
       "source_release_year": 2005,
       "seasonal": "summer",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2444,6 +2763,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2464,6 +2784,7 @@
       "source_release_year": 2012,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2484,6 +2805,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2504,6 +2826,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2524,6 +2847,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2544,6 +2868,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2564,6 +2889,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2584,6 +2910,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2604,6 +2931,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2624,6 +2952,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2644,6 +2973,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2664,6 +2994,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2684,6 +3015,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2704,6 +3036,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2724,6 +3057,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2744,6 +3078,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2764,6 +3099,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2784,6 +3120,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2804,6 +3141,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2824,6 +3162,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2844,6 +3183,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2864,6 +3204,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2884,6 +3225,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2904,6 +3246,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2924,6 +3267,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2944,6 +3288,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2964,6 +3309,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -2984,6 +3330,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3004,6 +3351,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3024,6 +3372,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3044,6 +3393,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3064,6 +3414,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3084,6 +3435,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3104,6 +3456,7 @@
       "source_release_year": 2012,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3119,11 +3472,12 @@
         "family"
       ],
       "franchise": null,
-      "min_age": 4,
+      "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1973,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3144,6 +3498,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3154,16 +3509,17 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kSX5rN90rg1Usa39MZdURHzLxmvEuS17A",
       "description": "Ein schlitzohriger Bauernjunge im alten Schweden sorgt mit seinen Streichen ständig für Chaos, hat dabei aber ein gutes Herz.",
       "series": "Michel aus Lönneberga",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "family"
       ],
       "franchise": null,
-      "min_age": 4,
+      "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1971,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3179,11 +3535,12 @@
         "family"
       ],
       "franchise": null,
-      "min_age": 4,
+      "min_age": 3,
       "age_tag": "3_5",
       "source_release_year": 1972,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3204,6 +3561,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3224,6 +3582,7 @@
       "source_release_year": 1983,
       "seasonal": "christmas",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3244,6 +3603,95 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 264,
+      "title": "Minions",
+      "thumbnail_url": "https://i.ytimg.com/vi/Tx8r2z3ARL0/maxresdefault.jpg",
+      "duration_seconds": 3667,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lbROi7OjKXwQxch1kN21HaP3eQHOeMjAM",
+      "description": "Kleine gelbe Helfer suchen über Jahrzehnte nach dem passenden furchteinflößenden Herrscher, dem sie treu dienen können.",
+      "series": "Minions",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2015,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 263,
+      "title": "Minions 2 - Auf der Suche nach dem Mini-Boss",
+      "thumbnail_url": "https://i.ytimg.com/vi/F_g4A5Zh_8Q/maxresdefault.jpg",
+      "duration_seconds": 3736,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nXC4mIAq9Sj5bpJzmXSECKqR7YazNv1pQ",
+      "description": "Ein kleiner gelber Helfer will unbedingt einer berüchtigten Bande angehören und gerät dabei in ein großes Abenteuer.",
+      "series": "Minions",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2022,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 266,
+      "title": "Momo",
+      "thumbnail_url": "https://i.ytimg.com/vi/CBnpXGRmyY0/maxresdefault.jpg",
+      "duration_seconds": 13454,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mL8XIakMMGbRpzYl0N-AP-MIUMNITYX1U",
+      "description": "Ein obdachloses Mädchen mit besonderer Gabe fürs Zuhören stellt sich grauen Männern entgegen, die Menschen die Zeit stehlen.",
+      "series": "Momo",
+      "position_in_series": null,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 10,
+      "age_tag": "9_11",
+      "source_release_year": 1973,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 268,
+      "title": "Momo",
+      "thumbnail_url": "https://i.ytimg.com/vi/eS0EP9_wQ_k/maxresdefault.jpg",
+      "duration_seconds": 5270,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kXXiCH2EvFSH5mkuKU5178pgs6qPtVcDk",
+      "description": "Ein obdachloses Mädchen mit besonderer Gabe fürs Zuhören stellt sich grauen Männern entgegen, die Menschen die Zeit stehlen.",
+      "series": "Momo",
+      "position_in_series": null,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 10,
+      "age_tag": "9_11",
+      "source_release_year": 2025,
+      "seasonal": null,
+      "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -3259,11 +3707,12 @@
         "adventure"
       ],
       "franchise": "disney",
-      "min_age": 5,
+      "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2024,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -3274,7 +3723,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mF7TtT8TcZBNPj2wNOsygEGUxPB9fhJRc",
       "description": "Ein Mädchen verkleidet sich als Soldat, um ihren kranken Vater vor dem Kriegsdienst zu bewahren.",
       "series": "Mulan",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
@@ -3284,6 +3733,7 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -3304,6 +3754,7 @@
       "source_release_year": 1998,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3324,6 +3775,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3344,6 +3796,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3364,6 +3817,7 @@
       "source_release_year": 2009,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3384,6 +3838,51 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 272,
+      "title": "Paddington",
+      "thumbnail_url": "https://i.ytimg.com/vi/Kf3q-iXIGpc/maxresdefault.jpg",
+      "duration_seconds": 4103,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mZyuypM6NnuR7S94P0ILBiILhZb1zpfmw",
+      "description": "Ein höflicher Bär aus einem fernen Land sucht in einer belebten Stadt ein neues Zuhause und findet eine warmherzige Familie.",
+      "series": "Paddington",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 271,
+      "title": "Paddington 2",
+      "thumbnail_url": "https://i.ytimg.com/vi/_LCl7OTl2QE/maxresdefault.jpg",
+      "duration_seconds": 4805,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kp_48MvIdf0CIOQxb2AdhGM5eDR0lqSW0",
+      "description": "Ein höflicher Bär möchte ein besonderes Geschenk besorgen, wird fälschlich verdächtigt und muss seine Unschuld beweisen.",
+      "series": "Paddington",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3404,6 +3903,7 @@
       "source_release_year": 1953,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3414,16 +3914,17 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mIwvauQpR3lTqtVwm-6a2IsONlCtc08Ps",
       "description": "Ein Junge führt Kinder in ein magisches Land, wo sie Abenteuer erleben und nie erwachsen werden.",
       "series": "Peter Pan",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "fairy_tale"
       ],
       "franchise": "disney",
-      "min_age": 6,
-      "age_tag": "6_8",
+      "min_age": 4,
+      "age_tag": "3_5",
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -3439,11 +3940,12 @@
         "fairy_tale"
       ],
       "franchise": "disney",
-      "min_age": 5,
+      "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2002,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3464,6 +3966,7 @@
       "source_release_year": 1999,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3484,6 +3987,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3504,6 +4008,7 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3524,6 +4029,7 @@
       "source_release_year": 1940,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3544,6 +4050,7 @@
       "source_release_year": 1970,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3564,6 +4071,7 @@
       "source_release_year": 1969,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3584,6 +4092,7 @@
       "source_release_year": 1970,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3604,6 +4113,7 @@
       "source_release_year": 1969,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3624,6 +4134,7 @@
       "source_release_year": 2013,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -3633,7 +4144,7 @@
       "duration_seconds": 4094,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_npX4I2rAwUnbX39bRnWaHy7jrGcKX8LSA",
       "description": "Ein Hubschrauber und seine Freunde arbeiten zusammen, um Rettungseinsätze durchzuführen und Menschen in Not zu helfen.",
-      "series": "Planes",
+      "series": "Cars",
       "position_in_series": 2,
       "genre": [
         "adventure"
@@ -3644,6 +4155,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -3664,6 +4176,7 @@
       "source_release_year": 1995,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3684,6 +4197,7 @@
       "source_release_year": 2012,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3704,6 +4218,7 @@
       "source_release_year": 2010,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3724,6 +4239,7 @@
       "source_release_year": 2007,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3744,6 +4260,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3764,6 +4281,7 @@
       "source_release_year": 1973,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3784,6 +4302,7 @@
       "source_release_year": 2024,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3804,6 +4323,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3824,6 +4344,7 @@
       "source_release_year": 1937,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3844,6 +4365,7 @@
       "source_release_year": 2013,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3854,7 +4376,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_n3Ek0cI8PqEMMGp3cL3U6voDqM9A6MZ30",
       "description": "Ein mürrischer Ogre muss eine verzauberte Prinzessin retten, um sein geliebtes Sumpfgrundstück zurückzubekommen.",
       "series": "Shrek",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "fantasy"
       ],
@@ -3864,6 +4386,7 @@
       "source_release_year": 2001,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3884,6 +4407,7 @@
       "source_release_year": 2004,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3904,6 +4428,7 @@
       "source_release_year": 2007,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3924,6 +4449,513 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 239,
+      "title": "Sofia die Erste - Abenteuer in der Wüste / Der Haustier-Wettbewerb",
+      "thumbnail_url": "https://i.ytimg.com/vi/xVQZ3v046v4/maxresdefault.jpg",
+      "duration_seconds": 3316,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mQqVhss7QvBmRIhWUw10F3OUADYC0ihks",
+      "description": "Eine Reise in ein fernes Wüstenreich und ein Haustier-Wettbewerb stellen eine junge Prinzessin vor neue Herausforderungen.",
+      "series": "Sofia die Erste",
+      "position_in_series": 5,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 255,
+      "title": "Sofia die Erste - Auf einmal Prinzessin",
+      "thumbnail_url": "https://i.ytimg.com/vi/MXv1wYTiPTg/maxresdefault.jpg",
+      "duration_seconds": 3267,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mlk7hz4fh71O1wdELogfNrOF4GDTTXHHU",
+      "description": "Ein Mädchen wird über Nacht zur Prinzessin und muss sich in ihrer neuen königlichen Familie und deren Welt erst zurechtfinden.",
+      "series": "Sofia die Erste",
+      "position_in_series": null,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2012,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 252,
+      "title": "Sofia die Erste - Camp Wildnis-Wald / Königlicher Urlaub",
+      "thumbnail_url": "https://i.ytimg.com/vi/RBbF_os6I2A/maxresdefault.jpg",
+      "duration_seconds": 3622,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nVUTWZvOA-dqFFi1d3hV92bVEabd_2ynE",
+      "description": "Ein Open-Air-Feriencamp und ein chaotischer königlicher Urlaub bringen eine Familie auf unerwartete Abenteuer.",
+      "series": "Sofia die Erste",
+      "position_in_series": 18,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2016,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 243,
+      "title": "Sofia die Erste - Das verhexte Fest / Das Pegasus-Rennen",
+      "thumbnail_url": "https://i.ytimg.com/vi/XVH4aXkdN7s/maxresdefault.jpg",
+      "duration_seconds": 3566,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kJtpRjSCQYRBHzGcuFWeZXvYVcSdwExU0",
+      "description": "Ein verzaubertes Festessen gerät aus den Fugen, während ein spannendes Flugrennen um eine besondere Krone entbrennt.",
+      "series": "Sofia die Erste",
+      "position_in_series": 9,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 242,
+      "title": "Sofia die Erste - Der Fluch der Prinzessin Ivy",
+      "thumbnail_url": "https://i.ytimg.com/vi/8XGPcxaLUxo/maxresdefault.jpg",
+      "duration_seconds": 3831,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lTvsmqnsMt_A3LVadVOtBCYdYwBft2laM",
+      "description": "Eine eifersüchtige junge Zauberin belegt eine Prinzessin mit einem Fluch, den diese gemeinsam mit ihren Freunden brechen muss.",
+      "series": "Sofia die Erste",
+      "position_in_series": 8,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 246,
+      "title": "Sofia die Erste - Der Lampengeist / Trolle in Not",
+      "thumbnail_url": "https://i.ytimg.com/vi/qlxMH1M-PxM/maxresdefault.jpg",
+      "duration_seconds": 3533,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_m0hPKy1P9QE2y4thZYMeKW1iadAuFqLqQ",
+      "description": "Ein frisch befreiter Flaschengeist sorgt mit seinen Wünschen für Chaos, während hilfsbedürftige Fabelwesen Unterstützung brauchen.",
+      "series": "Sofia die Erste",
+      "position_in_series": 12,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2015,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 244,
+      "title": "Sofia die Erste - Der Wunschbrunnen / Die Höhle des Jaguars",
+      "thumbnail_url": "https://i.ytimg.com/vi/XJkiGdWUX2Q/maxresdefault.jpg",
+      "duration_seconds": 3575,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nPXV9opit7OoyvSLOZky30FrLpcxBf87s",
+      "description": "Ein magischer Brunnen erfüllt Wünsche auf überraschende Weise, und eine Höhlenexpedition verlangt Mut und Teamgeist.",
+      "series": "Sofia die Erste",
+      "position_in_series": 10,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 251,
+      "title": "Sofia die Erste - Die geheime Bibliothek - Die Geschichte des noblen Ritters / Die geheime Bibliothek - Die Geschichte der Ewigen Flamme",
+      "thumbnail_url": "https://i.ytimg.com/vi/H1vSHaZjrD8/maxresdefault.jpg",
+      "duration_seconds": 3568,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lpiIii1iLyhhFL7Wy6C8vHbTTC8whLSJM",
+      "description": "Zwei Bibliotheksgeschichten erwecken die Legenden eines tapferen Ritters und einer ewigen Flamme zum Leben.",
+      "series": "Sofia die Erste",
+      "position_in_series": 17,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2016,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 247,
+      "title": "Sofia die Erste - Die geheime Bibliothek / Olaf und die Geschichte von Miss Nettle",
+      "thumbnail_url": "https://i.ytimg.com/vi/S0i4SrzOVMs/maxresdefault.jpg",
+      "duration_seconds": 3609,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nsBJzhXHfYJRL5b7ePWT8USaWr8pyBsA0",
+      "description": "Eine magische Bibliothek entführt in alte Legenden, darunter die Geschichte einer mürrischen Hexerei-Lehrerin.",
+      "series": "Sofia die Erste",
+      "position_in_series": 13,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2015,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 248,
+      "title": "Sofia die Erste - Die Hexenweihe / Das Drachenfest",
+      "thumbnail_url": "https://i.ytimg.com/vi/PZeQj2BvCmU/maxresdefault.jpg",
+      "duration_seconds": 3561,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lbf91eQEV3A3nORpohOSLq7Azpkw6TpQE",
+      "description": "Eine feierliche Hexenzeremonie und ein farbenfrohes Drachenfest sorgen für aufregende Tage voller Magie und Tradition.",
+      "series": "Sofia die Erste",
+      "position_in_series": 14,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2016,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 249,
+      "title": "Sofia die Erste - Die Kaninchen-Verwechslung / Stürmische Lani",
+      "thumbnail_url": "https://i.ytimg.com/vi/Uv-Sw1jxI3E/maxresdefault.jpg",
+      "duration_seconds": 3516,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mfop4nUZTa3yXn_jSyktOg_ICrAp6T4fM",
+      "description": "Eine Verwechslung zwischen zwei ähnlichen Häschen und ein stürmisches Abenteuer stellen die Freunde vor kuriose Prüfungen.",
+      "series": "Sofia die Erste",
+      "position_in_series": 15,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2015,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 250,
+      "title": "Sofia die Erste - Die Macht des Amuletts / Die Konferenz der Zauberer",
+      "thumbnail_url": "https://i.ytimg.com/vi/RzHAlh2fFj4/maxresdefault.jpg",
+      "duration_seconds": 3426,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lxdgvEfuiIPgRmECUgmmb9kTEmux6AQwY",
+      "description": "Die wahre Kraft eines magischen Amuletts kommt bei einem großen Treffen mächtiger Zauberer ans Licht.",
+      "series": "Sofia die Erste",
+      "position_in_series": 16,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 237,
+      "title": "Sofia die Erste - Die Musik der Trolle / Die schüchterne Prinzessin",
+      "thumbnail_url": "https://i.ytimg.com/vi/E3K3N7Die7E/maxresdefault.jpg",
+      "duration_seconds": 3439,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nBltjiSPG-kakIW3xXrvINU13Bc16CbGk",
+      "description": "Ein musikalisches Trollfest und die Begegnung mit einer schüchternen Prinzessin bringen neue Freundschaften und viel Mut.",
+      "series": "Sofia die Erste",
+      "position_in_series": 3,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 253,
+      "title": "Sofia die Erste - Die Mystischen Inseln (Teil 1 & 2)",
+      "thumbnail_url": "https://i.ytimg.com/vi/nXsFpH74ipQ/maxresdefault.jpg",
+      "duration_seconds": 3399,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_llnq4P2pxrf1zc_vdTBvLz-ez_WnVfuww",
+      "description": "Eine Reise zu geheimnisvollen, magischen Inseln eröffnet eine völlig neue Welt voller Legenden und Verantwortung.",
+      "series": "Sofia die Erste",
+      "position_in_series": 19,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 254,
+      "title": "Sofia die Erste - Die Mystischen Inseln (Teil 3 & 4)",
+      "thumbnail_url": "https://i.ytimg.com/vi/TPENAIOTfWA/maxresdefault.jpg",
+      "duration_seconds": 3306,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k4XygqSrQHNwhprBGCpc56lm9elFk-mnw",
+      "description": "Auf den geheimnisvollen Inseln warten weitere Abenteuer, bei denen Mut und Freundschaft über Legenden entscheiden.",
+      "series": "Sofia die Erste",
+      "position_in_series": 20,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 241,
+      "title": "Sofia die Erste - Die neue Lehrerin / Prinzessin Schmetterling",
+      "thumbnail_url": "https://i.ytimg.com/vi/8FLHB3Fad0k/maxresdefault.jpg",
+      "duration_seconds": 3411,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nrt0UCAnDjETpOUk3m09vXx6oXFB2EJww",
+      "description": "Eine strenge neue Lehrerin sorgt für Unruhe, während ein Zauber ein Mädchen auf Schmetterlingsgröße schrumpfen lässt.",
+      "series": "Sofia die Erste",
+      "position_in_series": 7,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 235,
+      "title": "Sofia die Erste - Die Zauberschülerin / Ein königliches Chaos",
+      "thumbnail_url": "https://i.ytimg.com/vi/JTH_AGJnIJA/maxresdefault.jpg",
+      "duration_seconds": 3264,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lug6b7z2iyGn_54YVJ6zwr12VQTMcdG9I",
+      "description": "Eine Prinzessin wird zur Lehrlingszauberin ernannt, während ein kleines Missgeschick für großes königliches Chaos sorgt.",
+      "series": "Sofia die Erste",
+      "position_in_series": 2,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 245,
+      "title": "Sofia die Erste - Ein Geschenk von Herzen / Wo ist Minimus?",
+      "thumbnail_url": "https://i.ytimg.com/vi/iuJxG9er6vo/maxresdefault.jpg",
+      "duration_seconds": 3393,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_n6xgrygYLw9Tcy_Vqp1JZe1YjoMoYcoXk",
+      "description": "Eine herzliche Geschenkidee im Winter und die aufgeregte Suche nach einem vermissten geflügelten Pferd bewegen die Freunde.",
+      "series": "Sofia die Erste",
+      "position_in_series": 11,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2014,
+      "seasonal": "winter",
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 233,
+      "title": "Sofia die Erste - Eine Prinzessin unter Prinzen / Die königliche Übernachtungsparty",
+      "thumbnail_url": "https://i.ytimg.com/vi/FdfA6pQg_bA/maxresdefault.jpg",
+      "duration_seconds": 3408,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kAKPndRKv5i5ye3OQj6v4FbAP2QCVSIdg",
+      "description": "Bei einem Fest unter lauter Prinzen und einer ersten Übernachtungsparty muss sich ein Mädchen in ihrer neuen Rolle beweisen.",
+      "series": "Sofia die Erste",
+      "position_in_series": 1,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 240,
+      "title": "Sofia die Erste - Frohes Fest mit König Roland / Der Prinzessinnen-Test",
+      "thumbnail_url": "https://i.ytimg.com/vi/iZ5CTHSN30Q/maxresdefault.jpg",
+      "duration_seconds": 3331,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nljg55LpPMXqCJBzVdehVg_uJdQ1zJoPk",
+      "description": "Ein fröhliches Familienfest und eine knifflige Prüfung, die wahre königliche Tugenden auf die Probe stellt, stehen im Mittelpunkt.",
+      "series": "Sofia die Erste",
+      "position_in_series": 6,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": "winter",
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 234,
+      "title": "Sofia die Erste - Königliche Zauberschule (Teil 1)",
+      "thumbnail_url": "https://i.ytimg.com/vi/X--19gY5ZLs/maxresdefault.jpg",
+      "duration_seconds": 2923,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lsprJDxiy7VybynYIzHqFXCve4R9EAPfo",
+      "description": "Eine neue Zauberschule in einem fernen Königreich empfängt ihre ersten Schüler und steckt voller unentdeckter Magie.",
+      "series": "Sofia die Erste",
+      "position_in_series": 1,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2026,
+      "seasonal": null,
+      "awards": [],
+      "variant": "remake",
+      "language": "de"
+    },
+    {
+      "id": 236,
+      "title": "Sofia die Erste - Königliche Zauberschule (Teil 2)",
+      "thumbnail_url": "https://i.ytimg.com/vi/sgfEmmZQ_Dw/maxresdefault.jpg",
+      "duration_seconds": 3142,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l8iQUtEpebR5iYCaBFfKpkUqf78mNgZwY",
+      "description": "Beim Zauberunterricht und einer schwungvollen Tanztruppe steckt so manches Missgeschick noch volle Magie.",
+      "series": "Sofia die Erste",
+      "position_in_series": 2,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2026,
+      "seasonal": null,
+      "awards": [],
+      "variant": "remake",
+      "language": "de"
+    },
+    {
+      "id": 238,
+      "title": "Sofia die Erste - Meerjungfrauen",
+      "thumbnail_url": "https://i.ytimg.com/vi/PdCLiY3UoiY/maxresdefault.jpg",
+      "duration_seconds": 3627,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mv4gAAP6Odi6_uTTazXSNDl-3liITyWC4",
+      "description": "Eine Begegnung mit dem Volk der Meerjungfrauen führt zum Bau eines schwimmenden Palastes und einer wichtigen Freundschaft.",
+      "series": "Sofia die Erste",
+      "position_in_series": 4,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3944,6 +4976,7 @@
       "source_release_year": 2020,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3964,6 +4997,7 @@
       "source_release_year": 2015,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -3984,6 +5018,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4004,6 +5039,7 @@
       "source_release_year": 1955,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4024,6 +5060,7 @@
       "source_release_year": 2001,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4034,7 +5071,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k8Rx3UELXDLdeVWfA9tFflFBXDMFWxtHs",
       "description": "Ein in der Wildnis aufgewachsener Mensch muss sich zwischen seiner Natur und der Zivilisation entscheiden.",
       "series": "Tarzan",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
@@ -4044,6 +5081,7 @@
       "source_release_year": 2013,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -4064,6 +5102,7 @@
       "source_release_year": 1999,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4084,6 +5123,7 @@
       "source_release_year": 2005,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4094,7 +5134,7 @@
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_neBCIjeNGVDNWSnBkoE4a0oEydUFyRH8U",
       "description": "Ein Junge wächst im Dschungel auf und muss lernen, seinen Platz in der Welt zwischen Natur und Zivilisation zu finden.",
       "series": "Das Dschungelbuch",
-      "position_in_series": null,
+      "position_in_series": 1,
       "genre": [
         "adventure"
       ],
@@ -4104,6 +5144,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": "remake",
       "language": "de"
     },
     {
@@ -4124,6 +5165,7 @@
       "source_release_year": 2006,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4144,6 +5186,7 @@
       "source_release_year": 2000,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4164,6 +5207,7 @@
       "source_release_year": 1993,
       "seasonal": "christmas",
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4173,7 +5217,7 @@
       "duration_seconds": 3212,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nymLr2m79sxm1PiRL15od7M6KP7-v8RjM",
       "description": "Eine Fee entdeckt ihre magischen Kräfte und findet ihren Platz in einer fantastischen Welt voller Abenteuer.",
-      "series": null,
+      "series": "Peter Pan",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -4184,6 +5228,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4204,6 +5249,7 @@
       "source_release_year": 2009,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -4224,6 +5270,7 @@
       "source_release_year": 2010,
       "seasonal": "summer",
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -4233,7 +5280,7 @@
       "duration_seconds": 3900,
       "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_m9K0ZDoAwreKv2zfLLzNsAbEvNcN_TOSI",
       "description": "Eine Fee muss sich einer Piratin entgegenstellen und ein großes Abenteuer bestehen.",
-      "series": null,
+      "series": "Peter Pan",
       "position_in_series": null,
       "genre": [
         "fairy_tale"
@@ -4244,6 +5291,7 @@
       "source_release_year": 2014,
       "seasonal": null,
       "awards": [],
+      "variant": "spin_off",
       "language": "de"
     },
     {
@@ -4264,6 +5312,28 @@
       "source_release_year": 1995,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 294,
+      "title": "Toy Story 2",
+      "thumbnail_url": "https://i.ytimg.com/vi/VWnMU0mgR6g/maxresdefault.jpg",
+      "duration_seconds": 2726,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nCWBT4bA-q87liqUOENx23lPwvPgcbsGQ",
+      "description": "Ein Spielzeug wird entführt und droht, für immer in einer Vitrine zu landen – seine Freunde starten eine Rettungsmission.",
+      "series": "Toy Story",
+      "position_in_series": 2,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 4,
+      "age_tag": "3_5",
+      "source_release_year": 1999,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4284,6 +5354,7 @@
       "source_release_year": 2010,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4304,6 +5375,7 @@
       "source_release_year": 2019,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4324,6 +5396,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4344,6 +5417,7 @@
       "source_release_year": 2007,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4364,6 +5438,7 @@
       "source_release_year": 2024,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4384,6 +5459,7 @@
       "source_release_year": 2022,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4404,6 +5480,7 @@
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4424,6 +5501,73 @@
       "source_release_year": 2024,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 291,
+      "title": "Vom kleinen Waschbären, der nicht aufgab und den großen Sprung wagte",
+      "thumbnail_url": "https://i.ytimg.com/vi/kop7hCyVEm4/maxresdefault.jpg",
+      "duration_seconds": 976,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nq01DAF8UIqd0DwFcoxsaDpg4h8PtPTrE",
+      "description": "Ein kleiner Waldbewohner trainiert für einen Sprungwettbewerb und hilft trotz eigener Enttäuschung einem Freund.",
+      "series": "Vom kleinen Waschbären",
+      "position_in_series": 3,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2021,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 292,
+      "title": "Vom kleinen Waschbären, der nicht wusste, dass er was ganz Besonderes ist",
+      "thumbnail_url": "https://i.ytimg.com/vi/MP34E5ReSFg/maxresdefault.jpg",
+      "duration_seconds": 567,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mjxCxdV6s25c7zdhmQVBuYQKSTquPNXXg",
+      "description": "Ein tollpatschiger kleiner Waldbewohner fühlt sich wertlos, bis ihm ein weiser Beschützer seine besondere Gabe zeigt.",
+      "series": "Vom kleinen Waschbären",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2018,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 293,
+      "title": "Vom kleinen Waschbären, der sich traute, mutig zu sein",
+      "thumbnail_url": "https://i.ytimg.com/vi/DLQGZcj6Xxs/maxresdefault.jpg",
+      "duration_seconds": 752,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kpvpzW_UgVGOGWo_mXaVT5mANQjn3ImoE",
+      "description": "Ein kleiner Waldbewohner überwindet seine Angst vor einem dunklen Wald, um einem verirrten Tierkind zu helfen.",
+      "series": "Vom kleinen Waschbären",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5",
+      "source_release_year": 2020,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4444,6 +5588,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4464,6 +5609,7 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4484,6 +5630,7 @@
       "source_release_year": 2008,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4504,6 +5651,7 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4524,6 +5672,51 @@
       "source_release_year": 2021,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 270,
+      "title": "Wendy",
+      "thumbnail_url": "https://i.ytimg.com/vi/8qXjbN65JQw/maxresdefault.jpg",
+      "duration_seconds": 3354,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kkjjRgEkLkOx0fcpHfYdtvXwIMZhsJOAA",
+      "description": "Ein Mädchen mit Angst vor Pferden schließt auf dem Hof der Großmutter Freundschaft mit einem geretteten Zirkuspferd.",
+      "series": "Wendy",
+      "position_in_series": 1,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2017,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 269,
+      "title": "Wendy 2",
+      "thumbnail_url": "https://i.ytimg.com/vi/PqaAlWweY5k/maxresdefault.jpg",
+      "duration_seconds": 4075,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mq9EeCSkGMZo4Yd57MTMfeRbTbo-Vz5Ig",
+      "description": "Um den Hof der Großmutter zu retten, trainiert ein Mädchen mit einem verängstigten Turnierpferd für einen wichtigen Wettkampf.",
+      "series": "Wendy",
+      "position_in_series": 2,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 7,
+      "age_tag": "6_8",
+      "source_release_year": 2018,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4544,6 +5737,7 @@
       "source_release_year": 2011,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4564,6 +5758,7 @@
       "source_release_year": 1999,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4584,6 +5779,7 @@
       "source_release_year": 1997,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4604,6 +5800,385 @@
       "source_release_year": 2023,
       "seasonal": null,
       "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 277,
+      "title": "Woozle Goozle - Altes Ägypten",
+      "thumbnail_url": "https://i.ytimg.com/vi/7ffZUUMFeW0/maxresdefault.jpg",
+      "duration_seconds": 2037,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_meWNxB9thLqeRT9V4RbA5L8p4NARi2hFE",
+      "description": "Eine Zeitreise in eine Pyramide erweckt versehentlich einen jahrtausendealten Geist, der gebändigt werden muss.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 274,
+      "title": "Woozle Goozle - Der neue Mitbewohner",
+      "thumbnail_url": "https://i.ytimg.com/vi/b4qxC-DzhCk/maxresdefault.jpg",
+      "duration_seconds": 930,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mevSprrlnuRBvRFA1Uea9OStKs-Q5m0ns",
+      "description": "Ein chaotischer, zaubernder Erfinder zieht bei einem Moderator ein und stellt dessen Alltag auf den Kopf.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2023,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 273,
+      "title": "Woozle Goozle - Der woozelige Schrank",
+      "thumbnail_url": "https://i.ytimg.com/vi/9SQSYiBerEQ/maxresdefault.jpg",
+      "duration_seconds": 1070,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nKlD7cYYo8KyInjqQBpomB2CN4dUCSMdQ",
+      "description": "Eine verrückte Aufräum-Erfindung sortiert eine Wohnung komplett falsch und sorgt für heillose Unordnung.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2023,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 278,
+      "title": "Woozle Goozle - Dinosaurier",
+      "thumbnail_url": "https://i.ytimg.com/vi/pAD7hs1tBt8/maxresdefault.jpg",
+      "duration_seconds": 1821,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k9c8uu09srJKPjTzfCYvrvRv13e25pPt8",
+      "description": "Eine Zeitreise beschwört versehentlich einen echten Dinosaurier ins Studio, den es wieder loszuwerden gilt.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 289,
+      "title": "Woozle Goozle - Elektrizität",
+      "thumbnail_url": "https://i.ytimg.com/vi/H1u8smQXJXo/maxresdefault.jpg",
+      "duration_seconds": 1086,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k6CFmTjSs_dOfvFNp2RPZLZIZziTEN0xo",
+      "description": "Ein Erfindungsunfall bringt kindgerecht näher, wie Strom entsteht und wofür man ihn überall braucht.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 290,
+      "title": "Woozle Goozle - Fahrrad",
+      "thumbnail_url": "https://i.ytimg.com/vi/xFwZowPvEPE/maxresdefault.jpg",
+      "duration_seconds": 1013,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mpnbjEDw3z31tO0i0qWH1mG5VfBu6pT-w",
+      "description": "Eine schiefgelaufene Erfindung erklärt kindgerecht, wie ein Fahrrad funktioniert und sicher genutzt wird.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 288,
+      "title": "Woozle Goozle - Glas",
+      "thumbnail_url": "https://i.ytimg.com/vi/To6h7IGope0/maxresdefault.jpg",
+      "duration_seconds": 1065,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nlAUFhCAIR-l1PyTTpETlDpU8k-kcbi4k",
+      "description": "Eine misslungene Erfindung zeigt kindgerecht, wie aus einfachem Sand durch Hitze funkelndes Glas entsteht.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 287,
+      "title": "Woozle Goozle - Gruseln",
+      "thumbnail_url": "https://i.ytimg.com/vi/XE3eT8OWxAw/maxresdefault.jpg",
+      "duration_seconds": 1110,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mfbbqV4YMLsu3bxzyLcAP-aAPZr0ZDEHE",
+      "description": "Zwischen schaurigen Experimenten wird kindgerecht erklärt, warum uns manche Dinge eine Gänsehaut bereiten.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 282,
+      "title": "Woozle Goozle - Haie",
+      "thumbnail_url": "https://i.ytimg.com/vi/6laEsRHv5bY/maxresdefault.jpg",
+      "duration_seconds": 1273,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nFNmIE5tMHRgeno4JUYCZLsyf7AzYG-wY",
+      "description": "Eine missglückte Erfindung führt zu spannenden Fakten darüber, wie Haie leben und jagen.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 286,
+      "title": "Woozle Goozle - Höhlen",
+      "thumbnail_url": "https://i.ytimg.com/vi/hd9VXOaWyj4/maxresdefault.jpg",
+      "duration_seconds": 1059,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mk0nnDSsTDf4U4gNUUqqzISNhoJ6O76LE",
+      "description": "Eine Erfindung führt tief unter die Erde und erklärt kindgerecht, wie Höhlen entstehen und wer dort lebt.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 281,
+      "title": "Woozle Goozle - Luft",
+      "thumbnail_url": "https://i.ytimg.com/vi/QR0-4JjSudk/maxresdefault.jpg",
+      "duration_seconds": 1233,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_l4XO4NTh3dMZBcWhBODAe-untZECmit3o",
+      "description": "Eine chaotische Erfindung macht die unsichtbare Luft um uns herum kindgerecht erlebbar und erklärbar.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 285,
+      "title": "Woozle Goozle - Mond",
+      "thumbnail_url": "https://i.ytimg.com/vi/01EPGWGWeA0/maxresdefault.jpg",
+      "duration_seconds": 1145,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mP62jcOCIhzRKePsZBBxLALt7K7sHF6zw",
+      "description": "Eine Erfindung schickt die Handlung Richtung Weltall und erklärt kindgerecht, warum der Mond sein Gesicht ändert.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 280,
+      "title": "Woozle Goozle - Raubtiere",
+      "thumbnail_url": "https://i.ytimg.com/vi/0FzukWXTVGM/maxresdefault.jpg",
+      "duration_seconds": 1277,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_nS7sTCy2vEvzEVXoHAvs-YL38vrTDl7W4",
+      "description": "Eine misslungene Erfindung sorgt für spannende Fakten darüber, wie wilde Jäger in der Natur überleben.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 276,
+      "title": "Woozle Goozle - Raumfahrt",
+      "thumbnail_url": "https://i.ytimg.com/vi/z6duEMF84-E/maxresdefault.jpg",
+      "duration_seconds": 1962,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lnLOLZ3J_uDb7VbbgnDGFn9rMbm7LgMpA",
+      "description": "Eine verrückte Erfindung schickt die Handlung ins Weltall und erklärt kindgerecht, wie Raketen fliegen.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 284,
+      "title": "Woozle Goozle - Schlaf",
+      "thumbnail_url": "https://i.ytimg.com/vi/2helJrgGpUI/maxresdefault.jpg",
+      "duration_seconds": 1045,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_k0FC1tqzbUMF0Lh2ia8di5ocbCK1SStbI",
+      "description": "Eine schlaflose Erfindungsnacht erklärt kindgerecht, warum Schlaf so wichtig ist und was dabei im Körper passiert.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 283,
+      "title": "Woozle Goozle - Sehen",
+      "thumbnail_url": "https://i.ytimg.com/vi/q6YverhHcZo/maxresdefault.jpg",
+      "duration_seconds": 1124,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_kw-kphVJT-Dex1pVXSajrkrUi6X3w5gQc",
+      "description": "Eine missglückte Erfindung erklärt kindgerecht, wie unsere Augen funktionieren und wir die Welt wahrnehmen.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 275,
+      "title": "Woozle Goozle - Umweltschutz",
+      "thumbnail_url": "https://i.ytimg.com/vi/EBXWOUHcU74/maxresdefault.jpg",
+      "duration_seconds": 1878,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_mFc2YnxX8zB1ouLPkg7-OmMR0u-RkM96E",
+      "description": "Eine Erfindung gegen zu viel Müll zeigt kindgerecht, wie jeder Einzelne die Umwelt schützen kann.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
+      "language": "de"
+    },
+    {
+      "id": 279,
+      "title": "Woozle Goozle - Wüste",
+      "thumbnail_url": "https://i.ytimg.com/vi/BVKHaywGHkM/maxresdefault.jpg",
+      "duration_seconds": 1242,
+      "youtube_music_url": "https://music.youtube.com/playlist?list=OLAK5uy_lC5tPsq9j9nSwnGryjSRnbxejSZ9PkPZU",
+      "description": "Eine Erfindung führt in heißen Sand und erklärt kindgerecht, wie Tiere und Pflanzen in der Wüste überleben.",
+      "series": "Woozle Goozle",
+      "position_in_series": null,
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8",
+      "source_release_year": 2013,
+      "seasonal": null,
+      "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4619,11 +6194,12 @@
         "adventure"
       ],
       "franchise": "disney",
-      "min_age": 5,
+      "min_age": 4,
       "age_tag": "3_5",
       "source_release_year": 2016,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     },
     {
@@ -4644,6 +6220,7 @@
       "source_release_year": 2025,
       "seasonal": null,
       "awards": [],
+      "variant": null,
       "language": "de"
     }
   ],
@@ -4673,6 +6250,484 @@
       ],
       "franchise": "marvel",
       "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Alice im Wunderland": {
+      "series_type": null,
+      "genre": [
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "Alles steht Kopf": {
+      "series_type": "sequel",
+      "genre": [
+        "family"
+      ],
+      "franchise": "pixar",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "Anna und die wilden Tiere": {
+      "series_type": "episodic",
+      "genre": [
+        "educational",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Arielle": {
+      "series_type": "sequel",
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Bambi": {
+      "series_type": "sequel",
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Bärenbrüder": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Cars": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Cinderella": {
+      "series_type": null,
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Das Dschungelbuch": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Das kleine WIR": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Der König der Löwen": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Die Eiskönigin": {
+      "series_type": "sequel",
+      "genre": [
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Die Monster AG": {
+      "series_type": "sequel",
+      "genre": [
+        "fantasy"
+      ],
+      "franchise": "pixar",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Die Schöne und das Biest": {
+      "series_type": "sequel",
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Die Unglaublichen": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "Dr. Brumm": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Drachenzähmen leicht gemacht": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Fluch der Karibik": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 7,
+      "age_tag": "6_8"
+    },
+    "Jim Knopf": {
+      "series_type": null,
+      "genre": [
+        "adventure",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8"
+    },
+    "Kung Fu Panda": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "dreamworks",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "Lieselotte": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Lilo & Stitch": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Madagascar": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "dreamworks",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Merida": {
+      "series_type": null,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "Michel aus Lönneberga": {
+      "series_type": "episodic",
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Micky Maus": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Minions": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8"
+    },
+    "Mulan": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 5,
+      "age_tag": "3_5"
+    },
+    "National Geographic Kids": {
+      "series_type": "episodic",
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Paddington": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8"
+    },
+    "Peter Pan": {
+      "series_type": "sequel",
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Pettersson und Findus": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Pippi Langstrumpf": {
+      "series_type": "episodic",
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Pocahontas": {
+      "series_type": null,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Ralph Reichts": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Shrek": {
+      "series_type": "sequel",
+      "genre": [
+        "fantasy"
+      ],
+      "franchise": "dreamworks",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Sofia die Erste": {
+      "series_type": "episodic",
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Susi und Strolch": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Tarzan": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Toy Story": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Vaiana": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 6,
+      "age_tag": "6_8"
+    },
+    "Wendy": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 7,
+      "age_tag": "6_8"
+    },
+    "Wieso? Weshalb? Warum? ERSTLESER": {
+      "series_type": "episodic",
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Winnie Puuh": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Zoomania": {
+      "series_type": "sequel",
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Woozle Goozle": {
+      "series_type": "episodic",
+      "genre": [
+        "educational"
+      ],
+      "franchise": null,
+      "min_age": 6,
+      "age_tag": "6_8"
+    },
+    "Momo": {
+      "series_type": null,
+      "genre": [
+        "family",
+        "fantasy"
+      ],
+      "franchise": null,
+      "min_age": 10,
+      "age_tag": "9_11"
+    },
+    "Findet Nemo": {
+      "series_type": null,
+      "genre": [
+        "adventure"
+      ],
+      "franchise": "pixar",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Dumbo": {
+      "series_type": null,
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 3,
+      "age_tag": "3_5"
+    },
+    "Die Wilden Hühner": {
+      "series_type": null,
+      "genre": [
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Aladdin": {
+      "series_type": null,
+      "genre": [
+        "fairy_tale"
+      ],
+      "franchise": "disney",
+      "min_age": 4,
+      "age_tag": "3_5"
+    },
+    "Vom kleinen Waschbären": {
+      "series_type": null,
+      "genre": [
+        "adventure",
+        "family"
+      ],
+      "franchise": null,
+      "min_age": 3,
       "age_tag": "3_5"
     }
   }
